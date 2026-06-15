@@ -18,7 +18,7 @@ def get_admin_token(client_instance=None):
     _client = client_instance or client
     response = _client.post(
         "/api/auth/login",
-        json={"email": "admin@example.com", "password": "admin_pass"}
+        json={"email": "admin@example.com", "password": "admin123"}
     )
     return response.json().get("access_token") if response.status_code == 200 else None
 

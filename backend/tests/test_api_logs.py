@@ -14,7 +14,7 @@ def get_analyst_token(client_instance=None):
     _client = client_instance or client
     response = _client.post(
         "/api/auth/login",
-        json={"email": "analyst@example.com", "password": "analyst_pass"}
+        json={"email": "analyst@example.com", "password": "analyst123"}
     )
     return response.json().get("access_token") if response.status_code == 200 else None
 
