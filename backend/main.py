@@ -5,9 +5,11 @@ import logging
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from app.routers import auth, users, api_logs, analytics
+from app.routers import auth, users, api_logs, analytics, websocket
 from app.database.init_db import init_db
 from app.core.config import settings
+from app.jobs.metrics_publisher import start_metrics_publisher
+from app.jobs.logs_publisher import start_logs_publisher
 import uuid
 import time
 
@@ -58,6 +60,8 @@ def startup_event():
     """Initialize database and setup"""
     logger.info("Initializing application...")
     init_db()
+    start_metrics_publisher()
+    start_logs_publisher()
     logger.info("Application startup complete")
 
 
