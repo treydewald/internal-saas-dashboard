@@ -1,5 +1,5 @@
 import React from 'react';
-import { APILog } from '../hooks/useAPILogs';
+import type { APILog } from '../hooks/useAPILogs';
 
 interface APILogsTableProps {
   logs: APILog[];
