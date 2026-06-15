@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { KPICard } from './KPICard';
+import { usePolling } from '../hooks/usePolling';
 import axios from 'axios';
 
 interface Trend {
@@ -28,13 +29,8 @@ export const KPICards: React.FC<KPICardsProps> = ({ dateFrom = '', dateTo = '' }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchKpis();
-  }, [dateFrom, dateTo]);
-
-  const fetchKpis = async () => {
+  const fetchKpis = useCallback(async () => {
     try {
-      setLoading(true);
       setError(null);
       const params = new URLSearchParams();
       if (dateFrom) params.append('date_from', dateFrom);
@@ -48,7 +44,18 @@ export const KPICards: React.FC<KPICardsProps> = ({ dateFrom = '', dateTo = '' }
     } finally {
       setLoading(false);
     }
-  };
+  }, [dateFrom, dateTo]);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchKpis();
+  }, [dateFrom, dateTo, fetchKpis]);
+
+  const { isPolling } = usePolling({
+    intervalMs: 30000,
+    onPoll: fetchKpis,
+    enabled: true,
+  });
 
   if (loading) {
     return (
@@ -81,16 +88,31 @@ export const KPICards: React.FC<KPICardsProps> = ({ dateFrom = '', dateTo = '' }
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {kpis.map((kpi) => (
-        <KPICard
-          key={kpi.name}
-          name={kpi.name}
-          value={kpi.value}
-          unit={kpi.unit}
-          trend={kpi.trend}
-        />
-      ))}
+    <div className="space-y-4">
+      {/* Refresh Button */}
+      <div className="flex justify-end">
+        <button
+          onClick={() => fetchKpis()}
+          disabled={loading || isPolling}
+          className="px-3 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-slate-600 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+        >
+          <span className={isPolling ? 'animate-spin' : ''}>⟲</span>
+          Refresh
+        </button>
+      </div>
+
+      {/* KPI Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {kpis.map((kpi) => (
+          <KPICard
+            key={kpi.name}
+            name={kpi.name}
+            value={kpi.value}
+            unit={kpi.unit}
+            trend={kpi.trend}
+          />
+        ))}
+      </div>
     </div>
   );
 };
