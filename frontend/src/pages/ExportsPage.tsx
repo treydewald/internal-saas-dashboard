@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { ExportJobForm } from '../components/ExportJobForm';
 import { useExports } from '../hooks/useExports';
 
@@ -13,9 +13,8 @@ interface ExportJobDisplay {
   created_at: string;
 }
 
-export const ExportsPage: React.FC = () => {
+export const ExportsPage = () => {
   const { jobs, loading, error, createExportJob, cancelJob, retryJob, deleteJob, getJobStatus } = useExports();
-  const [refreshInterval, setRefreshInterval] = useState<NodeJS.Timeout | null>(null);
 
   // Auto-refresh job status every 2 seconds
   useEffect(() => {
@@ -26,7 +25,6 @@ export const ExportsPage: React.FC = () => {
           getJobStatus(job.id).catch(err => console.error('Failed to refresh job:', err));
         });
       }, 2000);
-      setRefreshInterval(interval);
       return () => clearInterval(interval);
     }
   }, [jobs, getJobStatus]);
@@ -103,7 +101,7 @@ export const ExportsPage: React.FC = () => {
       )}
 
       {/* Create Export Form */}
-      <ExportJobForm onSubmit={handleCreateExport} loading={loading} error={error} />
+      <ExportJobForm onSubmit={handleCreateExport} loading={loading} error={error ?? undefined} />
 
       {/* Export Jobs List */}
       <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">

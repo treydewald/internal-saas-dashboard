@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   LineChart,
   Line,
@@ -9,11 +8,6 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useAPIActivity } from '../hooks/useAPIActivity';
-
-interface ActivityDataPoint {
-  date: string;
-  count: number;
-}
 
 interface APIActivityChartProps {
   dateFrom?: string;

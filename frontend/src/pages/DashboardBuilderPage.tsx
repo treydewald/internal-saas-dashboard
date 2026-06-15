@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDashboards } from '@/hooks/useDashboards';
-import type { Dashboard, DashboardCreatePayload } from '@/hooks/useDashboards';
+import type { DashboardCreatePayload } from '@/hooks/useDashboards';
 import { WidgetLibrary } from '@/components/WidgetLibrary';
 import type { Widget } from '@/components/WidgetLibrary';
 import { DashboardEditor } from '@/components/DashboardEditor';
 import type { LayoutWidget } from '@/components/DashboardEditor';
 import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface DashboardBuilderPageProps {
   dashboardId?: number;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
-export const DashboardBuilderPage: React.FC<DashboardBuilderPageProps> = ({
-  dashboardId,
-  onClose,
-}) => {
-  const { fetchDashboard, updateDashboard, createDashboard, loading } = useDashboards();
+export const DashboardBuilderPage = ({ dashboardId, onClose }: DashboardBuilderPageProps) => {
+  const navigate = useNavigate();
+  const { fetchDashboard, updateDashboard, createDashboard } = useDashboards();
   const [dashboardName, setDashboardName] = useState('');
   const [dashboardDescription, setDashboardDescription] = useState('');
   const [widgets, setWidgets] = useState<LayoutWidget[]>([]);
@@ -28,6 +27,15 @@ export const DashboardBuilderPage: React.FC<DashboardBuilderPageProps> = ({
       loadDashboard();
     }
   }, [dashboardId]);
+
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+      return;
+    }
+
+    navigate(-1);
+  };
 
   const loadDashboard = async () => {
     if (!dashboardId) return;
@@ -82,7 +90,7 @@ export const DashboardBuilderPage: React.FC<DashboardBuilderPageProps> = ({
         await createDashboard(payload);
       }
 
-      onClose();
+      handleClose();
     } catch (err: any) {
       setError(err.message || 'Failed to save dashboard');
     } finally {
@@ -95,7 +103,7 @@ export const DashboardBuilderPage: React.FC<DashboardBuilderPageProps> = ({
       {/* Header */}
       <div className="border-b border-slate-700 p-6">
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="flex items-center gap-2 mb-4 text-slate-400 hover:text-white transition"
         >
           <ArrowLeft size={20} />
@@ -154,7 +162,6 @@ export const DashboardBuilderPage: React.FC<DashboardBuilderPageProps> = ({
             {/* Dashboard Editor */}
             <DashboardEditor
               widgets={widgets}
-              onAddWidget={handleAddWidget}
               onRemoveWidget={handleRemoveWidget}
               onSave={handleSave}
               isSaving={isSaving}

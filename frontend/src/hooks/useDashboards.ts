@@ -36,7 +36,7 @@ export const useDashboards = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get('/dashboards');
+      const response = await api.get<Dashboard[]>('/api/dashboards');
       setDashboards(response.data);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch dashboards');
@@ -49,7 +49,7 @@ export const useDashboards = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get(`/dashboards/${dashboardId}`);
+      const response = await api.get<Dashboard>(`/api/dashboards/${dashboardId}`);
       setCurrentDashboard(response.data);
       return response.data;
     } catch (err: any) {
@@ -63,7 +63,7 @@ export const useDashboards = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get('/dashboards/default');
+      const response = await api.get<Dashboard>('/api/dashboards/default');
       setCurrentDashboard(response.data);
       return response.data;
     } catch (err: any) {
@@ -77,7 +77,7 @@ export const useDashboards = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.post('/dashboards', payload);
+      const response = await api.post<Dashboard>('/api/dashboards', payload);
       setDashboards([...dashboards, response.data]);
       return response.data;
     } catch (err: any) {
@@ -92,7 +92,7 @@ export const useDashboards = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.put(`/dashboards/${dashboardId}`, payload);
+      const response = await api.put<Dashboard>(`/api/dashboards/${dashboardId}`, payload);
       setDashboards(dashboards.map((d) => (d.id === dashboardId ? response.data : d)));
       if (currentDashboard?.id === dashboardId) {
         setCurrentDashboard(response.data);
@@ -110,7 +110,7 @@ export const useDashboards = () => {
     setLoading(true);
     setError(null);
     try {
-      await api.delete(`/dashboards/${dashboardId}`);
+      await api.delete(`/api/dashboards/${dashboardId}`);
       setDashboards(dashboards.filter((d) => d.id !== dashboardId));
       if (currentDashboard?.id === dashboardId) {
         setCurrentDashboard(null);
@@ -127,7 +127,7 @@ export const useDashboards = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.post(`/dashboards/${dashboardId}/set-default`);
+      const response = await api.post(`/api/dashboards/${dashboardId}/set-default`, {});
       setDashboards(
         dashboards.map((d) => ({
           ...d,

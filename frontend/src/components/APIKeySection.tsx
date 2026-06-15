@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { copyToClipboard } from '../utils/clipboard';
-
-interface APIKeySectionProps {
-  onKeyRegenerated?: () => void;
-}
+import { useNavigate } from 'react-router-dom';
 
 interface APIKeyData {
-  key: string;
-  maskedKey: string;
+  id: number;
+  name: string;
+  key_prefix: string;
+  is_active: boolean;
   created_at: string;
-  last_used?: string;
+  last_used_at?: string | null;
 }
 
-const APIKeySection: React.FC<APIKeySectionProps> = ({ onKeyRegenerated }) => {
+interface APIKeyListResponse {
+  api_keys: APIKeyData[];
+  total_count: number;
+}
+
+const APIKeySection: React.FC = () => {
+  const navigate = useNavigate();
   const [apiKey, setApiKey] = useState<APIKeyData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [showFullKey, setShowFullKey] = useState(false);
-  const [regenerating, setRegenerating] = useState(false);
 
   useEffect(() => {
     fetchAPIKey();
@@ -29,8 +30,8 @@ const APIKeySection: React.FC<APIKeySectionProps> = ({ onKeyRegenerated }) => {
     try {
       setLoading(true);
       setError('');
-      const response = await axios.get('/api/api-keys');
-      setApiKey(response.data);
+      const response = await axios.get<APIKeyListResponse>('/api/api-keys');
+      setApiKey(response.data.api_keys[0] ?? null);
     } catch (err) {
       const errorMsg = axios.isAxiosError(err)
         ? err.response?.data?.error || err.message
@@ -38,46 +39,6 @@ const APIKeySection: React.FC<APIKeySectionProps> = ({ onKeyRegenerated }) => {
       setError(errorMsg);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleCopy = async () => {
-    if (!apiKey) return;
-
-    try {
-      await copyToClipboard(apiKey.key);
-      setSuccess('API key copied to clipboard');
-      setTimeout(() => setSuccess(''), 3000);
-    } catch (err) {
-      setError('Failed to copy to clipboard');
-    }
-  };
-
-  const handleRegenerate = async () => {
-    if (
-      !window.confirm(
-        'Are you sure you want to regenerate your API key? The old key will be invalidated.'
-      )
-    ) {
-      return;
-    }
-
-    try {
-      setRegenerating(true);
-      setError('');
-      const response = await axios.post('/api/api-keys/regenerate');
-      setApiKey(response.data);
-      setSuccess('API key regenerated successfully');
-      setShowFullKey(false);
-      setTimeout(() => setSuccess(''), 3000);
-      if (onKeyRegenerated) onKeyRegenerated();
-    } catch (err) {
-      const errorMsg = axios.isAxiosError(err)
-        ? err.response?.data?.error || err.message
-        : 'Failed to regenerate API key';
-      setError(errorMsg);
-    } finally {
-      setRegenerating(false);
     }
   };
 
@@ -102,38 +63,24 @@ const APIKeySection: React.FC<APIKeySectionProps> = ({ onKeyRegenerated }) => {
           {error}
         </div>
       )}
-
-      {success && (
-        <div className="mb-4 p-3 bg-green-900 bg-opacity-50 border border-green-700 rounded text-green-200 text-sm">
-          {success}
-        </div>
-      )}
-
       {apiKey ? (
         <div className="space-y-4">
-          {/* API Key Display */}
           <div>
             <label className="text-sm font-medium text-slate-300 block mb-2">
-              API Key
+              Primary API Key
             </label>
-            <div className="flex items-center gap-2">
-              <div className="flex-1">
-                <div className="bg-slate-700 px-3 py-2 rounded font-mono text-sm text-slate-300 break-all">
-                  {showFullKey ? apiKey.key : apiKey.maskedKey}
-                </div>
-              </div>
-              <button
-                onClick={() => setShowFullKey(!showFullKey)}
-                className="px-2 py-2 text-slate-400 hover:text-white transition-colors"
-                title={showFullKey ? 'Hide key' : 'Show key'}
-              >
-                {showFullKey ? '👁️‍🗨️' : '👁️'}
-              </button>
+            <div className="bg-slate-700 px-3 py-2 rounded font-mono text-sm text-slate-300 break-all">
+              {apiKey.key_prefix}***
             </div>
           </div>
 
-          {/* Metadata */}
           <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs font-medium text-slate-400 uppercase">
+                Name
+              </label>
+              <p className="text-white mt-1">{apiKey.name}</p>
+            </div>
             <div>
               <label className="text-xs font-medium text-slate-400 uppercase">
                 Created
@@ -142,41 +89,47 @@ const APIKeySection: React.FC<APIKeySectionProps> = ({ onKeyRegenerated }) => {
                 {new Date(apiKey.created_at).toLocaleDateString()}
               </p>
             </div>
-            {apiKey.last_used && (
+            {apiKey.last_used_at && (
               <div>
                 <label className="text-xs font-medium text-slate-400 uppercase">
                   Last Used
                 </label>
                 <p className="text-white mt-1">
-                  {new Date(apiKey.last_used).toLocaleDateString()}
+                  {new Date(apiKey.last_used_at).toLocaleDateString()}
                 </p>
               </div>
             )}
+            <div>
+              <label className="text-xs font-medium text-slate-400 uppercase">
+                Status
+              </label>
+              <p className="text-white mt-1">{apiKey.is_active ? 'Active' : 'Revoked'}</p>
+            </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex gap-3 pt-4">
             <button
-              onClick={handleCopy}
-              className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded font-medium transition-colors flex items-center gap-2"
+              onClick={() => navigate('/api-keys')}
+              className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded font-medium transition-colors"
             >
-              📋 Copy
-            </button>
-            <button
-              onClick={handleRegenerate}
-              disabled={regenerating}
-              className="px-4 py-2 bg-red-900 hover:bg-red-800 text-white rounded font-medium transition-colors disabled:bg-slate-600 disabled:cursor-not-allowed"
-            >
-              {regenerating ? 'Regenerating...' : '🔄 Regenerate'}
+              Manage Keys
             </button>
           </div>
 
           <p className="text-xs text-slate-400 mt-4">
-            ⚠️ Keep your API key secret. Do not share it publicly or commit it to version control.
+            API secrets are only shown once at creation time. Use the API Keys page to create, revoke, or delete keys.
           </p>
         </div>
       ) : (
-        <p className="text-slate-400">No API key found</p>
+        <div className="space-y-3">
+          <p className="text-slate-400">No API keys created yet.</p>
+          <button
+            onClick={() => navigate('/api-keys')}
+            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded font-medium transition-colors"
+          >
+            Open API Key Manager
+          </button>
+        </div>
       )}
     </div>
   );

@@ -14,6 +14,7 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  updateUser: (updates: Partial<AuthUser>) => void;
   isLoading: boolean;
   error: string | null;
 }
@@ -27,7 +28,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Load token and user from localStorage on mount
@@ -38,6 +39,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
     }
+
+    setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -78,12 +81,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('auth_user');
   };
 
+  const updateUser = (updates: Partial<AuthUser>) => {
+    setUser((currentUser) => {
+      if (!currentUser) {
+        return currentUser;
+      }
+
+      const nextUser = { ...currentUser, ...updates };
+      localStorage.setItem('auth_user', JSON.stringify(nextUser));
+      return nextUser;
+    });
+  };
+
   const value: AuthContextType = {
     user,
     token,
     isAuthenticated: !!token,
     login,
     logout,
+    updateUser,
     isLoading,
     error,
   };

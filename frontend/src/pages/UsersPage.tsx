@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useUsers } from '../hooks/useUsers';
 import { UsersTable } from '../components/UsersTable';
 import { FilterBar } from '../components/FilterBar';

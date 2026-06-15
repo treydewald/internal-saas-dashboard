@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
 import { api } from '../utils/api';
 import InsightsCards from '../components/InsightsCards';
 import AnomalyAlert from '../components/AnomalyAlert';
@@ -40,7 +39,6 @@ interface DashboardData {
 }
 
 const InsightsPage: React.FC = () => {
-  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<DashboardData | null>(null);
@@ -50,10 +48,15 @@ const InsightsPage: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await api.get('/insights/dashboard');
+        const response = await api.get<DashboardData>('/api/insights/dashboard');
+
+        if (!response.ok) {
+          throw new Error('Failed to load insights');
+        }
+
         setData(response.data);
       } catch (err: any) {
-        setError(err.response?.data?.detail || 'Failed to load insights');
+        setError(err.message || 'Failed to load insights');
       } finally {
         setLoading(false);
       }

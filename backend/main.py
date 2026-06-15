@@ -12,6 +12,7 @@ from app.core.config import settings
 from app.jobs.metrics_publisher import start_metrics_publisher
 from app.jobs.logs_publisher import start_logs_publisher
 from app.jobs.report_scheduler import start_report_scheduler, stop_report_scheduler
+from app.middleware.audit_middleware import AuditMiddleware
 import uuid
 import time
 
@@ -34,6 +35,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(AuditMiddleware)
 
 
 # Request logging middleware

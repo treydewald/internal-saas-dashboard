@@ -32,7 +32,7 @@ export const useAPIKeys = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get('/api/api-keys');
+      const response = await api.get<APIKeysResponse>('/api/api-keys');
       const data: APIKeysResponse = await response.json();
 
       if (!response.ok) {
@@ -57,7 +57,7 @@ export const useAPIKeys = () => {
   const createKey = useCallback(async (name: string) => {
     setError(null);
     try {
-      const response = await api.post('/api/api-keys', { name });
+      const response = await api.post<APIKeyWithSecret>('/api/api-keys', { name });
       const data: APIKeyWithSecret = await response.json();
 
       if (!response.ok) {
@@ -78,7 +78,7 @@ export const useAPIKeys = () => {
   const revokeKey = useCallback(async (keyId: number) => {
     setError(null);
     try {
-      const response = await api.post(`/api/api-keys/${keyId}/revoke`, {});
+      const response = await api.post<Record<string, unknown>>(`/api/api-keys/${keyId}/revoke`, {});
       const data = await response.json();
 
       if (!response.ok) {
@@ -98,7 +98,7 @@ export const useAPIKeys = () => {
   const deleteKey = useCallback(async (keyId: number) => {
     setError(null);
     try {
-      const response = await api.delete(`/api/api-keys/${keyId}`);
+      const response = await api.delete<Record<string, unknown>>(`/api/api-keys/${keyId}`);
 
       if (!response.ok) {
         const data = await response.json();

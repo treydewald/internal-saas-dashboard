@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface AuditLog {
   id: number;
   user_id?: number;

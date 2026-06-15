@@ -12,7 +12,7 @@ export const usePolling = ({
   enabled = true,
 }: UsePollingOptions) => {
   const [isPolling, setIsPolling] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isPollingRef = useRef(false);
 
   const startPolling = useCallback(async () => {

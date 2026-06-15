@@ -14,7 +14,7 @@ interface UserProfile {
 }
 
 const ProfileSection: React.FC<ProfileSectionProps> = ({ onSave }) => {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(user || null);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({ name: user?.name || '' });
@@ -45,8 +45,13 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onSave }) => {
     setSuccess('');
 
     try {
-      const response = await axios.put('/api/users/me', { name: formData.name });
+      if (!user) {
+        throw new Error('User is not available');
+      }
+
+      const response = await axios.put(`/api/users/${user.id}`, { name: formData.name });
       setProfile(response.data);
+      updateUser({ name: response.data.name });
       setEditMode(false);
       setSuccess('Profile updated successfully');
       setTimeout(() => setSuccess(''), 3000);

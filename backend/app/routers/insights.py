@@ -18,7 +18,7 @@ churn_predictor = ChurnPredictor()
 @router.get("/anomalies")
 def get_anomalies(
     days: int = 7,
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
@@ -27,13 +27,13 @@ def get_anomalies(
     """
     try:
         response_time_anomalies = anomaly_detector.detect_response_time_anomalies(
-            db, current_user.id, days
+            db, current_user["user_id"], days
         )
         error_rate_anomalies = anomaly_detector.detect_error_rate_anomalies(
-            db, current_user.id, days
+            db, current_user["user_id"], days
         )
         traffic_anomalies = anomaly_detector.detect_traffic_anomalies(
-            db, current_user.id, days
+            db, current_user["user_id"], days
         )
 
         return {
@@ -55,7 +55,7 @@ def get_anomalies(
 def forecast_requests(
     days_history: int = 7,
     days_ahead: int = 3,
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
@@ -63,7 +63,7 @@ def forecast_requests(
     """
     try:
         forecast = forecaster.forecast_request_volume(
-            db, current_user.id, days_history, days_ahead
+            db, current_user["user_id"], days_history, days_ahead
         )
         return {
             "forecast_type": "request_volume",
@@ -78,7 +78,7 @@ def forecast_requests(
 def forecast_error_rate(
     days_history: int = 7,
     days_ahead: int = 3,
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
@@ -86,7 +86,7 @@ def forecast_error_rate(
     """
     try:
         forecast = forecaster.forecast_error_rate(
-            db, current_user.id, days_history, days_ahead
+            db, current_user["user_id"], days_history, days_ahead
         )
         return {
             "forecast_type": "error_rate",
@@ -101,7 +101,7 @@ def forecast_error_rate(
 def forecast_revenue(
     days_history: int = 7,
     days_ahead: int = 3,
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
@@ -109,7 +109,7 @@ def forecast_revenue(
     """
     try:
         forecast = forecaster.forecast_revenue(
-            db, current_user.id, days_history, days_ahead
+            db, current_user["user_id"], days_history, days_ahead
         )
         return {
             "forecast_type": "revenue",
@@ -123,14 +123,14 @@ def forecast_revenue(
 @router.get("/churn-risk/user/{user_id}")
 def get_user_churn_risk(
     user_id: int,
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
     Get churn risk prediction for a specific user.
     Only allow admins or the user to view their own risk.
     """
-    if current_user.role.name != "admin" and current_user.id != user_id:
+    if current_user["role"] != "admin" and current_user["user_id"] != user_id:
         raise HTTPException(status_code=403, detail="Insufficient permissions")
 
     try:
@@ -147,14 +147,14 @@ def get_user_churn_risk(
 @router.get("/churn-risk/cohort")
 def get_cohort_churn_risk(
     days_future: int = 30,
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
     Get churn risk prediction for entire user cohort.
     Admin only.
     """
-    if current_user.role.name != "admin":
+    if current_user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Admin access required")
 
     try:
@@ -170,7 +170,7 @@ def get_cohort_churn_risk(
 
 @router.get("/dashboard")
 def get_insights_dashboard(
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
@@ -198,10 +198,11 @@ def get_insights_dashboard(
         }
 
         # Add churn risk only for admins
-        if current_user.role.name == "admin":
+        if current_user["role"] == "admin":
             churn_response = get_cohort_churn_risk(days_future=30, current_user=current_user, db=db)
             dashboard["churn_risk"] = churn_response
 
         return dashboard
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating dashboard: {str(e)}")
+

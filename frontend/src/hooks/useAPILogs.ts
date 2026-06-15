@@ -62,7 +62,7 @@ export const useAPILogs = (options: UseAPILogsOptions = {}) => {
           params.append('endpoint', endpointFilter);
         }
 
-        const response = await api.get(`/api/api-logs?${params}`);
+        const response = await api.get<APILogsResponse>(`/api/api-logs?${params}`);
         const data: APILogsResponse = await response.json();
 
         if (!response.ok) {

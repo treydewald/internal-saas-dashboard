@@ -1,10 +1,9 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, JSON
+from app.core.database import Base
 
-Base_audit = None
 
-
-class AuditLog:
+class AuditLog(Base):
     """Audit log model for tracking user actions and system events."""
     __tablename__ = "audit_logs"
 

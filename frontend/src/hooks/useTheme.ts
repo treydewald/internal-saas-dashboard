@@ -1,6 +1,3 @@
-import { useContext } from 'react';
-import { ThemeContext } from '../context/ThemeContext';
-
 interface UseThemeReturn {
   theme: 'light' | 'dark';
   toggleTheme: () => void;

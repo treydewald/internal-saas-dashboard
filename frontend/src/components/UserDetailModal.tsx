@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useUserDetail } from '../hooks/useUserDetail';
 import UserEditForm from './UserEditForm';
 import { useAuth } from '../hooks/useAuth';

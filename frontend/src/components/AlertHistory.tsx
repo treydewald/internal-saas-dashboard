@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface Alert {
   id: number;
   alert_rule_id: number;

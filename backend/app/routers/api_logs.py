@@ -1,7 +1,6 @@
 """API logs routes"""
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from datetime import datetime
 from app.core.database import get_db
 from app.core.dependencies import require_permission
 from app.schemas.api_log import APILogListResponse
@@ -15,8 +14,8 @@ router = APIRouter(prefix="/api/api-logs", tags=["api-logs"])
 async def get_api_logs(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
-    date_from: datetime = Query(None),
-    date_to: datetime = Query(None),
+    date_from: str = Query(None),
+    date_to: str = Query(None),
     status_code: int = Query(None),
     endpoint: str = Query(None),
     _: dict = Depends(require_permission(Permission.API_LOGS_READ)),

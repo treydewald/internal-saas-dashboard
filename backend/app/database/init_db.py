@@ -6,6 +6,15 @@ from app.models.user import User
 from app.models.role import Role
 from app.models.api_log import APILog
 from app.models.metric import Metric
+# Import all models so Base.metadata knows about all tables
+from app.models.alert_rule import AlertRule
+from app.models.api_key import APIKey
+from app.models.audit_log import AuditLog
+from app.models.dashboard import Dashboard
+from app.models.export_job import ExportJob
+from app.models.ml_insight import MLInsight
+from app.models.organization import Organization
+from app.models.scheduled_report import ScheduledReport
 
 
 def init_db():

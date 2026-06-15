@@ -1,18 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAPIKeys } from '../hooks/useAPIKeys';
-import { useAuth } from '../hooks/useAuth';
 
-interface APIKeyUIItem {
-  id: number;
-  name: string;
-  key_prefix: string;
-  is_active: boolean;
-  last_used_at: string | null;
-  created_at: string;
-}
-
-export const APIKeyUsagePage: React.FC = () => {
-  const { user } = useAuth();
+export const APIKeyUsagePage = () => {
   const { keys, loading, error, createKey, revokeKey, deleteKey, createdKey, clearCreatedKey } = useAPIKeys();
   const [newKeyName, setNewKeyName] = useState('');
   const [showCreatedKey, setShowCreatedKey] = useState(false);
@@ -157,7 +146,7 @@ export const APIKeyUsagePage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {keys.map((key: APIKeyUIItem) => (
+                {keys.map((key) => (
                   <tr key={key.id} className="border-b border-slate-700 hover:bg-slate-700 hover:bg-opacity-50">
                     <td className="py-3 px-4 text-white">{key.name}</td>
                     <td className="py-3 px-4 text-slate-400 font-mono text-xs">{key.key_prefix}***</td>

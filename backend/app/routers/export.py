@@ -18,7 +18,7 @@ router = APIRouter(prefix="/api/export", tags=["export"])
 @router.post("/kpis")
 async def export_kpis(
     format: str = Query("csv", pattern="^(csv|pdf)$"),
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
 ):
     """
     Export KPI snapshot as CSV or PDF.
@@ -56,7 +56,7 @@ async def export_kpis(
 async def export_users(
     format: str = Query("csv", regex="^(csv|pdf)$"),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
 ):
     """
     Export users list as CSV or PDF.
@@ -100,7 +100,7 @@ async def export_users(
 async def export_api_logs(
     format: str = Query("csv", regex="^(csv|pdf)$"),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
 ):
     """
     Export API logs as CSV or PDF.
@@ -137,3 +137,4 @@ async def export_api_logs(
             media_type=media_type,
             headers={"Content-Disposition": f"attachment; filename={filename}"},
         )
+

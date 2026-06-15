@@ -12,7 +12,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredRole
 }) => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return null;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

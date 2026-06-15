@@ -2,6 +2,9 @@ from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from typing import Callable
 import re
+from app.core.database import SessionLocal
+from app.core.jwt_utils import decode_token
+from app.services.audit_service import AuditService
 
 
 class AuditMiddleware(BaseHTTPMiddleware):
@@ -15,7 +18,45 @@ class AuditMiddleware(BaseHTTPMiddleware):
         (r"^/api/users/?.*", ["POST", "PUT", "DELETE"]),
         (r"^/api/alerts/?.*", ["POST", "PUT", "DELETE"]),
         (r"^/api/api-keys/?.*", ["POST", "DELETE"]),
+        (r"^/api/reports/?.*", ["POST", "PUT", "DELETE"]),
+        (r"^/api/exports/?.*", ["POST", "DELETE"]),
+        (r"^/api/dashboards/?.*", ["POST", "PUT", "DELETE"]),
+        (r"^/api/organizations/?.*", ["POST", "PUT", "DELETE"]),
     ]
+
+    @staticmethod
+    def _extract_user_id(request: Request) -> int | None:
+        authorization = request.headers.get("authorization")
+        if not authorization or not authorization.startswith("Bearer "):
+            return None
+
+        token = authorization.split(" ", 1)[1]
+        payload = decode_token(token)
+        if not payload:
+            return None
+
+        return payload.get("user_id")
+
+    @staticmethod
+    def _build_action(request: Request) -> tuple[str, str, int | None]:
+        segments = [segment for segment in request.url.path.split("/") if segment]
+        resource_segments = segments[1:] if segments and segments[0] == "api" else segments
+
+        resource_type = resource_segments[0] if resource_segments else "unknown"
+        resource_id = None
+        action_name = request.method.lower()
+
+        if resource_segments:
+            last_segment = resource_segments[-1]
+            if last_segment.isdigit():
+                resource_id = int(last_segment)
+            elif last_segment not in {resource_type, "rules"}:
+                action_name = f"{action_name}_{last_segment.replace('-', '_')}"
+
+            if len(resource_segments) > 1 and resource_segments[1] == "rules":
+                resource_type = "alert_rules"
+
+        return action_name, resource_type, resource_id
 
     async def dispatch(self, request: Request, call_next: Callable):
         response = await call_next(request)
@@ -31,22 +72,26 @@ class AuditMiddleware(BaseHTTPMiddleware):
         )
 
         if should_audit and response.status_code < 400:
-            # Extract user_id from JWT token if available
-            user_id = None
-            if "authorization" in request.headers:
-                try:
-                    # In real app, parse JWT to get user_id
-                    # For MVP, we'll set this to None
-                    pass
-                except Exception:
-                    pass
+            user_id = self._extract_user_id(request)
+            action, resource_type, resource_id = self._build_action(request)
 
-            # Determine action and resource type from request
-            action = f"{request.method.lower()}_{request.url.path.split('/')[-1]}"
-            resource_type = request.url.path.split("/")[-2] if "/" in request.url.path else "unknown"
-
-            # Log to audit trail
-            # This would be called with db session from request state
-            # For MVP, logging is optional/deferred
+            db = SessionLocal()
+            try:
+                AuditService.log_action(
+                    db=db,
+                    user_id=user_id,
+                    action=action,
+                    resource_type=resource_type,
+                    resource_id=resource_id,
+                    status="success",
+                    details={
+                        "path": request.url.path,
+                        "method": request.method,
+                        "status_code": response.status_code,
+                    },
+                    ip_address=request.client.host if request.client else None,
+                )
+            finally:
+                db.close()
 
         return response

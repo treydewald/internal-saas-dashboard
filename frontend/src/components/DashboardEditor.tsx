@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { Widget } from './WidgetLibrary';
 import { X, Save, Copy } from 'lucide-react';
 
@@ -10,19 +10,17 @@ export interface LayoutWidget extends Widget {
 
 interface DashboardEditorProps {
   widgets: LayoutWidget[];
-  onAddWidget: (widget: LayoutWidget) => void;
   onRemoveWidget: (widgetId: string) => void;
   onSave: (layout: LayoutWidget[]) => void;
   isSaving?: boolean;
 }
 
-export const DashboardEditor: React.FC<DashboardEditorProps> = ({
+export const DashboardEditor = ({
   widgets,
-  onAddWidget,
   onRemoveWidget,
   onSave,
   isSaving = false,
-}) => {
+}: DashboardEditorProps) => {
   const [draggedWidget, setDraggedWidget] = useState<LayoutWidget | null>(null);
 
   const handleDragStart = (widget: LayoutWidget) => {

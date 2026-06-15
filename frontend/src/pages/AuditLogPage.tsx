@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuditLog } from '../hooks/useAuditLog';
 import AuditLogTable from '../components/AuditLogTable';
 import AuditEntryDetail from '../components/AuditEntryDetail';
 
 export default function AuditLogPage() {
-  const [selectedLog, setSelectedLog] = useState(null);
-  const { logs, totalCount, loading, fetchLogs } = useAuditLog();
+  const [selectedLog, setSelectedLog] = useState<Parameters<typeof AuditEntryDetail>[0]['log'] | null>(null);
+  const { logs, totalCount, loading } = useAuditLog();
 
   return (
     <div className="p-6 bg-gray-50 dark:bg-slate-900 min-h-screen">

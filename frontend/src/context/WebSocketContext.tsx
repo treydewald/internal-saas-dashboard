@@ -1,4 +1,5 @@
-import React, { createContext, useEffect, useState, useCallback, useRef, ReactNode } from 'react';
+import { createContext, useEffect, useState, useCallback, useRef } from 'react';
+import type { ReactNode } from 'react';
 import { useAuth } from '../hooks/useAuth';
 
 export interface WebSocketMessage {
@@ -21,14 +22,14 @@ interface WebSocketProviderProps {
   children: ReactNode;
 }
 
-export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }) => {
+export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
   const { isAuthenticated, user } = useAuth();
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null);
   const [error, setError] = useState<string | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
+  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const buildWebSocketUrl = useCallback(() => {
     const userId = user?.id || '';

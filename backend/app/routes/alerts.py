@@ -200,3 +200,4 @@ def resolve_alert(
         "status": alert.status,
         "resolved_at": alert.resolved_at.isoformat() if alert.resolved_at else None
     }
+

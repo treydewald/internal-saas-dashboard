@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface AuditEntryDetailProps {
   log: {
     id: number;

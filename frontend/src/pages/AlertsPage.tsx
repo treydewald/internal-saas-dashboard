@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAlerts } from '../hooks/useAlerts';
 import AlertRuleBuilder from '../components/AlertRuleBuilder';
 import AlertHistory from '../components/AlertHistory';

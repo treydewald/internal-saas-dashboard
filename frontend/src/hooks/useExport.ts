@@ -9,7 +9,7 @@ export const useExport = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.post(`/export/kpis?format=${format}`, {}, {
+      const response = await api.post<Blob>(`/api/export/kpis?format=${format}`, {}, {
         responseType: 'blob',
       });
       downloadFile(response.data, `kpis_${new Date().toISOString().split('T')[0]}.${format}`);
@@ -24,7 +24,7 @@ export const useExport = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.post(`/export/users?format=${format}`, {}, {
+      const response = await api.post<Blob>(`/api/export/users?format=${format}`, {}, {
         responseType: 'blob',
       });
       downloadFile(response.data, `users_${new Date().toISOString().split('T')[0]}.${format}`);
@@ -39,7 +39,7 @@ export const useExport = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.post(`/export/api-logs?format=${format}`, {}, {
+      const response = await api.post<Blob>(`/api/export/api-logs?format=${format}`, {}, {
         responseType: 'blob',
       });
       downloadFile(response.data, `api_logs_${new Date().toISOString().split('T')[0]}.${format}`);

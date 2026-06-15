@@ -2,23 +2,27 @@
  * Role-based permission utilities for frontend access control
  */
 
-export enum UserRole {
-  ADMIN = 'admin',
-  ANALYST = 'analyst',
-  VIEWER = 'viewer',
-}
+export const UserRole = {
+  ADMIN: 'admin',
+  ANALYST: 'analyst',
+  VIEWER: 'viewer',
+} as const;
 
-export enum Permission {
-  USER_READ = 'user:read',
-  USER_CREATE = 'user:create',
-  USER_UPDATE = 'user:update',
-  USER_DELETE = 'user:delete',
-  API_LOGS_READ = 'api_logs:read',
-  SETTINGS_READ = 'settings:read',
-  SETTINGS_UPDATE = 'settings:update',
-  REPORTS_READ = 'reports:read',
-  ANALYTICS_READ = 'analytics:read',
-}
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
+
+export const Permission = {
+  USER_READ: 'user:read',
+  USER_CREATE: 'user:create',
+  USER_UPDATE: 'user:update',
+  USER_DELETE: 'user:delete',
+  API_LOGS_READ: 'api_logs:read',
+  SETTINGS_READ: 'settings:read',
+  SETTINGS_UPDATE: 'settings:update',
+  REPORTS_READ: 'reports:read',
+  ANALYTICS_READ: 'analytics:read',
+} as const;
+
+export type Permission = (typeof Permission)[keyof typeof Permission];
 
 // Role to permissions mapping (mirrored from backend)
 const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {

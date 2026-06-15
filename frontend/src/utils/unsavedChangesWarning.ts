@@ -1,6 +1,6 @@
 export const setupUnsavedChangesWarning = (
   hasUnsavedChanges: boolean
-): void => {
+): (() => void) => {
   const handleBeforeUnload = (e: BeforeUnloadEvent) => {
     if (hasUnsavedChanges) {
       e.preventDefault();

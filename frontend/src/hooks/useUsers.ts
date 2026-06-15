@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { api } from '../utils/api';
 
 export interface User {
-  id: string;
+  id: number;
   name: string;
   email: string;
   plan: 'free' | 'pro' | 'enterprise';
@@ -57,7 +57,7 @@ export const useUsers = (options: UseUsersOptions = {}) => {
           params.append('status', statusFilter);
         }
 
-        const response = await api.get(`/api/users?${params}`);
+        const response = await api.get<UsersResponse>(`/api/users?${params}`);
         const data: UsersResponse = await response.json();
 
         if (!response.ok) {

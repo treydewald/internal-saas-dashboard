@@ -37,7 +37,7 @@ export const useOrganization = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get('/api/organizations');
+      const response = await api.get<OrganizationsResponse>('/api/organizations');
       const data: OrganizationsResponse = await response.json();
 
       if (!response.ok) {
@@ -68,7 +68,7 @@ export const useOrganization = () => {
     async (name: string, slug: string, description?: string) => {
       setError(null);
       try {
-        const response = await api.post('/api/organizations', {
+        const response = await api.post<Organization>('/api/organizations', {
           name,
           slug,
           description,
@@ -95,7 +95,7 @@ export const useOrganization = () => {
     async (orgId: number, updates: Partial<Organization>) => {
       setError(null);
       try {
-        const response = await api.put(`/api/organizations/${orgId}`, updates);
+        const response = await api.put<Organization>(`/api/organizations/${orgId}`, updates);
         const data: Organization = await response.json();
 
         if (!response.ok) {
