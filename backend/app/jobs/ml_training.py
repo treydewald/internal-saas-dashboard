@@ -7,8 +7,8 @@ This is a simplified version for the MVP - in production would use scikit-learn 
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
-from backend.app.config import settings
-from backend.app.models import APILog, User
+from app.core.config import settings
+from app.models import APILog, User
 import json
 import logging
 

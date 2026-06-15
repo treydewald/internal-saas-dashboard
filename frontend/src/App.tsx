@@ -10,6 +10,7 @@ import { UsersPage } from './pages/UsersPage';
 import { APILogsPage } from './pages/APILogsPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import InsightsPage from './pages/InsightsPage';
 
 function App() {
   return (
@@ -65,6 +66,16 @@ function App() {
               <ProtectedRoute requiredRole="admin">
                 <DashboardLayout>
                   <SettingsPage />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/insights"
+            element={
+              <ProtectedRoute requiredRole="analyst">
+                <DashboardLayout>
+                  <InsightsPage />
                 </DashboardLayout>
               </ProtectedRoute>
             }

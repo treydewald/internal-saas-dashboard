@@ -7,11 +7,11 @@ Stores results in MLInsight table for quick dashboard retrieval.
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
-from backend.app.config import settings
-from backend.app.models import User, MLInsight
-from backend.app.services.anomaly_detection import AnomalyDetector
-from backend.app.services.forecasting import Forecaster
-from backend.app.services.churn_prediction import ChurnPredictor
+from app.core.config import settings
+from app.models import User, MLInsight
+from app.services.anomaly_detection import AnomalyDetector
+from app.services.forecasting import Forecaster
+from app.services.churn_prediction import ChurnPredictor
 import logging
 
 logger = logging.getLogger(__name__)
