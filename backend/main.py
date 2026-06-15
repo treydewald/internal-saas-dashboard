@@ -5,11 +5,12 @@ import logging
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from app.routers import auth, users, api_logs, analytics, websocket, export
+from app.routers import auth, users, api_logs, analytics, websocket, export, reports
 from app.database.init_db import init_db
 from app.core.config import settings
 from app.jobs.metrics_publisher import start_metrics_publisher
 from app.jobs.logs_publisher import start_logs_publisher
+from app.jobs.report_scheduler import start_report_scheduler, stop_report_scheduler
 import uuid
 import time
 
