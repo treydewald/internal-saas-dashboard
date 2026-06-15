@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/ws", tags=["websocket"])
 
 
-@router.websocket("/ws/connect")
+@router.websocket("/connect")
 async def websocket_endpoint(
     websocket: WebSocket,
     user_id: str = Query(None, description="User ID for personalized updates"),
@@ -65,7 +65,7 @@ async def websocket_endpoint(
         connection_manager.disconnect(websocket)
 
 
-@router.get("/ws/status")
+@router.get("/status")
 async def websocket_status():
     """
     Get WebSocket server status.

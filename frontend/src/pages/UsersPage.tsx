@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useUsers } from '../hooks/useUsers';
 import { UsersTable } from '../components/UsersTable';
-import { SearchBar } from '../components/SearchBar';
+import { FilterBar } from '../components/FilterBar';
 import { Pagination } from '../components/Pagination';
+import { useFilters } from '../hooks/useFilters';
 
 export const UsersPage: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const { filters, updateFilter, clearFilters } = useFilters();
   const { users, loading, error, currentPage, totalPages, limit, onPageChange, refetch } =
-    useUsers({ search: searchTerm, limit: 20 });
+    useUsers({
+      search: filters.search,
+      plan: filters.plan,
+      status: filters.status,
+      limit: 20,
+    });
 
   return (
     <div className="flex flex-col gap-6">
@@ -17,14 +23,22 @@ export const UsersPage: React.FC = () => {
         <p className="text-slate-400 mt-1">Manage and view all system users</p>
       </div>
 
-      {/* Search Bar */}
-      <div className="w-full">
-        <SearchBar
-          placeholder="Search users by name or email..."
-          onSearch={setSearchTerm}
-          debounceMs={300}
-        />
-      </div>
+      {/* Filter Bar */}
+      <FilterBar
+        onSearch={(search) => {
+          updateFilter('search', search);
+        }}
+        onPlanChange={(plan) => {
+          updateFilter('plan', plan);
+        }}
+        onStatusChange={(status) => {
+          updateFilter('status', status);
+        }}
+        onClearFilters={clearFilters}
+        searchValue={filters.search}
+        planValue={filters.plan}
+        statusValue={filters.status}
+      />
 
       {/* Users Table */}
       <div className="bg-gray-900 border border-slate-700 rounded-lg overflow-hidden">

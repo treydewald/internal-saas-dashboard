@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { WebSocketProvider } from './context/WebSocketContext';
 import { LoginPage } from './pages/LoginPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { DashboardLayout } from './layouts/DashboardLayout';
@@ -13,6 +14,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <WebSocketProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route
@@ -67,6 +69,7 @@ function App() {
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </WebSocketProvider>
       </AuthProvider>
     </BrowserRouter>
   );

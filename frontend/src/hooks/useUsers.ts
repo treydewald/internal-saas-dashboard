@@ -20,55 +20,71 @@ export interface UsersResponse {
 interface UseUsersOptions {
   limit?: number;
   search?: string;
+  plan?: string;
+  status?: string;
 }
 
 export const useUsers = (options: UseUsersOptions = {}) => {
-  const { limit = 20, search = '' } = options;
+  const { limit = 20, search = '', plan = '', status = '' } = options;
   const [users, setUsers] = useState<User[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchUsers = useCallback(async (currentOffset: number, searchTerm: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams({
-        limit: limit.toString(),
-        offset: currentOffset.toString(),
-      });
+  const fetchUsers = useCallback(
+    async (
+      currentOffset: number,
+      searchTerm: string,
+      planFilter: string,
+      statusFilter: string,
+    ) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const params = new URLSearchParams({
+          limit: limit.toString(),
+          offset: currentOffset.toString(),
+        });
 
-      if (searchTerm) {
-        params.append('search', searchTerm);
+        if (searchTerm) {
+          params.append('search', searchTerm);
+        }
+        if (planFilter) {
+          params.append('plan', planFilter);
+        }
+        if (statusFilter) {
+          params.append('status', statusFilter);
+        }
+
+        const response = await api.get(`/api/users?${params}`);
+        const data: UsersResponse = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data as any);
+        }
+
+        setUsers(data.users);
+        setTotalCount(data.total_count);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch users');
+        setUsers([]);
+        setTotalCount(0);
+      } finally {
+        setLoading(false);
       }
-
-      const response = await api.get(`/api/users?${params}`);
-      const data: UsersResponse = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data as any);
-      }
-
-      setUsers(data.users);
-      setTotalCount(data.total_count);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch users');
-      setUsers([]);
-      setTotalCount(0);
-    } finally {
-      setLoading(false);
-    }
-  }, [limit]);
+    },
+    [limit],
+  );
 
   useEffect(() => {
     setOffset(0);
-    fetchUsers(0, search);
-  }, [search, fetchUsers]);
+    fetchUsers(0, search, plan, status);
+  }, [search, plan, status, fetchUsers]);
 
   const handlePageChange = (newOffset: number) => {
     setOffset(newOffset);
-    fetchUsers(newOffset, search);
+    fetchUsers(newOffset, search, plan, status);
   };
 
   const currentPage = Math.floor(offset / limit) + 1;
@@ -84,6 +100,6 @@ export const useUsers = (options: UseUsersOptions = {}) => {
     currentPage,
     totalPages,
     onPageChange: handlePageChange,
-    refetch: () => fetchUsers(offset, search),
+    refetch: () => fetchUsers(offset, search, plan, status),
   };
 };

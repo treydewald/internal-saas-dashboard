@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { ConnectionStatus } from './ConnectionStatus';
 import styles from './Header.module.css';
 
 export const Header: React.FC<{ onMenuToggle?: () => void }> = ({ onMenuToggle }) => {
@@ -24,6 +25,7 @@ export const Header: React.FC<{ onMenuToggle?: () => void }> = ({ onMenuToggle }
         </button>
         <h1 className={styles.title}>Internal SaaS Dashboard</h1>
         <div className={styles.userSection}>
+          <ConnectionStatus />
           <span className={styles.userName}>{user?.name || 'User'}</span>
           <button className={styles.logoutBtn} onClick={handleLogout}>
             Logout
