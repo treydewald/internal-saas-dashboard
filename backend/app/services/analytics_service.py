@@ -5,7 +5,7 @@ from sqlalchemy import func, cast, Date
 from app.models.metric import Metric
 from app.models.api_log import APILog
 from app.models.user import User
-from app.schemas.analytics import KPIResponse, TrendInfo, KPIsResponse, APIActivityResponse, APIActivityDataPoint
+from app.schemas.analytics import KPIResponse, TrendInfo, KPIsResponse, APIActivityResponse, APIActivityDataPoint, MetricResponse, MetricsResponse
 
 
 class AnalyticsService:
@@ -121,3 +121,82 @@ class AnalyticsService:
             current_date += timedelta(days=1)
 
         return APIActivityResponse(data=data_points)
+
+    @staticmethod
+    def get_advanced_metrics(db: Session, date_from: str = None, date_to: str = None) -> MetricsResponse:
+        """Get advanced derived metrics"""
+
+        # Parse dates if provided
+        filters = []
+        if date_from:
+            filters.append(APILog.timestamp >= datetime.fromisoformat(date_from))
+        if date_to:
+            to_date = datetime.fromisoformat(date_to)
+            to_date = to_date.replace(hour=23, minute=59, second=59)
+            filters.append(APILog.timestamp <= to_date)
+
+        # Calculate metrics
+        # Active users
+        active_users = db.query(func.count(User.id)).filter(
+            User.status == "active"
+        ).scalar() or 1
+
+        # API success rate (2xx and 3xx status codes)
+        total_requests_query = db.query(func.count(APILog.id))
+        for f in filters:
+            total_requests_query = total_requests_query.filter(f)
+        total_requests = total_requests_query.scalar() or 1
+
+        success_query = db.query(func.count(APILog.id)).filter(
+            APILog.status_code < 400
+        )
+        for f in filters:
+            success_query = success_query.filter(f)
+        successful_requests = success_query.scalar() or 0
+        success_rate = (successful_requests / total_requests * 100) if total_requests > 0 else 0
+
+        # Revenue per user
+        revenue_query = db.query(func.sum(Metric.metric_value)).filter(
+            Metric.metric_name == "revenue"
+        )
+        if date_from:
+            revenue_query = revenue_query.filter(Metric.date >= date_from)
+        if date_to:
+            revenue_query = revenue_query.filter(Metric.date <= date_to)
+        total_revenue = revenue_query.scalar() or 0
+        revenue_per_user = (total_revenue / active_users) if active_users > 0 else 0
+
+        # Growth % (simplified - would need historical data for real calculation)
+        # Using previous period logic - for now, returning 0
+        growth_percent = 0.0
+
+        # Churn rate (simplified)
+        inactive_users = db.query(func.count(User.id)).filter(
+            User.status == "inactive"
+        ).scalar() or 0
+        churn_rate = (inactive_users / (active_users + inactive_users) * 100) if (active_users + inactive_users) > 0 else 0
+
+        metrics = [
+            MetricResponse(
+                name="Growth %",
+                value=round(growth_percent, 2),
+                unit="%"
+            ),
+            MetricResponse(
+                name="Churn Rate",
+                value=round(churn_rate, 2),
+                unit="%"
+            ),
+            MetricResponse(
+                name="Revenue per User",
+                value=round(revenue_per_user, 2),
+                unit="$"
+            ),
+            MetricResponse(
+                name="API Success Rate",
+                value=round(success_rate, 2),
+                unit="%"
+            ),
+        ]
+
+        return MetricsResponse(metrics=metrics)

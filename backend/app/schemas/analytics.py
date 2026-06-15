@@ -26,3 +26,13 @@ class APIActivityDataPoint(BaseModel):
 
 class APIActivityResponse(BaseModel):
     data: List[APIActivityDataPoint]
+
+
+class MetricResponse(BaseModel):
+    name: str
+    value: float
+    unit: Optional[str] = None
+
+
+class MetricsResponse(BaseModel):
+    metrics: List[MetricResponse]

@@ -1,5 +1,6 @@
 import React from 'react';
 import { KPICards } from '../components/KPICards';
+import { MetricsCards } from '../components/MetricsCards';
 import { APIActivityChart } from '../components/APIActivityChart';
 import { DateRangePicker } from '../components/DateRangePicker';
 import ExportButton from '../components/ExportButton';
@@ -36,6 +37,13 @@ export const OverviewPage: React.FC = () => {
           <ExportButton exportType="kpis" label="Export KPIs" />
         </div>
         <KPICards dateFrom={dateRange.from} dateTo={dateRange.to} />
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          Advanced Metrics
+        </h2>
+        <MetricsCards dateFrom={dateRange.from} dateTo={dateRange.to} />
       </section>
 
       <section>
