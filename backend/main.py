@@ -87,6 +87,7 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(api_logs.router)
 app.include_router(analytics.router)
+app.include_router(websocket.router)
 
 
 # Health and status endpoints
