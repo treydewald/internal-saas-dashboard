@@ -15,6 +15,7 @@ const navItems: NavItem[] = [
   { label: 'Overview', path: '/', icon: '📊', requiredRole: null },
   { label: 'Users', path: '/users', icon: '👥', requiredRole: null },
   { label: 'API Logs', path: '/api-logs', icon: '📝', requiredRole: 'analyst' },
+  { label: 'Insights', path: '/insights', icon: '🧠', requiredRole: 'analyst' },
   { label: 'Reports', path: '/reports', icon: '📈', requiredRole: 'admin' },
   { label: 'Settings', path: '/settings', icon: '⚙️', requiredRole: 'admin' },
 ];
