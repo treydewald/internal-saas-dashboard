@@ -1,11 +1,11 @@
 """Analytics service for KPI aggregation"""
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, cast, Date
 from app.models.metric import Metric
 from app.models.api_log import APILog
 from app.models.user import User
-from app.schemas.analytics import KPIResponse, TrendInfo, KPIsResponse
+from app.schemas.analytics import KPIResponse, TrendInfo, KPIsResponse, APIActivityResponse, APIActivityDataPoint
 
 
 class AnalyticsService:
@@ -61,3 +61,39 @@ class AnalyticsService:
         ]
 
         return KPIsResponse(kpis=kpis)
+
+    @staticmethod
+    def get_api_activity(db: Session, days: int = 7) -> APIActivityResponse:
+        """Get API request activity aggregated by day for the past N days"""
+        # Get date range
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=days - 1)
+
+        # Query API logs grouped by date
+        results = db.query(
+            cast(APILog.timestamp, Date).label("date"),
+            func.count(APILog.id).label("count")
+        ).filter(
+            cast(APILog.timestamp, Date) >= start_date,
+            cast(APILog.timestamp, Date) <= end_date
+        ).group_by(
+            cast(APILog.timestamp, Date)
+        ).order_by(
+            cast(APILog.timestamp, Date).asc()
+        ).all()
+
+        # Convert results to response format
+        data_points = []
+        date_counts = {row.date: row.count for row in results}
+
+        # Fill in all dates in range, even if no logs
+        current_date = start_date
+        while current_date <= end_date:
+            count = date_counts.get(current_date, 0)
+            data_points.append(APIActivityDataPoint(
+                date=current_date.isoformat(),
+                count=count
+            ))
+            current_date += timedelta(days=1)
+
+        return APIActivityResponse(data=data_points)

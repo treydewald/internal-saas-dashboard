@@ -17,3 +17,12 @@ class KPIResponse(BaseModel):
 
 class KPIsResponse(BaseModel):
     kpis: List[KPIResponse]
+
+
+class APIActivityDataPoint(BaseModel):
+    date: str  # ISO format YYYY-MM-DD
+    count: int
+
+
+class APIActivityResponse(BaseModel):
+    data: List[APIActivityDataPoint]

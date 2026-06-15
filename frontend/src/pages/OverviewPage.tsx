@@ -1,5 +1,6 @@
 import React from 'react';
 import { KPICards } from '../components/KPICards';
+import { APIActivityChart } from '../components/APIActivityChart';
 
 export const OverviewPage: React.FC = () => {
   return (
@@ -18,6 +19,10 @@ export const OverviewPage: React.FC = () => {
           Key Performance Indicators
         </h2>
         <KPICards />
+      </section>
+
+      <section>
+        <APIActivityChart />
       </section>
     </div>
   );

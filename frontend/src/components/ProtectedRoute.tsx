@@ -1,10 +1,11 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { isAnalystOrAdmin, isAdmin } from '../utils/rolePermissions';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: string;
+  requiredRole?: 'admin' | 'analyst' | 'viewer';
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
@@ -17,8 +18,17 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" replace />;
   }
 
-  if (requiredRole && user?.role !== requiredRole) {
-    return <Navigate to="/" replace />;
+  // Check role-based access
+  if (requiredRole) {
+    const hasRequiredRole =
+      requiredRole === 'admin' ? isAdmin(user?.role) :
+      requiredRole === 'analyst' ? isAnalystOrAdmin(user?.role) :
+      true;
+
+    if (!hasRequiredRole) {
+      // Redirect to home with insufficient permissions
+      return <Navigate to="/" replace />;
+    }
   }
 
   return <>{children}</>;

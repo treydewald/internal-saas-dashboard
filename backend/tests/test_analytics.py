@@ -46,3 +46,36 @@ def test_get_kpis_unauthenticated():
     """Test KPI access without authentication"""
     response = client.get("/api/analytics/kpis")
     assert response.status_code == 401
+
+
+def test_get_api_activity_authenticated(auth_token_admin):
+    """Test getting API activity with authentication"""
+    headers = get_auth_headers(auth_token_admin)
+    response = client.get("/api/analytics/api-activity", headers=headers)
+    assert response.status_code == 200
+    data = response.json()
+    assert "data" in data
+    assert isinstance(data["data"], list)
+    # Should have 7 days of data by default
+    assert len(data["data"]) == 7
+
+    # Check data point structure
+    for point in data["data"]:
+        assert "date" in point
+        assert "count" in point
+        assert isinstance(point["count"], int)
+
+
+def test_get_api_activity_custom_days(auth_token_admin):
+    """Test API activity with custom day range"""
+    headers = get_auth_headers(auth_token_admin)
+    response = client.get("/api/analytics/api-activity?days=14", headers=headers)
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["data"]) == 14
+
+
+def test_get_api_activity_unauthenticated():
+    """Test API activity access without authentication"""
+    response = client.get("/api/analytics/api-activity")
+    assert response.status_code == 401

@@ -38,7 +38,7 @@ function App() {
           <Route
             path="/api-logs"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="analyst">
                 <DashboardLayout>
                   <APILogsPage />
                 </DashboardLayout>
@@ -48,7 +48,7 @@ function App() {
           <Route
             path="/reports"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="admin">
                 <DashboardLayout>
                   <ReportsPage />
                 </DashboardLayout>
@@ -58,7 +58,7 @@ function App() {
           <Route
             path="/settings"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="admin">
                 <DashboardLayout>
                   <SettingsPage />
                 </DashboardLayout>
