@@ -63,12 +63,14 @@ def startup_event():
     init_db()
     start_metrics_publisher()
     start_logs_publisher()
+    start_report_scheduler()
     logger.info("Application startup complete")
 
 
 @app.on_event("shutdown")
 def shutdown_event():
     """Cleanup on shutdown"""
+    stop_report_scheduler()
     logger.info("Application shutdown")
 
 
@@ -90,6 +92,7 @@ app.include_router(api_logs.router)
 app.include_router(analytics.router)
 app.include_router(websocket.router)
 app.include_router(export.router)
+app.include_router(reports.router)
 
 
 # Health and status endpoints

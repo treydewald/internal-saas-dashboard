@@ -22,3 +22,4 @@ class User(Base):
 
     dashboards = relationship("Dashboard", back_populates="user", cascade="all, delete-orphan")
     scheduled_reports = relationship("ScheduledReport", back_populates="user", cascade="all, delete-orphan")
+    api_keys = relationship("APIKey", back_populates="user", cascade="all, delete-orphan")
