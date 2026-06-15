@@ -4,8 +4,8 @@ import axios from 'axios'
 import './index.css'
 import App from './App.tsx'
 
-// Configure axios to use the backend API
-axios.defaults.baseURL = 'http://localhost:8000'
+// Configure axios to use the backend API via Vite proxy
+// No baseURL needed - Vite proxies /api/* to http://localhost:8000
 
 // Add request interceptor to include auth token
 axios.interceptors.request.use(

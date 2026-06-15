@@ -16,7 +16,13 @@ const navItems: NavItem[] = [
   { label: 'Users', path: '/users', icon: '👥', requiredRole: null },
   { label: 'API Logs', path: '/api-logs', icon: '📝', requiredRole: 'analyst' },
   { label: 'Insights', path: '/insights', icon: '🧠', requiredRole: 'analyst' },
+  { label: 'Alerts', path: '/alerts', icon: '🔔', requiredRole: 'analyst' },
+  { label: 'Audit Log', path: '/audit-log', icon: '🛡️', requiredRole: 'admin' },
+  { label: 'Dashboards', path: '/dashboard-builder', icon: '🗂️', requiredRole: null },
   { label: 'Reports', path: '/reports', icon: '📈', requiredRole: 'admin' },
+  { label: 'Exports', path: '/exports', icon: '📤', requiredRole: null },
+  { label: 'API Keys', path: '/api-keys', icon: '🔑', requiredRole: null },
+  { label: 'Org Settings', path: '/org-settings', icon: '🏢', requiredRole: 'admin' },
   { label: 'Settings', path: '/settings', icon: '⚙️', requiredRole: 'admin' },
 ];
 

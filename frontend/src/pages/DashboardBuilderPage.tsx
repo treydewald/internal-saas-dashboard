@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useDashboards, Dashboard, DashboardCreatePayload } from '@/hooks/useDashboards';
-import { WidgetLibrary, Widget } from '@/components/WidgetLibrary';
-import { DashboardEditor, LayoutWidget } from '@/components/DashboardEditor';
+import { useDashboards } from '@/hooks/useDashboards';
+import type { Dashboard, DashboardCreatePayload } from '@/hooks/useDashboards';
+import { WidgetLibrary } from '@/components/WidgetLibrary';
+import type { Widget } from '@/components/WidgetLibrary';
+import { DashboardEditor } from '@/components/DashboardEditor';
+import type { LayoutWidget } from '@/components/DashboardEditor';
 import { ArrowLeft } from 'lucide-react';
 
 interface DashboardBuilderPageProps {

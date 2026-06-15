@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Widget } from './WidgetLibrary';
+import type { Widget } from './WidgetLibrary';
 import { X, Save, Copy } from 'lucide-react';
 
 export interface LayoutWidget extends Widget {

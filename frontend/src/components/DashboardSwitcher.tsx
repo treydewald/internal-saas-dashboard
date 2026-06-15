@@ -1,5 +1,6 @@
 import React from 'react';
-import { useDashboards, Dashboard } from '@/hooks/useDashboards';
+import { useDashboards } from '@/hooks/useDashboards';
+import type { Dashboard } from '@/hooks/useDashboards';
 import { ChevronDown, Plus } from 'lucide-react';
 
 interface DashboardSwitcherProps {

@@ -31,10 +31,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
   const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
 
   const buildWebSocketUrl = useCallback(() => {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = window.location.host;
     const userId = user?.id || '';
-    return `${protocol}//${host}/ws/connect?user_id=${encodeURIComponent(userId)}`;
+    // In development, connect directly to backend; in production, use relative ws path
+    const backendHost = import.meta.env.VITE_WS_HOST || 'localhost:8000';
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    return `${protocol}//${backendHost}/ws/connect?user_id=${encodeURIComponent(userId)}`;
   }, [user?.id]);
 
   const connect = useCallback(() => {
