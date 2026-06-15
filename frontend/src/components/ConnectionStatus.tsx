@@ -9,16 +9,23 @@ export const ConnectionStatus: React.FC = () => {
   }
 
   const getStatusColor = () => {
-    if (error) return '#EF4444'; // red
-    if (isConnecting) return '#FACC15'; // yellow
-    if (isConnected) return '#22C55E'; // green
-    return '#6B7280'; // gray
+    if (error) return '#EF4444';
+    if (isConnecting) return '#FACC15';
+    if (isConnected) return '#22C55E';
+    return '#6B7280';
+  };
+
+  const getGlowColor = () => {
+    if (error) return 'rgba(239,68,68,0.6)';
+    if (isConnecting) return 'rgba(250,204,21,0.6)';
+    if (isConnected) return 'rgba(34,197,94,0.6)';
+    return 'transparent';
   };
 
   const getStatusText = () => {
     if (error) return 'Connection Error';
     if (isConnecting) return 'Connecting...';
-    if (isConnected) return 'Real-time Connected';
+    if (isConnected) return 'Live';
     return 'Disconnected';
   };
 
@@ -27,12 +34,14 @@ export const ConnectionStatus: React.FC = () => {
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
-        padding: '8px 12px',
-        borderRadius: '6px',
-        backgroundColor: '#F3F4F6',
+        gap: '7px',
+        padding: '5px 12px',
+        borderRadius: '20px',
+        backgroundColor: 'rgba(15,23,42,0.7)',
+        border: `1px solid ${getStatusColor()}40`,
         fontSize: '12px',
-        fontWeight: '500',
+        fontWeight: 600,
+        letterSpacing: '0.02em',
       }}
     >
       <div
@@ -41,23 +50,30 @@ export const ConnectionStatus: React.FC = () => {
           height: '8px',
           borderRadius: '50%',
           backgroundColor: getStatusColor(),
-          animation: isConnecting ? 'pulse 2s infinite' : 'none',
+          boxShadow: isConnected || isConnecting
+            ? `0 0 0 2px ${getGlowColor()}, 0 0 8px ${getGlowColor()}`
+            : 'none',
+          animation: isConnecting
+            ? 'statusPulse 1.4s ease-in-out infinite'
+            : isConnected
+            ? 'statusGlow 2.5s ease-in-out infinite'
+            : 'none',
         }}
       />
-      <span style={{ color: '#374151' }}>{getStatusText()}</span>
+      <span style={{ color: getStatusColor() }}>{getStatusText()}</span>
       {error && (
         <button
           onClick={reconnect}
           style={{
-            marginLeft: '8px',
-            padding: '4px 8px',
+            marginLeft: '6px',
+            padding: '3px 8px',
             backgroundColor: '#3B82F6',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer',
             fontSize: '11px',
-            fontWeight: '600',
+            fontWeight: 600,
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = '#2563EB';
@@ -71,13 +87,13 @@ export const ConnectionStatus: React.FC = () => {
       )}
 
       <style>{`
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
+        @keyframes statusPulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.4; transform: scale(0.85); }
+        }
+        @keyframes statusGlow {
+          0%, 100% { box-shadow: 0 0 0 2px rgba(34,197,94,0.4), 0 0 6px rgba(34,197,94,0.4); }
+          50% { box-shadow: 0 0 0 3px rgba(34,197,94,0.2), 0 0 12px rgba(34,197,94,0.6); }
         }
       `}</style>
     </div>

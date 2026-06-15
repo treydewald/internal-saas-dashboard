@@ -1,0 +1,23 @@
+{
+  "kpis": [
+    { "id": "kpi-1", "label": "Active Users", "value": "1,284", "delta": "+6.1%", "trend": "UP" },
+    { "id": "kpi-2", "label": "Requests", "value": "32,441", "delta": "+3.4%", "trend": "UP" },
+    { "id": "kpi-3", "label": "Errors", "value": "0.8%", "delta": "-0.2%", "trend": "DOWN" },
+    { "id": "kpi-4", "label": "Revenue", "value": "$18,200", "delta": "+4.7%", "trend": "UP" }
+  ],
+  "successSeries": [
+    { "label": "08:00", "value": 92 },
+    { "label": "09:00", "value": 94 },
+    { "label": "10:00", "value": 95 },
+    { "label": "11:00", "value": 93 },
+    { "label": "12:00", "value": 97 },
+    { "label": "13:00", "value": 96 },
+    { "label": "14:00", "value": 98 }
+  ],
+  "tableRows": [
+    { "user": "A. Rivera", "plan": "Pro", "usage": 82, "status": "Active" },
+    { "user": "M. Patel", "plan": "Free", "usage": 12, "status": "Active" },
+    { "user": "S. Iqbal", "plan": "Enterprise", "usage": 91, "status": "Active" },
+    { "user": "T. Clark", "plan": "Pro", "usage": 67, "status": "Trial" }
+  ]
+}

@@ -78,17 +78,41 @@ export const MetricsCards: React.FC<MetricsCardsProps> = ({ dateFrom = '', dateT
       {metrics.map((metric) => (
         <div
           key={metric.name}
-          className="bg-white dark:bg-slate-800 rounded-lg shadow p-6"
+          style={{
+            background: 'linear-gradient(135deg, #1a2947 0%, #162035 100%)',
+            border: '1px solid #334155',
+            borderLeft: '3px solid #38BDF8',
+            borderRadius: '12px',
+            padding: '20px 24px',
+            boxShadow: '0 2px 16px rgba(0,0,0,0.25)',
+          }}
         >
-          <h3 className="text-sm font-medium text-gray-600 dark:text-slate-400 mb-1">
+          <p
+            style={{
+              fontSize: '11px',
+              fontWeight: 600,
+              letterSpacing: '0.07em',
+              textTransform: 'uppercase',
+              color: '#64748B',
+              marginBottom: '10px',
+            }}
+          >
             {metric.name}
-          </h3>
-          <div className="flex items-end gap-2">
-            <span className="text-3xl font-bold text-gray-900 dark:text-white">
+          </p>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+            <span
+              style={{
+                fontSize: '2rem',
+                fontWeight: 800,
+                color: '#E2E8F0',
+                letterSpacing: '-0.02em',
+                lineHeight: 1,
+              }}
+            >
               {metric.value.toFixed(1)}
             </span>
             {metric.unit && (
-              <span className="text-lg text-gray-500 dark:text-slate-400 mb-1">
+              <span style={{ fontSize: '0.95rem', color: '#64748B', fontWeight: 500 }}>
                 {metric.unit}
               </span>
             )}

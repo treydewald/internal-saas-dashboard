@@ -16,11 +16,23 @@ export const APILogsPage: React.FC = () => {
     });
 
   return (
-    <div className="flex flex-col gap-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white">API Logs</h1>
-        <p className="text-slate-400 mt-1">Monitor and analyze API request history</p>
+      <div style={{ borderBottom: '1px solid #1e2d4a', paddingBottom: '20px' }}>
+        <h1
+          style={{
+            fontSize: '2rem',
+            fontWeight: 800,
+            color: '#F1F5F9',
+            letterSpacing: '-0.02em',
+            marginBottom: '6px',
+          }}
+        >
+          API Logs
+        </h1>
+        <p style={{ color: '#64748B', fontSize: '14px' }}>
+          Monitor and analyze API request history
+        </p>
       </div>
 
       {/* Date Range Picker */}
@@ -32,10 +44,18 @@ export const APILogsPage: React.FC = () => {
 
       {/* API Logs Table with Export */}
       <div>
-        <div className="flex justify-end mb-4">
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
           <ExportButton exportType="api-logs" label="Export Logs" />
         </div>
-        <div className="bg-gray-900 border border-slate-700 rounded-lg overflow-hidden">
+        <div
+          style={{
+            background: 'linear-gradient(180deg, #0d1829 0%, #0a1422 100%)',
+            border: '1px solid #1e2d4a',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
+          }}
+        >
           <APILogsTable logs={logs} loading={loading} error={error} onRefetch={refetch} />
         </div>
       </div>

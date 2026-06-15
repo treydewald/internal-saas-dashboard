@@ -1,7 +1,9 @@
 .header {
-  background-color: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
-  padding: 16px 0;
+  background: linear-gradient(90deg, #0F172A 0%, #1A2342 60%, #0F172A 100%);
+  border-bottom: 1px solid #1e2d4a;
+  box-shadow: 0 1px 0 rgba(56,189,248,0.08), 0 4px 24px rgba(0,0,0,0.4);
+  padding: 0;
+  height: 58px;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -12,6 +14,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
+  height: 100%;
   max-width: 100%;
 }
 
@@ -33,47 +36,55 @@
 }
 
 .title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 700;
+  color: #F1F5F9;
   margin: 0;
   flex: 1;
+  letter-spacing: 0.01em;
+}
+
+.title span {
+  color: #38BDF8;
 }
 
 .userSection {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .userName {
-  color: var(--text-secondary);
-  font-size: 14px;
+  color: #94A3B8;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .logoutBtn {
-  padding: 8px 16px;
-  background-color: var(--accent-error);
-  color: white;
-  border: none;
+  padding: 6px 14px;
+  background-color: transparent;
+  color: #94A3B8;
+  border: 1px solid #334155;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .logoutBtn:hover {
-  background-color: #DC2626;
+  background-color: rgba(239,68,68,0.1);
+  border-color: #EF4444;
+  color: #F87171;
 }
 
 .themeButton {
   background: none;
   border: none;
   color: var(--text-primary);
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
-  padding: 8px;
+  padding: 6px 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,5 +93,5 @@
 }
 
 .themeButton:hover {
-  background-color: var(--bg-tertiary);
+  background-color: rgba(255,255,255,0.06);
 }

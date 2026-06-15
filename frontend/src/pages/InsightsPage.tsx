@@ -76,17 +76,34 @@ const InsightsPage: React.FC = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-100 mb-2">ML Insights</h1>
-        <p className="text-gray-400">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
+      <div style={{ borderBottom: '1px solid #1e2d4a', paddingBottom: '24px' }}>
+        <h1
+          style={{
+            fontSize: '2rem',
+            fontWeight: 800,
+            color: '#F1F5F9',
+            letterSpacing: '-0.02em',
+            marginBottom: '6px',
+          }}
+        >
+          ML Insights
+        </h1>
+        <p style={{ color: '#64748B', fontSize: '14px' }}>
           Anomaly detection, forecasts, and predictions for your API activity
         </p>
       </div>
 
       {error && (
-        <div className="bg-red-500 bg-opacity-10 border border-red-500 rounded-lg p-4">
-          <p className="text-red-400">{error}</p>
+        <div
+          style={{
+            background: 'rgba(239,68,68,0.08)',
+            border: '1px solid rgba(239,68,68,0.3)',
+            borderRadius: '10px',
+            padding: '16px',
+          }}
+        >
+          <p style={{ color: '#F87171' }}>{error}</p>
         </div>
       )}
 
@@ -97,33 +114,60 @@ const InsightsPage: React.FC = () => {
 
           {/* Anomalies Section */}
           {data.anomalies.total_anomalies > 0 && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-100">Detected Anomalies</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <h2
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.07em',
+                  textTransform: 'uppercase',
+                  color: '#64748B',
+                }}
+              >
+                Detected Anomalies
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {data.anomalies.response_time_anomalies.map((anomaly, idx) => (
-                  <AnomalyAlert
-                    key={`rt-${idx}`}
-                    anomaly={anomaly}
-                    type="response_time"
-                  />
+                  <AnomalyAlert key={`rt-${idx}`} anomaly={anomaly} type="response_time" />
                 ))}
                 {data.anomalies.error_rate_anomalies.map((anomaly, idx) => (
-                  <AnomalyAlert
-                    key={`er-${idx}`}
-                    anomaly={anomaly}
-                    type="error_rate"
-                  />
+                  <AnomalyAlert key={`er-${idx}`} anomaly={anomaly} type="error_rate" />
                 ))}
               </div>
             </div>
           )}
 
           {/* Forecasts Section */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-100">Predictions & Forecasts</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h2
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.07em',
+                textTransform: 'uppercase',
+                color: '#64748B',
+              }}
+            >
+              Predictions &amp; Forecasts
+            </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-                <h3 className="text-lg font-semibold text-gray-100 mb-4">
+              <div
+                style={{
+                  background: 'linear-gradient(135deg, #1a2542 0%, #131e35 100%)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  border: '1px solid #1e2d4a',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: '#94A3B8',
+                    marginBottom: '16px',
+                  }}
+                >
                   Request Volume Forecast
                 </h3>
                 <ForecastChart
@@ -132,8 +176,23 @@ const InsightsPage: React.FC = () => {
                   confidence={data.forecasts.requests.confidence_score}
                 />
               </div>
-              <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-                <h3 className="text-lg font-semibold text-gray-100 mb-4">
+              <div
+                style={{
+                  background: 'linear-gradient(135deg, #1a2542 0%, #131e35 100%)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  border: '1px solid #1e2d4a',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: '#94A3B8',
+                    marginBottom: '16px',
+                  }}
+                >
                   Error Rate Forecast
                 </h3>
                 <ForecastChart
@@ -145,27 +204,45 @@ const InsightsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Churn Risk Section (Admin Only) */}
+          {/* Churn Risk Section */}
           {data.churn_risk && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-100">Churn Risk Analysis</h2>
-              <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <h2
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.07em',
+                  textTransform: 'uppercase',
+                  color: '#64748B',
+                }}
+              >
+                Churn Risk Analysis
+              </h2>
+              <div
+                style={{
+                  background: 'linear-gradient(135deg, #1a2542 0%, #131e35 100%)',
+                  borderRadius: '12px',
+                  padding: '28px',
+                  border: '1px solid #1e2d4a',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
+                }}
+              >
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
                   <div>
-                    <p className="text-gray-400 text-sm">High Risk Users</p>
-                    <p className="text-3xl font-bold text-red-500">
+                    <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#64748B', marginBottom: '8px' }}>High Risk Users</p>
+                    <p style={{ fontSize: '2.25rem', fontWeight: 800, color: '#F87171', letterSpacing: '-0.02em', lineHeight: 1 }}>
                       {data.churn_risk.high_risk_count}
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-sm">Medium Risk Users</p>
-                    <p className="text-3xl font-bold text-yellow-500">
+                    <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#64748B', marginBottom: '8px' }}>Medium Risk Users</p>
+                    <p style={{ fontSize: '2.25rem', fontWeight: 800, color: '#FCD34D', letterSpacing: '-0.02em', lineHeight: 1 }}>
                       {data.churn_risk.medium_risk_count}
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-sm">Total At Risk</p>
-                    <p className="text-3xl font-bold text-orange-500">
+                    <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#64748B', marginBottom: '8px' }}>Total At Risk</p>
+                    <p style={{ fontSize: '2.25rem', fontWeight: 800, color: '#FB923C', letterSpacing: '-0.02em', lineHeight: 1 }}>
                       {data.churn_risk.total_at_risk}
                     </p>
                   </div>
@@ -174,7 +251,7 @@ const InsightsPage: React.FC = () => {
             </div>
           )}
 
-          <p className="text-gray-500 text-sm">
+          <p style={{ color: '#334155', fontSize: '12px' }}>
             Last updated: {new Date(data.generated_at).toLocaleString()}
           </p>
         </>

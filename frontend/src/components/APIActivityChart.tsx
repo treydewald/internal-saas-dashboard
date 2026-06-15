@@ -62,39 +62,64 @@ export const APIActivityChart: React.FC<APIActivityChartProps> = ({ dateFrom = '
   }
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-        API Request Volume (Last 7 Days)
+    <div
+      style={{
+        background: 'linear-gradient(135deg, #1a2542 0%, #131e35 100%)',
+        border: '1px solid #1e2d4a',
+        borderRadius: '12px',
+        padding: '24px',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
+      }}
+    >
+      <h3
+        style={{
+          fontSize: '11px',
+          fontWeight: 700,
+          letterSpacing: '0.07em',
+          textTransform: 'uppercase',
+          color: '#64748B',
+          marginBottom: '20px',
+        }}
+      >
+        API Request Volume — Last 7 Days
       </h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#94A3B8" />
+      <ResponsiveContainer width="100%" height={280}>
+        <LineChart data={chartData} margin={{ top: 5, right: 16, left: 0, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#1e2d4a" vertical={false} />
           <XAxis
             dataKey="displayDate"
-            stroke="#64748B"
-            style={{ fontSize: '12px' }}
+            stroke="#2d3e5f"
+            tick={{ fill: '#475569', fontSize: 12 }}
+            axisLine={{ stroke: '#1e2d4a' }}
+            tickLine={false}
           />
           <YAxis
-            stroke="#64748B"
-            style={{ fontSize: '12px' }}
+            stroke="#2d3e5f"
+            tick={{ fill: '#475569', fontSize: 12 }}
+            axisLine={false}
+            tickLine={false}
+            width={40}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1E293B',
-              border: '1px solid #475569',
+              backgroundColor: '#0d1829',
+              border: '1px solid #1e2d4a',
               borderRadius: '8px',
               color: '#E2E8F0',
+              fontSize: '13px',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
             }}
             formatter={(value) => [value, 'Requests']}
             labelFormatter={(label) => `Date: ${label}`}
+            cursor={{ stroke: '#38BDF820', strokeWidth: 1 }}
           />
           <Line
             type="monotone"
             dataKey="count"
             stroke="#38BDF8"
-            strokeWidth={2}
-            dot={{ fill: '#38BDF8', r: 4 }}
-            activeDot={{ r: 6 }}
+            strokeWidth={2.5}
+            dot={{ fill: '#0d1829', stroke: '#38BDF8', strokeWidth: 2, r: 4 }}
+            activeDot={{ r: 6, fill: '#38BDF8', stroke: '#0d1829', strokeWidth: 2 }}
             isAnimationActive={true}
           />
         </LineChart>

@@ -1,0 +1,41 @@
+[
+  {
+    "id": "wf-001",
+    "name": "Revenue Cohort Sync",
+    "owner": "ops-admin",
+    "status": "ACTIVE",
+    "schedule": "Every 15 min",
+    "steps": [
+      { "id": "s-1", "name": "Fetch API Usage", "durationMs": 400, "status": "IDLE" },
+      { "id": "s-2", "name": "Join Billing Events", "durationMs": 500, "status": "IDLE" },
+      { "id": "s-3", "name": "Compute KPI Deltas", "durationMs": 450, "status": "IDLE" },
+      { "id": "s-4", "name": "Publish Dashboard Snapshot", "durationMs": 350, "status": "IDLE" }
+    ]
+  },
+  {
+    "id": "wf-002",
+    "name": "Latency Risk Watch",
+    "owner": "platform-analyst",
+    "status": "ACTIVE",
+    "schedule": "Every 5 min",
+    "steps": [
+      { "id": "s-1", "name": "Ingest Request Timings", "durationMs": 350, "status": "IDLE" },
+      { "id": "s-2", "name": "Detect Threshold Breach", "durationMs": 450, "status": "IDLE" },
+      { "id": "s-3", "name": "Enrich with Org Metadata", "durationMs": 420, "status": "IDLE" },
+      { "id": "s-4", "name": "Emit Incident Signals", "durationMs": 380, "status": "IDLE" }
+    ]
+  },
+  {
+    "id": "wf-003",
+    "name": "Trial Conversion Tracker",
+    "owner": "growth-team",
+    "status": "PAUSED",
+    "schedule": "Daily",
+    "steps": [
+      { "id": "s-1", "name": "Load Trial Accounts", "durationMs": 380, "status": "IDLE" },
+      { "id": "s-2", "name": "Apply Funnel Segments", "durationMs": 470, "status": "IDLE" },
+      { "id": "s-3", "name": "Forecast Conversion", "durationMs": 500, "status": "IDLE" },
+      { "id": "s-4", "name": "Write Growth Summary", "durationMs": 390, "status": "IDLE" }
+    ]
+  }
+]

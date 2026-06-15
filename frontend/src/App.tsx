@@ -1,157 +1,189 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { WebSocketProvider } from './context/WebSocketContext';
-import { ThemeProvider } from './context/ThemeContext';
-import { LoginPage } from './pages/LoginPage';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { DashboardLayout } from './layouts/DashboardLayout';
-import { OverviewPage } from './pages/OverviewPage';
-import { UsersPage } from './pages/UsersPage';
-import { APILogsPage } from './pages/APILogsPage';
-import { ReportsPage } from './pages/ReportsPage';
-import { SettingsPage } from './pages/SettingsPage';
-import InsightsPage from './pages/InsightsPage';
-import AlertsPage from './pages/AlertsPage';
-import AuditLogPage from './pages/AuditLogPage';
-import DashboardBuilderPage from './pages/DashboardBuilderPage';
-import { APIKeyUsagePage } from './pages/APIKeyUsagePage';
-import { OrganizationSettingsPage } from './pages/OrganizationSettingsPage';
-import { ExportsPage } from './pages/ExportsPage';
+import { useEffect, useState } from 'react';
+import { Sidebar } from './components/screenshot/Sidebar';
+import { KPICards } from './components/screenshot/KPICards';
+import { WorkflowCanvas } from './components/screenshot/WorkflowCanvas';
+import { LogStream } from './components/screenshot/LogStream';
+import { ControlPanel } from './components/screenshot/ControlPanel';
+import workflowData from './mock/workflows.json';
+import logsData from './mock/logs.json';
+import analyticsData from './mock/analytics.json';
+import type { AnalyticsData, LogEntry, Workflow } from './types/dashboard';
+import './App.css';
 
 function App() {
+  const [activeSection, setActiveSection] = useState('Overview');
+  const [selectedWorkflowId, setSelectedWorkflowId] = useState((workflowData as Workflow[])[0]?.id ?? '');
+  const [workflows, setWorkflows] = useState<Workflow[]>(workflowData as Workflow[]);
+  const [logs, setLogs] = useState<LogEntry[]>(logsData as LogEntry[]);
+  const [isRunning, setIsRunning] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [draftName, setDraftName] = useState('');
+
+  const analytics = analyticsData as AnalyticsData;
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setLogs(currentLogs => {
+        const levels: LogEntry['level'][] = ['INFO', 'SUCCESS', 'WARN'];
+        const messages = [
+          'Step validated against policy rules',
+          'Output table refreshed for screenshot profile',
+          'Metrics window updated with latest stream',
+          'Workflow checkpoint advanced to next stage',
+        ];
+
+        const newEntry: LogEntry = {
+          id: `log-${Date.now()}`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+          level: levels[Math.floor(Math.random() * levels.length)],
+          source: 'runner',
+          message: messages[Math.floor(Math.random() * messages.length)],
+        };
+
+        return [newEntry, ...currentLogs].slice(0, 18);
+      });
+    }, 1500);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const runWorkflow = () => {
+    setIsRunning(true);
+    setWorkflows(current =>
+      current.map(workflow => {
+        if (workflow.id !== selectedWorkflowId) {
+          return workflow;
+        }
+        return {
+          ...workflow,
+          steps: workflow.steps.map((step, index) => ({
+            ...step,
+            status: index === 1 ? 'RUNNING' : index < 1 ? 'SUCCESS' : 'IDLE',
+          })),
+        };
+      }),
+    );
+  };
+
+  const createWorkflow = () => {
+    if (!draftName.trim()) {
+      return;
+    }
+
+    const newWorkflow: Workflow = {
+      id: `wf-${Date.now()}`,
+      name: draftName.trim(),
+      owner: 'new-owner',
+      status: 'ACTIVE',
+      schedule: 'Manual',
+      steps: [
+        { id: 'n-1', name: 'Source Intake', durationMs: 320, status: 'IDLE' },
+        { id: 'n-2', name: 'Transform Records', durationMs: 360, status: 'IDLE' },
+        { id: 'n-3', name: 'Publish Output', durationMs: 280, status: 'IDLE' },
+      ],
+    };
+
+    setWorkflows(current => [newWorkflow, ...current]);
+    setSelectedWorkflowId(newWorkflow.id);
+    setDraftName('');
+    setShowCreateModal(false);
+  };
+
+  const editWorkflow = () => {
+    if (!draftName.trim()) {
+      return;
+    }
+
+    setWorkflows(current =>
+      current.map(workflow =>
+        workflow.id === selectedWorkflowId ? { ...workflow, name: draftName.trim() } : workflow,
+      ),
+    );
+    setDraftName('');
+    setShowEditModal(false);
+  };
+
+  const selectedWorkflow = workflows.find(workflow => workflow.id === selectedWorkflowId);
+
   return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <AuthProvider>
-          <WebSocketProvider>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <OverviewPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
+    <div className="dashboard-app">
+      <Sidebar active={activeSection} onSelect={setActiveSection} />
+
+      <main className="main-layout">
+        <header className="main-layout__header glass-panel">
+          <div>
+            <p className="eyebrow">SaaS Admin Dashboard</p>
+            <h2>Internal Operations Console</h2>
+          </div>
+          <div className="status-group">
+            <span className="status status--running">RUNNING</span>
+            <span className="status status--healthy">HEALTHY</span>
+          </div>
+        </header>
+
+        <KPICards cards={analytics.kpis} />
+
+        <ControlPanel
+          onRun={runWorkflow}
+          onCreate={() => {
+            setDraftName('');
+            setShowCreateModal(true);
+          }}
+          onEdit={() => {
+            setDraftName(selectedWorkflow?.name ?? '');
+            setShowEditModal(true);
+          }}
+          isRunning={isRunning}
+        />
+
+        <div className="workspace-grid">
+          <WorkflowCanvas
+            workflows={workflows}
+            selectedWorkflowId={selectedWorkflowId}
+            onSelectWorkflow={setSelectedWorkflowId}
+            successSeries={analytics.successSeries}
+            tableRows={analytics.tableRows}
           />
-          <Route
-            path="/users"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <UsersPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/api-logs"
-            element={
-              <ProtectedRoute requiredRole="analyst">
-                <DashboardLayout>
-                  <APILogsPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/reports"
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <DashboardLayout>
-                  <ReportsPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <DashboardLayout>
-                  <SettingsPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/insights"
-            element={
-              <ProtectedRoute requiredRole="analyst">
-                <DashboardLayout>
-                  <InsightsPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/alerts"
-            element={
-              <ProtectedRoute requiredRole="analyst">
-                <DashboardLayout>
-                  <AlertsPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/audit-log"
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <DashboardLayout>
-                  <AuditLogPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard-builder"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <DashboardBuilderPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/api-keys"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <APIKeyUsagePage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/org-settings"
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <DashboardLayout>
-                  <OrganizationSettingsPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/exports"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <ExportsPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-          </WebSocketProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </ThemeProvider>
+          <LogStream logs={logs} />
+        </div>
+      </main>
+
+      {(showCreateModal || showEditModal) && (
+        <div className="modal-backdrop" role="presentation">
+          <div className="modal glass-panel" role="dialog" aria-modal="true">
+            <h3>{showCreateModal ? 'Create Workflow' : 'Edit Workflow'}</h3>
+            <label htmlFor="workflow-name">Workflow Name</label>
+            <input
+              id="workflow-name"
+              value={draftName}
+              onChange={event => setDraftName(event.target.value)}
+              placeholder="Enter workflow name"
+            />
+            <div className="modal-actions">
+              <button
+                className="btn btn--ghost"
+                type="button"
+                onClick={() => {
+                  setShowCreateModal(false);
+                  setShowEditModal(false);
+                  setDraftName('');
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn--primary"
+                type="button"
+                onClick={showCreateModal ? createWorkflow : editWorkflow}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

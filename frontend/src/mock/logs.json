@@ -1,0 +1,30 @@
+[
+  {
+    "id": "log-001",
+    "timestamp": "09:41:00",
+    "level": "INFO",
+    "source": "orchestrator",
+    "message": "Workflow queue warmed and ready"
+  },
+  {
+    "id": "log-002",
+    "timestamp": "09:41:02",
+    "level": "SUCCESS",
+    "source": "collector",
+    "message": "API traffic snapshot received for 12 tenants"
+  },
+  {
+    "id": "log-003",
+    "timestamp": "09:41:04",
+    "level": "WARN",
+    "source": "quality-gate",
+    "message": "1 data source delayed > 3000ms"
+  },
+  {
+    "id": "log-004",
+    "timestamp": "09:41:06",
+    "level": "INFO",
+    "source": "metrics-engine",
+    "message": "Preparing KPI aggregation window"
+  }
+]

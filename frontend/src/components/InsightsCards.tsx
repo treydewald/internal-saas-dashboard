@@ -71,19 +71,69 @@ const InsightsCards: React.FC<InsightsCardsProps> = ({ data }) => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {cards.map((card, idx) => {
         const Icon = card.icon;
+        const glowColorMap: Record<string, string> = {
+          'text-red-500': 'rgba(239,68,68,0.15)',
+          'text-yellow-500': 'rgba(250,204,21,0.15)',
+          'text-green-500': 'rgba(34,197,94,0.15)',
+          'text-cyan-500': 'rgba(6,182,212,0.15)',
+          'text-blue-500': 'rgba(59,130,246,0.15)',
+          'text-orange-500': 'rgba(249,115,22,0.15)',
+        };
+        const borderColorMap: Record<string, string> = {
+          'text-red-500': 'rgba(239,68,68,0.3)',
+          'text-yellow-500': 'rgba(250,204,21,0.3)',
+          'text-green-500': 'rgba(34,197,94,0.3)',
+          'text-cyan-500': 'rgba(6,182,212,0.3)',
+          'text-blue-500': 'rgba(59,130,246,0.3)',
+          'text-orange-500': 'rgba(249,115,22,0.3)',
+        };
+        const glowBg = glowColorMap[card.color] ?? 'rgba(148,163,184,0.1)';
+        const borderAccent = borderColorMap[card.color] ?? 'rgba(148,163,184,0.2)';
+
         return (
           <div
             key={idx}
-            className="bg-slate-800 border border-slate-700 rounded-lg p-6 hover:border-slate-600 transition-colors"
+            style={{
+              background: 'linear-gradient(135deg, #1a2542 0%, #131e35 100%)',
+              border: `1px solid ${borderAccent}`,
+              borderRadius: '12px',
+              padding: '24px',
+              boxShadow: `0 4px 24px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.03)`,
+              transition: 'box-shadow 0.2s ease, transform 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget as HTMLDivElement;
+              el.style.boxShadow = `0 8px 32px rgba(0,0,0,0.4), 0 0 20px ${glowBg}`;
+              el.style.transform = 'translateY(-1px)';
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget as HTMLDivElement;
+              el.style.boxShadow = '0 4px 24px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.03)';
+              el.style.transform = 'translateY(0)';
+            }}
           >
-            <div className="flex items-start justify-between mb-4">
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
               <div>
-                <p className="text-gray-400 text-sm font-medium">{card.title}</p>
-                <p className={`text-3xl font-bold mt-2 ${card.color}`}>{card.value}</p>
-                <p className="text-gray-500 text-xs mt-2">{card.subtitle}</p>
+                <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.07em', textTransform: 'uppercase', color: '#475569', marginBottom: '10px' }}>
+                  {card.title}
+                </p>
+                <p style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1 }} className={card.color}>
+                  {card.value}
+                </p>
+                <p style={{ fontSize: '12px', color: '#475569', marginTop: '8px' }}>
+                  {card.subtitle}
+                </p>
               </div>
-              <div className={`${card.bgColor} bg-opacity-20 p-3 rounded-lg`}>
-                <Icon className={`w-6 h-6 ${card.color}`} />
+              <div
+                style={{
+                  padding: '10px',
+                  borderRadius: '10px',
+                  background: glowBg,
+                  border: `1px solid ${borderAccent}`,
+                  flexShrink: 0,
+                }}
+              >
+                <Icon className={`w-5 h-5 ${card.color}`} />
               </div>
             </div>
           </div>
