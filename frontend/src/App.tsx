@@ -1,16 +1,13 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { LoginPage } from './pages/LoginPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
-
-// Placeholder for dashboard components
-const Dashboard: React.FC = () => (
-  <div style={{ padding: '20px', color: '#E2E8F0', backgroundColor: '#0F172A', minHeight: '100vh' }}>
-    <h1>Dashboard</h1>
-    <p>Welcome to Internal SaaS Dashboard</p>
-  </div>
-);
+import { DashboardLayout } from './layouts/DashboardLayout';
+import { OverviewPage } from './pages/OverviewPage';
+import { UsersPage } from './pages/UsersPage';
+import { APILogsPage } from './pages/APILogsPage';
+import { ReportsPage } from './pages/ReportsPage';
+import { SettingsPage } from './pages/SettingsPage';
 
 function App() {
   return (
@@ -22,7 +19,49 @@ function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <DashboardLayout>
+                  <OverviewPage />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <UsersPage />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/api-logs"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <APILogsPage />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <ReportsPage />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <SettingsPage />
+                </DashboardLayout>
               </ProtectedRoute>
             }
           />

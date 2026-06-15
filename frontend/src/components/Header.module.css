@@ -1,0 +1,68 @@
+.header {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  max-width: 100%;
+}
+
+.menuButton {
+  display: none;
+  background: none;
+  color: var(--text-primary);
+  font-size: 24px;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 16px;
+}
+
+@media (max-width: 768px) {
+  .menuButton {
+    display: block;
+  }
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  flex: 1;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userName {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.logoutBtn {
+  padding: 8px 16px;
+  background-color: var(--accent-error);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background-color: #DC2626;
+}
