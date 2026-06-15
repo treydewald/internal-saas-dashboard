@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, JSON, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from backend.app.database import Base
+from app.core.database import Base
 
 
 class ScheduledReport(Base):

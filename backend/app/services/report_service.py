@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
-from backend.app.models.scheduled_report import ScheduledReport, ReportExecution
-from backend.app.schemas.scheduled_report import (
+from app.models.scheduled_report import ScheduledReport, ReportExecution
+from app.schemas.scheduled_report import (
     ScheduledReportCreate,
     ScheduledReportUpdate,
 )
-from backend.app.services.export_service import ExportService
-from backend.app.utils.email import EmailService
+from app.services.export_service import ExportService
+from app.utils.email import EmailService
 from datetime import datetime, timedelta
 from typing import List, Optional, Dict, Any
 import os

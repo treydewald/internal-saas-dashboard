@@ -7,6 +7,9 @@ from email import encoders
 from typing import List, Optional
 import os
 from datetime import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class EmailService:
@@ -71,7 +74,7 @@ class EmailService:
             return True
 
         except Exception as e:
-            print(f"Error sending email to {recipient_emails}: {str(e)}")
+            logger.error(f"Error sending email to {recipient_emails}: {str(e)}", exc_info=True)
             return False
 
     def _attach_file(self, msg: MIMEMultipart, filepath: str, filename: str) -> None:
@@ -87,7 +90,7 @@ class EmailService:
                 )
                 msg.attach(part)
         except Exception as e:
-            print(f"Error attaching file {filepath}: {str(e)}")
+            logger.error(f"Error attaching file {filepath}: {str(e)}", exc_info=True)
 
     @staticmethod
     def generate_report_email_body(

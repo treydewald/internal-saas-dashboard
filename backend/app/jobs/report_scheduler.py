@@ -5,8 +5,8 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from backend.app.database import Base, SQLALCHEMY_DATABASE_URL
-from backend.app.services.report_service import ReportService
+from app.core.database import Base, engine, SessionLocal
+from app.services.report_service import ReportService
 
 logger = logging.getLogger(__name__)
 
@@ -16,8 +16,8 @@ class ReportScheduler:
 
     def __init__(self):
         self.scheduler = AsyncIOScheduler()
-        self.engine = create_engine(SQLALCHEMY_DATABASE_URL)
-        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+        self.engine = engine
+        self.SessionLocal = SessionLocal
         self.is_running = False
 
     def start(self):
