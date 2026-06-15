@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import api from '../utils/api';
+import { api } from '../utils/api';
 import InsightsCards from '../components/InsightsCards';
 import AnomalyAlert from '../components/AnomalyAlert';
 import ForecastChart from '../components/ForecastChart';

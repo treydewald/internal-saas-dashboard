@@ -1,5 +1,5 @@
 """Organization model for multi-tenancy support"""
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Text
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Text, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core.database import Base
@@ -27,8 +27,8 @@ class UserOrg(Base):
     __tablename__ = "user_orgs"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, index=True)  # Foreign key to users table
-    organization_id = Column(Integer, index=True)  # Foreign key to organizations table
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    organization_id = Column(Integer, ForeignKey("organizations.id", ondelete="CASCADE"), index=True)
     role = Column(String(50), default="member")  # admin, member, viewer
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

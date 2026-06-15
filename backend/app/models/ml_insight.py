@@ -8,7 +8,7 @@ class MLInsight(Base):
     __tablename__ = "ml_insights"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     insight_type = Column(String(50), nullable=False)  # anomaly, forecast, churn_prediction
     metric_name = Column(String(100), nullable=False)
     confidence_score = Column(Float, nullable=False)  # 0.0 - 1.0
