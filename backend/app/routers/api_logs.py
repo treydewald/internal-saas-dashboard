@@ -3,8 +3,10 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from datetime import datetime
 from app.core.database import get_db
+from app.core.dependencies import require_permission
 from app.schemas.api_log import APILogListResponse
 from app.services.api_log_service import APILogService
+from app.utils.permissions import Permission
 
 router = APIRouter(prefix="/api/api-logs", tags=["api-logs"])
 
@@ -17,6 +19,7 @@ async def get_api_logs(
     date_to: datetime = Query(None),
     status_code: int = Query(None),
     endpoint: str = Query(None),
+    _: dict = Depends(require_permission(Permission.API_LOGS_READ)),
     db: Session = Depends(get_db),
 ):
     """Get paginated list of API logs with optional filters"""

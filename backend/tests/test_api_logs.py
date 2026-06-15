@@ -4,8 +4,19 @@ from fastapi.testclient import TestClient
 from main import app
 from app.core.database import SessionLocal
 from app.services.api_log_service import APILogService
+from tests.conftest import get_auth_headers
 
 client = TestClient(app)
+
+
+def get_analyst_token(client_instance=None):
+    """Get analyst token for testing"""
+    _client = client_instance or client
+    response = _client.post(
+        "/api/auth/login",
+        json={"email": "analyst@example.com", "password": "analyst_pass"}
+    )
+    return response.json().get("access_token") if response.status_code == 200 else None
 
 
 @pytest.fixture
@@ -14,9 +25,10 @@ def db():
     return SessionLocal()
 
 
-def test_get_api_logs_empty(db):
+def test_get_api_logs_empty(db, client):
     """Test getting API logs when none exist"""
-    response = client.get("/api/api-logs")
+    token = get_analyst_token(client)
+    response = client.get("/api/api-logs", headers=get_auth_headers(token))
     assert response.status_code == 200
     data = response.json()
     assert "logs" in data
@@ -24,8 +36,9 @@ def test_get_api_logs_empty(db):
     assert isinstance(data["logs"], list)
 
 
-def test_create_and_get_api_log(db):
+def test_create_and_get_api_log(db, client):
     """Test creating and retrieving API logs"""
+    token = get_analyst_token(client)
     # Create some test logs
     APILogService.create_log(
         db,
@@ -52,24 +65,26 @@ def test_create_and_get_api_log(db):
     )
 
     # Get logs
-    response = client.get("/api/api-logs")
+    response = client.get("/api/api-logs", headers=get_auth_headers(token))
     assert response.status_code == 200
     data = response.json()
     assert data["total_count"] >= 3
     assert len(data["logs"]) > 0
 
 
-def test_get_api_logs_pagination(db):
+def test_get_api_logs_pagination(db, client):
     """Test API logs pagination"""
-    response = client.get("/api/api-logs?limit=10&skip=0")
+    token = get_analyst_token(client)
+    response = client.get("/api/api-logs?limit=10&skip=0", headers=get_auth_headers(token))
     assert response.status_code == 200
     data = response.json()
     assert len(data["logs"]) <= 10
     assert isinstance(data["total_count"], int)
 
 
-def test_get_api_logs_filter_by_status_code(db):
+def test_get_api_logs_filter_by_status_code(db, client):
     """Test filtering API logs by status code"""
+    token = get_analyst_token(client)
     # Create logs with different status codes
     APILogService.create_log(
         db, "/api/test", "GET", 200, 10, user_id=1
@@ -78,15 +93,16 @@ def test_get_api_logs_filter_by_status_code(db):
         db, "/api/test", "GET", 500, 50, user_id=1
     )
 
-    response = client.get("/api/api-logs?status_code=200")
+    response = client.get("/api/api-logs?status_code=200", headers=get_auth_headers(token))
     assert response.status_code == 200
     data = response.json()
     for log in data["logs"]:
         assert log["status_code"] == 200
 
 
-def test_get_api_logs_filter_by_endpoint(db):
+def test_get_api_logs_filter_by_endpoint(db, client):
     """Test filtering API logs by endpoint"""
+    token = get_analyst_token(client)
     # Create logs with different endpoints
     APILogService.create_log(
         db, "/api/users", "GET", 200, 10, user_id=1
@@ -95,15 +111,16 @@ def test_get_api_logs_filter_by_endpoint(db):
         db, "/api/analytics", "GET", 200, 15, user_id=1
     )
 
-    response = client.get("/api/api-logs?endpoint=users")
+    response = client.get("/api/api-logs?endpoint=users", headers=get_auth_headers(token))
     assert response.status_code == 200
     data = response.json()
     for log in data["logs"]:
         assert "users" in log["endpoint"]
 
 
-def test_get_api_logs_sorted_by_timestamp_desc(db):
+def test_get_api_logs_sorted_by_timestamp_desc(db, client):
     """Test API logs sorted by timestamp descending"""
+    token = get_analyst_token(client)
     # Create multiple logs (should be created with different timestamps)
     APILogService.create_log(
         db, "/api/test1", "GET", 200, 10, user_id=1
@@ -115,7 +132,7 @@ def test_get_api_logs_sorted_by_timestamp_desc(db):
         db, "/api/test3", "GET", 200, 30, user_id=1
     )
 
-    response = client.get("/api/api-logs")
+    response = client.get("/api/api-logs", headers=get_auth_headers(token))
     assert response.status_code == 200
     data = response.json()
 
@@ -128,8 +145,9 @@ def test_get_api_logs_sorted_by_timestamp_desc(db):
             assert current_timestamp >= next_timestamp
 
 
-def test_api_logs_response_format(db):
+def test_api_logs_response_format(db, client):
     """Test API logs response format"""
+    token = get_analyst_token(client)
     APILogService.create_log(
         db,
         endpoint="/api/test",
@@ -140,7 +158,7 @@ def test_api_logs_response_format(db):
         request_id="req-123",
     )
 
-    response = client.get("/api/api-logs?limit=1")
+    response = client.get("/api/api-logs?limit=1", headers=get_auth_headers(token))
     assert response.status_code == 200
     data = response.json()
     assert len(data["logs"]) > 0
@@ -155,8 +173,9 @@ def test_api_logs_response_format(db):
     assert isinstance(log["response_time_ms"], int)
 
 
-def test_api_logs_response_time_range(db):
+def test_api_logs_response_time_range(db, client):
     """Test API logs with different response times"""
+    token = get_analyst_token(client)
     APILogService.create_log(
         db, "/api/fast", "GET", 200, 5, user_id=1
     )
@@ -164,7 +183,7 @@ def test_api_logs_response_time_range(db):
         db, "/api/slow", "GET", 200, 1500, user_id=1
     )
 
-    response = client.get("/api/api-logs")
+    response = client.get("/api/api-logs", headers=get_auth_headers(token))
     assert response.status_code == 200
     data = response.json()
 
