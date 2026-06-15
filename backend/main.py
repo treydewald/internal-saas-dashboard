@@ -5,7 +5,7 @@ import logging
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from app.routers import auth
+from app.routers import auth, users, api_logs
 from app.database.init_db import init_db
 from app.core.config import settings
 import uuid
@@ -80,6 +80,8 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 # Include routers
 app.include_router(auth.router)
+app.include_router(users.router)
+app.include_router(api_logs.router)
 
 
 # Health and status endpoints
