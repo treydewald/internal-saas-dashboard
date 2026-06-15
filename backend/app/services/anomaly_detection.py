@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
 from sqlalchemy.orm import Session
-from backend.app.models import APILog, Metric
+from app.models import APILog, Metric
 import statistics
 
 

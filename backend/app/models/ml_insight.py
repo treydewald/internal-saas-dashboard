@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Float, DateTime, JSON, ForeignKey
 from sqlalchemy.orm import relationship
-from backend.app.database import Base
+from app.core.database import Base
 
 
 class MLInsight(Base):

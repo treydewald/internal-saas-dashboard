@@ -2,16 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime
 
-from backend.app.dependencies import get_db, get_current_user
-from backend.app.models import User, MLInsight
-from backend.app.schemas.analytics import (
-    AnomalySchema,
-    ForecastSchema,
-    ChurnRiskSchema,
-)
-from backend.app.services.anomaly_detection import AnomalyDetector
-from backend.app.services.forecasting import Forecaster
-from backend.app.services.churn_prediction import ChurnPredictor
+from app.core.dependencies import get_db, get_current_user
+from app.models import User, MLInsight
+from app.services.anomaly_detection import AnomalyDetector
+from app.services.forecasting import Forecaster
+from app.services.churn_prediction import ChurnPredictor
 
 router = APIRouter(prefix="/api/insights", tags=["insights"])
 
