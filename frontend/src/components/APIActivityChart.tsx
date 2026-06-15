@@ -15,8 +15,13 @@ interface ActivityDataPoint {
   count: number;
 }
 
-export const APIActivityChart: React.FC = () => {
-  const { data, loading, error, refetch } = useAPIActivity(7);
+interface APIActivityChartProps {
+  dateFrom?: string;
+  dateTo?: string;
+}
+
+export const APIActivityChart: React.FC<APIActivityChartProps> = ({ dateFrom = '', dateTo = '' }) => {
+  const { data, loading, error, refetch } = useAPIActivity(7, dateFrom, dateTo);
 
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr);

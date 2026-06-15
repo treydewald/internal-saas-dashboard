@@ -2,6 +2,7 @@ import React from 'react';
 import { useAPILogs } from '../hooks/useAPILogs';
 import { APILogsTable } from '../components/APILogsTable';
 import { DateRangePicker } from '../components/DateRangePicker';
+import ExportButton from '../components/ExportButton';
 import { Pagination } from '../components/Pagination';
 import { useDateRange } from '../hooks/useDateRange';
 
@@ -29,9 +30,14 @@ export const APILogsPage: React.FC = () => {
         toDate={dateRange.to}
       />
 
-      {/* API Logs Table */}
-      <div className="bg-gray-900 border border-slate-700 rounded-lg overflow-hidden">
-        <APILogsTable logs={logs} loading={loading} error={error} onRefetch={refetch} />
+      {/* API Logs Table with Export */}
+      <div>
+        <div className="flex justify-end mb-4">
+          <ExportButton exportType="api-logs" label="Export Logs" />
+        </div>
+        <div className="bg-gray-900 border border-slate-700 rounded-lg overflow-hidden">
+          <APILogsTable logs={logs} loading={loading} error={error} onRefetch={refetch} />
+        </div>
       </div>
 
       {/* Pagination */}

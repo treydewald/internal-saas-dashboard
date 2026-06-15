@@ -1,8 +1,13 @@
 import React from 'react';
 import { KPICards } from '../components/KPICards';
 import { APIActivityChart } from '../components/APIActivityChart';
+import { DateRangePicker } from '../components/DateRangePicker';
+import ExportButton from '../components/ExportButton';
+import { useDateRange } from '../hooks/useDateRange';
 
 export const OverviewPage: React.FC = () => {
+  const { dateRange, updateDateRange } = useDateRange();
+
   return (
     <div className="space-y-8">
       <div>
@@ -14,15 +19,27 @@ export const OverviewPage: React.FC = () => {
         </p>
       </div>
 
+      {/* Date Range Selector */}
       <section>
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-          Key Performance Indicators
-        </h2>
-        <KPICards />
+        <DateRangePicker
+          onDateRangeChange={updateDateRange}
+          fromDate={dateRange.from}
+          toDate={dateRange.to}
+        />
       </section>
 
       <section>
-        <APIActivityChart />
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            Key Performance Indicators
+          </h2>
+          <ExportButton exportType="kpis" label="Export KPIs" />
+        </div>
+        <KPICards dateFrom={dateRange.from} dateTo={dateRange.to} />
+      </section>
+
+      <section>
+        <APIActivityChart dateFrom={dateRange.from} dateTo={dateRange.to} />
       </section>
     </div>
   );

@@ -3,7 +3,8 @@ from fastapi.responses import StreamingResponse, FileResponse
 from sqlalchemy.orm import Session
 from datetime import datetime
 from typing import List, Optional
-from app.core.dependencies import get_db, get_current_user
+from app.core.database import get_db
+from app.core.dependencies import get_current_user
 from app.services.export_service import ExportService
 from app.services.user_service import UserService
 from app.services.api_log_service import APILogService
@@ -16,7 +17,7 @@ router = APIRouter(prefix="/api/export", tags=["export"])
 
 @router.post("/kpis")
 async def export_kpis(
-    format: str = Query("csv", regex="^(csv|pdf)$"),
+    format: str = Query("csv", pattern="^(csv|pdf)$"),
     current_user: User = Depends(get_current_user),
 ):
     """

@@ -5,7 +5,7 @@ import logging
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from app.routers import auth, users, api_logs, analytics, websocket
+from app.routers import auth, users, api_logs, analytics, websocket, export
 from app.database.init_db import init_db
 from app.core.config import settings
 from app.jobs.metrics_publisher import start_metrics_publisher
@@ -88,6 +88,7 @@ app.include_router(users.router)
 app.include_router(api_logs.router)
 app.include_router(analytics.router)
 app.include_router(websocket.router)
+app.include_router(export.router)
 
 
 # Health and status endpoints

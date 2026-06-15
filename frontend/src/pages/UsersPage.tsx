@@ -3,6 +3,7 @@ import { useUsers } from '../hooks/useUsers';
 import { UsersTable } from '../components/UsersTable';
 import { FilterBar } from '../components/FilterBar';
 import { Pagination } from '../components/Pagination';
+import ExportButton from '../components/ExportButton';
 import { useFilters } from '../hooks/useFilters';
 
 export const UsersPage: React.FC = () => {
@@ -40,9 +41,14 @@ export const UsersPage: React.FC = () => {
         statusValue={filters.status}
       />
 
-      {/* Users Table */}
-      <div className="bg-gray-900 border border-slate-700 rounded-lg overflow-hidden">
-        <UsersTable users={users} loading={loading} error={error} onRefetch={refetch} />
+      {/* Users Table with Export */}
+      <div>
+        <div className="flex justify-end mb-4">
+          <ExportButton exportType="users" label="Export Users" />
+        </div>
+        <div className="bg-gray-900 border border-slate-700 rounded-lg overflow-hidden">
+          <UsersTable users={users} loading={loading} error={error} onRefetch={refetch} />
+        </div>
       </div>
 
       {/* Pagination */}

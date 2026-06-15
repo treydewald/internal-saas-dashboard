@@ -10,28 +10,48 @@ from app.schemas.analytics import KPIResponse, TrendInfo, KPIsResponse, APIActiv
 
 class AnalyticsService:
     @staticmethod
-    def get_kpis(db: Session) -> KPIsResponse:
-        """Get KPI metrics"""
+    def get_kpis(db: Session, date_from: str = None, date_to: str = None) -> KPIsResponse:
+        """Get KPI metrics, optionally filtered by date range"""
 
-        # Get active users count
+        # Parse dates if provided
+        filters = []
+        if date_from:
+            filters.append(APILog.timestamp >= datetime.fromisoformat(date_from))
+        if date_to:
+            to_date = datetime.fromisoformat(date_to)
+            to_date = to_date.replace(hour=23, minute=59, second=59)
+            filters.append(APILog.timestamp <= to_date)
+
+        # Get active users count (not filtered by date for now)
         active_users = db.query(func.count(User.id)).filter(
             User.status == "active"
         ).scalar() or 0
 
-        # Get total API requests
-        api_requests = db.query(func.count(APILog.id)).scalar() or 0
+        # Get total API requests with optional date filter
+        api_query = db.query(func.count(APILog.id))
+        for f in filters:
+            api_query = api_query.filter(f)
+        api_requests = api_query.scalar() or 0
 
         # Get error rate
-        total_requests = db.query(func.count(APILog.id)).scalar() or 1
-        error_requests = db.query(func.count(APILog.id)).filter(
+        total_requests = api_query.scalar() or 1
+        error_query = db.query(func.count(APILog.id)).filter(
             APILog.status_code >= 400
-        ).scalar() or 0
+        )
+        for f in filters:
+            error_query = error_query.filter(f)
+        error_requests = error_query.scalar() or 0
         error_rate = (error_requests / total_requests * 100) if total_requests > 0 else 0
 
-        # Get revenue (using Metric table or calculate from users)
-        revenue = db.query(func.sum(Metric.metric_value)).filter(
+        # Get revenue (using Metric table with optional date filter)
+        revenue_query = db.query(func.sum(Metric.metric_value)).filter(
             Metric.metric_name == "revenue"
-        ).scalar() or 0
+        )
+        if date_from:
+            revenue_query = revenue_query.filter(Metric.date >= date_from)
+        if date_to:
+            revenue_query = revenue_query.filter(Metric.date <= date_to)
+        revenue = revenue_query.scalar() or 0
 
         kpis = [
             KPIResponse(
@@ -63,11 +83,15 @@ class AnalyticsService:
         return KPIsResponse(kpis=kpis)
 
     @staticmethod
-    def get_api_activity(db: Session, days: int = 7) -> APIActivityResponse:
-        """Get API request activity aggregated by day for the past N days"""
-        # Get date range
-        end_date = datetime.now().date()
-        start_date = end_date - timedelta(days=days - 1)
+    def get_api_activity(db: Session, days: int = 7, date_from: str = None, date_to: str = None) -> APIActivityResponse:
+        """Get API request activity aggregated by day"""
+        # Determine date range
+        if date_from and date_to:
+            start_date = datetime.fromisoformat(date_from).date()
+            end_date = datetime.fromisoformat(date_to).date()
+        else:
+            end_date = datetime.now().date()
+            start_date = end_date - timedelta(days=days - 1)
 
         # Query API logs grouped by date
         results = db.query(

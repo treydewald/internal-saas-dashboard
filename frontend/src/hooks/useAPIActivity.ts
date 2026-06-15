@@ -10,7 +10,7 @@ interface ActivityResponse {
   data: ActivityDataPoint[];
 }
 
-export const useAPIActivity = (days: number = 7) => {
+export const useAPIActivity = (days: number = 7, dateFrom: string = '', dateTo: string = '') => {
   const [data, setData] = useState<ActivityDataPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,8 +19,15 @@ export const useAPIActivity = (days: number = 7) => {
     try {
       setLoading(true);
       setError(null);
+      const params: Record<string, string | number> = {};
+      if (dateFrom && dateTo) {
+        params.date_from = dateFrom;
+        params.date_to = dateTo;
+      } else {
+        params.days = days;
+      }
       const response = await axios.get<ActivityResponse>('/api/analytics/api-activity', {
-        params: { days }
+        params
       });
       setData(response.data.data);
     } catch (err) {
@@ -33,7 +40,7 @@ export const useAPIActivity = (days: number = 7) => {
 
   useEffect(() => {
     fetchActivity();
-  }, [days]);
+  }, [days, dateFrom, dateTo]);
 
   return { data, loading, error, refetch: fetchActivity };
 };

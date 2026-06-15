@@ -18,20 +18,29 @@ interface KPIsResponse {
   kpis: KPI[];
 }
 
-export const KPICards: React.FC = () => {
+interface KPICardsProps {
+  dateFrom?: string;
+  dateTo?: string;
+}
+
+export const KPICards: React.FC<KPICardsProps> = ({ dateFrom = '', dateTo = '' }) => {
   const [kpis, setKpis] = useState<KPI[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchKpis();
-  }, []);
+  }, [dateFrom, dateTo]);
 
   const fetchKpis = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get<KPIsResponse>('/api/analytics/kpis');
+      const params = new URLSearchParams();
+      if (dateFrom) params.append('date_from', dateFrom);
+      if (dateTo) params.append('date_to', dateTo);
+      const queryString = params.toString() ? `?${params.toString()}` : '';
+      const response = await axios.get<KPIsResponse>(`/api/analytics/kpis${queryString}`);
       setKpis(response.data.kpis);
     } catch (err) {
       console.error('Failed to fetch KPIs:', err);
