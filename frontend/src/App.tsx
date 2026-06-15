@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { WebSocketProvider } from './context/WebSocketContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { LoginPage } from './pages/LoginPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { DashboardLayout } from './layouts/DashboardLayout';
@@ -12,9 +13,10 @@ import { SettingsPage } from './pages/SettingsPage';
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <WebSocketProvider>
+    <ThemeProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <WebSocketProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route
@@ -69,9 +71,10 @@ function App() {
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        </WebSocketProvider>
-      </AuthProvider>
-    </BrowserRouter>
+          </WebSocketProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

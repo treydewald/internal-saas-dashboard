@@ -66,3 +66,21 @@
 .logoutBtn:hover {
   background-color: #DC2626;
 }
+
+.themeButton {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.themeButton:hover {
+  background-color: var(--bg-tertiary);
+}
