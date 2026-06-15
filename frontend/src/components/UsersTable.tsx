@@ -8,6 +8,7 @@ interface UsersTableProps {
   loading: boolean;
   error?: string | null;
   onRefetch?: () => void;
+  onRowClick?: (userId: number) => void;
 }
 
 export const UsersTable: React.FC<UsersTableProps> = ({
@@ -15,6 +16,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   loading,
   error,
   onRefetch,
+  onRowClick,
 }) => {
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
 
@@ -150,6 +152,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
             <tr
               key={user.id}
               className="border-b border-slate-800 hover:bg-gray-900 transition-colors cursor-pointer"
+              onClick={() => onRowClick?.(user.id)}
             >
               <td className="px-6 py-4">
                 <div>

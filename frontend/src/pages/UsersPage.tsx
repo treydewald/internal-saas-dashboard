@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useUsers } from '../hooks/useUsers';
 import { UsersTable } from '../components/UsersTable';
 import { FilterBar } from '../components/FilterBar';
 import { Pagination } from '../components/Pagination';
 import ExportButton from '../components/ExportButton';
 import { useFilters } from '../hooks/useFilters';
+import UserDetailModal from '../components/UserDetailModal';
 
 export const UsersPage: React.FC = () => {
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { filters, updateFilter, clearFilters } = useFilters();
   const { users, loading, error, currentPage, totalPages, limit, onPageChange, refetch } =
     useUsers({
@@ -15,6 +18,20 @@ export const UsersPage: React.FC = () => {
       status: filters.status,
       limit: 20,
     });
+
+  const handleRowClick = (userId: number) => {
+    setSelectedUserId(userId);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedUserId(null);
+  };
+
+  const handleModalSave = () => {
+    refetch();
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -47,9 +64,25 @@ export const UsersPage: React.FC = () => {
           <ExportButton exportType="users" label="Export Users" />
         </div>
         <div className="bg-gray-900 border border-slate-700 rounded-lg overflow-hidden">
-          <UsersTable users={users} loading={loading} error={error} onRefetch={refetch} />
+          <UsersTable
+            users={users}
+            loading={loading}
+            error={error}
+            onRefetch={refetch}
+            onRowClick={handleRowClick}
+          />
         </div>
       </div>
+
+      {/* User Detail Modal */}
+      {selectedUserId && (
+        <UserDetailModal
+          userId={selectedUserId}
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+          onSave={handleModalSave}
+        />
+      )}
 
       {/* Pagination */}
       {!loading && !error && users.length > 0 && (
