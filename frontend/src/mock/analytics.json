@@ -1,9 +1,25 @@
 {
   "kpis": [
-    { "id": "kpi-1", "label": "Active Users", "value": "1,284", "delta": "+6.1%", "trend": "UP" },
-    { "id": "kpi-2", "label": "Requests", "value": "32,441", "delta": "+3.4%", "trend": "UP" },
-    { "id": "kpi-3", "label": "Errors", "value": "0.8%", "delta": "-0.2%", "trend": "DOWN" },
-    { "id": "kpi-4", "label": "Revenue", "value": "$18,200", "delta": "+4.7%", "trend": "UP" }
+    {
+      "id": "kpi-1", "label": "Active Users", "value": "1,284", "delta": "+6.1%", "trend": "UP",
+      "sparkline": [980, 1020, 1100, 1150, 1200, 1260, 1284],
+      "context": "vs last 24h", "updatedAt": "Updated 12 sec ago"
+    },
+    {
+      "id": "kpi-2", "label": "Requests", "value": "32,441", "delta": "+3.4%", "trend": "UP",
+      "sparkline": [26000, 27400, 28100, 29300, 30200, 31500, 32441],
+      "context": "vs last 24h", "updatedAt": "Updated 8 sec ago"
+    },
+    {
+      "id": "kpi-3", "label": "Error Rate", "value": "0.8%", "delta": "-0.2%", "trend": "DOWN",
+      "sparkline": [1.4, 1.2, 1.1, 1.0, 0.9, 0.85, 0.8],
+      "context": "vs last 24h", "updatedAt": "Updated 5 sec ago"
+    },
+    {
+      "id": "kpi-4", "label": "Revenue", "value": "$18,200", "delta": "+4.7%", "trend": "UP",
+      "sparkline": [14800, 15400, 15900, 16600, 17100, 17700, 18200],
+      "context": "vs last 7d", "updatedAt": "Updated 31 sec ago"
+    }
   ],
   "successSeries": [
     { "label": "08:00", "value": 92 },

@@ -5,33 +5,118 @@
 }
 
 :root {
-  /* Dark theme (default) */
-  --bg-primary: #0F172A;
-  --bg-secondary: #1A2342;
-  --bg-tertiary: #2D3E5F;
-  --text-primary: #E2E8F0;
+  /* ─── Visual Hierarchy Layers ─── */
+  --layer-0: #060c1f;          /* app background — deepest */
+  --layer-1: #0c1528;          /* sections — slightly lifted */
+  --layer-2: #111d38;          /* cards — noticeably lifted */
+  --layer-3: #192644;          /* interactive elements — highest contrast */
+
+  /* ─── Dark theme (default) ─── */
+  --bg-primary: #0a1220;
+  --bg-secondary: #111d38;
+  --bg-tertiary: #1e2f50;
+  --text-primary: #EFF6FF;
   --text-secondary: #CBD5E1;
-  --text-tertiary: #94A3B8;
-  --border-color: #334155;
+  --text-tertiary: #64748B;
+  --text-muted: #3D5270;
+  --border-color: rgba(148,163,184,0.14);
+  --border-active: rgba(56,189,248,0.35);
+
+  /* ─── Extended Color Palette ─── */
   --accent-primary: #38BDF8;
-  --accent-success: #22C55E;
-  --accent-warning: #FACC15;
-  --accent-error: #EF4444;
+  --accent-primary-dim: rgba(56,189,248,0.15);
+  --accent-success: #34D399;          /* mint */
+  --accent-success-dim: rgba(52,211,153,0.12);
+  --accent-warning: #FBBF24;          /* amber */
+  --accent-warning-dim: rgba(251,191,36,0.12);
+  --accent-error: #FB7185;            /* rose */
+  --accent-error-dim: rgba(251,113,133,0.12);
+  --accent-info: #38BDF8;             /* sky */
+  --accent-info-dim: rgba(56,189,248,0.12);
+  --accent-purple: #A78BFA;
+  --accent-purple-dim: rgba(167,139,250,0.12);
+
+  /* ─── Border System ─── */
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-default: rgba(148,163,184,0.14);
+  --border-emphasis: rgba(148,163,184,0.25);
+  --border-highlight: rgba(56,189,248,0.35);
+  --border-inner: rgba(255,255,255,0.10);  /* inner highlight line */
+
+  /* ─── Radius Scale ─── */
+  --radius-panel: 24px;
+  --radius-card: 18px;
+  --radius-button: 14px;
+  --radius-chip: 999px;
+  --radius-input: 10px;
+  --radius-sm: 8px;
+
+  /* ─── Layered Shadow System ─── */
+  --shadow-sm:
+    0 1px 2px rgba(0,0,0,0.25),
+    0 2px 8px rgba(0,0,0,0.20);
+  --shadow-card:
+    0 1px 2px rgba(0,0,0,0.30),
+    0 8px 24px rgba(0,0,0,0.30),
+    0 20px 60px rgba(0,0,0,0.18);
+  --shadow-card-hover:
+    0 1px 3px rgba(0,0,0,0.35),
+    0 12px 32px rgba(0,0,0,0.38),
+    0 24px 72px rgba(0,0,0,0.24),
+    0 0 0 1px rgba(56,189,248,0.20);
+  --shadow-glow-blue:
+    0 0 20px rgba(56,189,248,0.25),
+    0 0 60px rgba(56,189,248,0.10);
+
+  /* ─── Motion Scale ─── */
+  --duration-sm: 150ms;
+  --duration-md: 250ms;
+  --duration-lg: 350ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ─── Typography Weight Scale ─── */
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
 }
 
 /* Light theme */
 html:not(.dark) {
-  --bg-primary: #F8FAFC;
-  --bg-secondary: #F1F5F9;
-  --bg-tertiary: #E2E8F0;
-  --text-primary: #1E293B;
+  --layer-0: #F0F4FA;
+  --layer-1: #F8FAFC;
+  --layer-2: #FFFFFF;
+  --layer-3: #FFFFFF;
+  --bg-primary: #F0F4FA;
+  --bg-secondary: #F8FAFC;
+  --bg-tertiary: #E9EEF6;
+  --text-primary: #0F172A;
   --text-secondary: #334155;
   --text-tertiary: #64748B;
-  --border-color: #CBD5E1;
+  --text-muted: #94A3B8;
+  --border-color: rgba(15,23,42,0.10);
+  --border-subtle: rgba(15,23,42,0.06);
+  --border-default: rgba(15,23,42,0.10);
+  --border-emphasis: rgba(15,23,42,0.18);
+  --border-highlight: rgba(2,132,199,0.35);
   --accent-primary: #0284C7;
+  --accent-primary-dim: rgba(2,132,199,0.10);
   --accent-success: #16A34A;
-  --accent-warning: #CA8A04;
+  --accent-success-dim: rgba(22,163,74,0.10);
+  --accent-warning: #D97706;
+  --accent-warning-dim: rgba(217,119,6,0.10);
   --accent-error: #DC2626;
+  --accent-error-dim: rgba(220,38,38,0.10);
+  --shadow-card:
+    0 1px 3px rgba(15,23,42,0.08),
+    0 8px 24px rgba(15,23,42,0.08),
+    0 20px 60px rgba(15,23,42,0.05);
+  --shadow-card-hover:
+    0 1px 3px rgba(15,23,42,0.10),
+    0 12px 32px rgba(15,23,42,0.12),
+    0 0 0 1px rgba(2,132,199,0.20);
 }
 
 html, body {

@@ -11,6 +11,7 @@ import type { AnalyticsData, LogEntry, Workflow } from './types/dashboard';
 import './App.css';
 
 function App() {
+  const [screenshotMode, setScreenshotMode] = useState(false);
   const [activeSection, setActiveSection] = useState('Overview');
   const [selectedWorkflowId, setSelectedWorkflowId] = useState((workflowData as Workflow[])[0]?.id ?? '');
   const [workflows, setWorkflows] = useState<Workflow[]>(workflowData as Workflow[]);
@@ -107,7 +108,7 @@ function App() {
   const selectedWorkflow = workflows.find(workflow => workflow.id === selectedWorkflowId);
 
   return (
-    <div className="dashboard-app">
+    <div className={`dashboard-app${screenshotMode ? ' screenshot-mode' : ''}`}>
       <Sidebar active={activeSection} onSelect={setActiveSection} />
 
       <main className="main-layout">
@@ -119,6 +120,14 @@ function App() {
           <div className="status-group">
             <span className="status status--running">RUNNING</span>
             <span className="status status--healthy">HEALTHY</span>
+            <button
+              type="button"
+              className={`screenshot-mode-btn${screenshotMode ? ' is-active' : ''}`}
+              onClick={() => setScreenshotMode(m => !m)}
+              title="Toggle screenshot presentation mode"
+            >
+              {screenshotMode ? '📷 ON' : '📷 OFF'}
+            </button>
           </div>
         </header>
 

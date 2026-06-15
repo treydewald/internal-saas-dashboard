@@ -30,6 +30,9 @@ export interface KPI {
   value: string;
   delta: string;
   trend: "UP" | "DOWN";
+  sparkline?: number[];
+  context?: string;
+  updatedAt?: string;
 }
 
 export interface SuccessPoint {
