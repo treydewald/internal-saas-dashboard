@@ -73,39 +73,35 @@ export const APILogsTable: React.FC<APILogsTableProps> = ({
   return (
     <div className="glass-panel" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
       <div style={{ overflowX: 'auto', flex: 1 }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table className="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
+            <tr>
               {['Time', 'Endpoint', 'Method', 'Status', 'Latency'].map((col) => (
-                <th key={col} style={{ padding: '10px 12px', textAlign: 'left', fontSize: '0.65rem', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                <th key={col}>
                   {col}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {logs.map((log, idx) => (
+            {logs.map((log) => (
               <tr
                 key={log.id}
-                className="table-row--hoverable"
-                style={{
-                  borderBottom: '1px solid var(--border-subtle)',
-                  backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)',
-                }}
+                className="table-row"
               >
-                <td style={{ padding: '8px 12px', fontSize: '0.70rem', color: 'var(--text-tertiary)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+                <td style={{ fontSize: '0.70rem', color: 'var(--text-tertiary)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
                   {formatTimestamp(log.timestamp)}
                 </td>
-                <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-secondary)', fontFamily: 'monospace', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <td style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontFamily: 'monospace', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {log.endpoint}
                 </td>
-                <td style={{ padding: '8px 12px' }}>
+                <td>
                   <MethodBadge method={log.method as any} />
                 </td>
-                <td style={{ padding: '8px 12px' }}>
+                <td>
                   <StatusCodeBadge code={log.status_code} />
                 </td>
-                <td style={{ padding: '8px 12px', fontSize: '0.72rem', fontVariantNumeric: 'tabular-nums', color: getResponseTimeStatus(log.response_time_ms) === 'error' ? 'var(--accent-error)' : getResponseTimeStatus(log.response_time_ms) === 'warn' ? 'var(--accent-warning)' : 'var(--text-secondary)' }}>
+                <td style={{ fontSize: '0.72rem', fontVariantNumeric: 'tabular-nums', color: getResponseTimeStatus(log.response_time_ms) === 'error' ? 'var(--accent-error)' : getResponseTimeStatus(log.response_time_ms) === 'warn' ? 'var(--accent-warning)' : 'var(--text-secondary)' }}>
                   {log.response_time_ms}ms
                 </td>
               </tr>

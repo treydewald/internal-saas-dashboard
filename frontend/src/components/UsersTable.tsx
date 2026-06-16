@@ -106,21 +106,14 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   return (
     <div className="glass-panel" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
       <div style={{ overflowX: 'auto', flex: 1 }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table className="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
+            <tr>
               {['Name', 'Plan', 'Usage', 'Status'].map((col) => (
                 <th
                   key={col}
                   onClick={() => handleSort(col.toLowerCase())}
                   style={{
-                    padding: '12px 16px',
-                    textAlign: 'left',
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    color: 'var(--text-tertiary)',
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
                     cursor: 'pointer',
                     userSelect: 'none',
                   }}
@@ -134,15 +127,10 @@ export const UsersTable: React.FC<UsersTableProps> = ({
             {sortedUsers.map((user, idx) => (
               <tr
                 key={user.id}
-                className="table-row--hoverable"
+                className="table-row"
                 onClick={() => onRowClick?.(user.id)}
-                style={{
-                  borderBottom: '1px solid var(--border-subtle)',
-                  backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)',
-                  cursor: 'pointer',
-                }}
               >
-                <td style={{ padding: '10px 16px' }}>
+                <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <div style={{
                       width: '32px', height: '32px', borderRadius: '50%', flexShrink: 0,
@@ -159,7 +147,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                     </div>
                   </div>
                 </td>
-                <td style={{ padding: '10px 16px' }}>
+                <td>
                   {(() => {
                     const ps = PLAN_STYLES[user.plan] || PLAN_STYLES.free;
                     return (
@@ -169,7 +157,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                     );
                   })()}
                 </td>
-                <td style={{ padding: '10px 16px' }}>
+                <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <div style={{ flex: 1, maxWidth: '80px', height: '5px', borderRadius: '3px', background: 'var(--border-default)', overflow: 'hidden' }}>
                       <div style={{ width: `${user.usage_percent}%`, height: '100%', borderRadius: '3px', background: user.usage_percent > 80 ? '#DC2626' : user.usage_percent > 60 ? '#D97706' : 'var(--accent-primary)' }} />
@@ -177,7 +165,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                     <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-secondary)', minWidth: '32px' }}>{user.usage_percent}%</span>
                   </div>
                 </td>
-                <td style={{ padding: '10px 16px' }}>
+                <td>
                   <StatusChip state={getStatusChip(user.status)} label={user.status.charAt(0).toUpperCase() + user.status.slice(1)} />
                 </td>
               </tr>

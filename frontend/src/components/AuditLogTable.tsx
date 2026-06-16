@@ -33,11 +33,11 @@ export default function AuditLogTable({ logs, loading, onSelectLog, totalCount }
         </h3>
       </div>
       <div style={{ overflowX: 'auto', flex: 1 }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table className="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
+            <tr>
               {['Action', 'Resource', 'Status', 'User', 'Timestamp'].map((col) => (
-                <th key={col} style={{ padding: '10px 12px', textAlign: 'left', fontSize: '0.65rem', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                <th key={col}>
                   {col}
                 </th>
               ))}
@@ -57,30 +57,25 @@ export default function AuditLogTable({ logs, loading, onSelectLog, totalCount }
                 </td>
               </tr>
             ) : (
-              logs.map((log, idx) => (
+              logs.map((log) => (
                 <tr
                   key={log.id}
                   onClick={() => onSelectLog(log)}
-                  className="table-row--hoverable"
-                  style={{
-                    borderBottom: '1px solid var(--border-subtle)',
-                    backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)',
-                    cursor: 'pointer',
-                  }}
+                  className="table-row"
                 >
-                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                  <td style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
                     <ActionTypeBadge actionType={log.action} label={log.action.replace(/_/g, ' ')} />
                   </td>
-                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                  <td style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
                     {log.resource_type} {log.resource_id && `#${log.resource_id}`}
                   </td>
-                  <td style={{ padding: '8px 12px' }}>
+                  <td>
                     <StatusChip state={log.status === 'success' ? 'healthy' : 'error'} label={log.status} />
                   </td>
-                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>
+                  <td style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>
                     {log.user_id ? `User #${log.user_id}` : 'System'}
                   </td>
-                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>
+                  <td style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>
                     {formatDate(log.created_at)}
                   </td>
                 </tr>

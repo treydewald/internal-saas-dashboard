@@ -10,7 +10,7 @@ export const OverviewPage: React.FC = () => {
   const { dateRange, updateDateRange } = useDateRange();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
       {/* ── Hero Header ─────────────────────────────── */}
       <div
@@ -18,25 +18,26 @@ export const OverviewPage: React.FC = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
-          gap: '24px',
+          gap: '20px',
           flexWrap: 'wrap',
+          flex: '0 0 auto',
         }}
       >
         <div>
           <p
             style={{
-              fontSize: '11px',
+              fontSize: '10px',
               fontWeight: 600,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
               color: 'var(--accent-primary)',
-              margin: '0 0 6px 0',
+              margin: '0 0 4px 0',
             }}
           >
             Platform Analytics
           </p>
-          <h1 style={{ margin: '0 0 4px 0' }}>Overview</h1>
-          <p style={{ fontSize: '14px', color: 'var(--text-tertiary)', margin: 0 }}>
+          <h1 style={{ margin: '0 0 2px 0', fontSize: '28px' }}>Overview</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-tertiary)', margin: 0 }}>
             Real-time performance metrics and API activity
           </p>
         </div>
@@ -51,28 +52,19 @@ export const OverviewPage: React.FC = () => {
       </div>
 
       {/* ── KPI Cards ──────────────────────────────── */}
-      <section>
-        <p className="eyebrow" style={{ marginBottom: '14px' }}>Key Performance Indicators</p>
+      <section style={{ flex: '0 0 auto' }}>
+        <p className="eyebrow" style={{ marginBottom: '10px', fontSize: '10px' }}>Key Performance Indicators</p>
         <KPICards dateFrom={dateRange.from} dateTo={dateRange.to} />
       </section>
 
       {/* ── Activity Chart (hero section) ─────────── */}
-      <section>
+      <section style={{ flex: '1 1 auto', minHeight: 0 }}>
         <APIActivityChart dateFrom={dateRange.from} dateTo={dateRange.to} />
       </section>
 
       {/* ── Advanced Metrics ───────────────────────── */}
-      <section>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '14px',
-          }}
-        >
-          <p className="eyebrow">Performance Breakdown</p>
-        </div>
+      <section style={{ flex: '0 0 auto' }}>
+        <p className="eyebrow" style={{ marginBottom: '10px', fontSize: '10px' }}>Performance Breakdown</p>
         <MetricsCards dateFrom={dateRange.from} dateTo={dateRange.to} />
       </section>
     </div>
