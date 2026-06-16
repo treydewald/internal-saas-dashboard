@@ -1,5 +1,6 @@
 import React from 'react';
-import { StatusChip } from './StatusChip';
+import { MethodBadge } from './MethodBadge';
+import { StatusCodeBadge } from './StatusCodeBadge';
 import type { APILog } from '../hooks/useAPILogs';
 
 interface APILogsTableProps {
@@ -9,22 +10,15 @@ interface APILogsTableProps {
   onRefetch?: () => void;
 }
 
-const getResponseTimeStatus = (ms: number): 'active' | 'warn' | 'error' => {
-  if (ms < 1000) return 'active';
-  if (ms < 3000) return 'warn';
-  return 'error';
-};
-
-const getStatusCodeStatus = (code: number): 'active' | 'warn' | 'error' => {
-  if (code < 300) return 'active';
-  if (code < 400) return 'active';
-  if (code < 500) return 'warn';
-  return 'error';
-};
-
 const formatTimestamp = (timestamp: string): string => {
   const date = new Date(timestamp);
   return date.toLocaleTimeString();
+};
+
+const getResponseTimeStatus = (ms: number): string => {
+  if (ms < 1000) return 'var(--text-secondary)';
+  if (ms < 3000) return 'var(--accent-warning)';
+  return 'var(--accent-error)';
 };
 
 export const APILogsTable: React.FC<APILogsTableProps> = ({
@@ -106,10 +100,10 @@ export const APILogsTable: React.FC<APILogsTableProps> = ({
                   {log.endpoint}
                 </td>
                 <td style={{ padding: '8px 12px' }}>
-                  <StatusChip status={log.method.toLowerCase()} label={log.method} />
+                  <MethodBadge method={log.method as any} />
                 </td>
                 <td style={{ padding: '8px 12px' }}>
-                  <StatusChip status={getStatusCodeStatus(log.status_code)} label={String(log.status_code)} />
+                  <StatusCodeBadge code={log.status_code} />
                 </td>
                 <td style={{ padding: '8px 12px', fontSize: '0.72rem', fontVariantNumeric: 'tabular-nums', color: getResponseTimeStatus(log.response_time_ms) === 'error' ? 'var(--accent-error)' : getResponseTimeStatus(log.response_time_ms) === 'warn' ? 'var(--accent-warning)' : 'var(--text-secondary)' }}>
                   {log.response_time_ms}ms

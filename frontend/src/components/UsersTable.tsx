@@ -27,8 +27,8 @@ interface UsersTableProps {
   onRowClick?: (userId: number) => void;
 }
 
-const getStatusChip = (status: string): 'active' | 'inactive' | 'pending' => {
-  if (status === 'active') return 'active';
+const getStatusChip = (status: string): 'healthy' | 'inactive' | 'pending' => {
+  if (status === 'active') return 'healthy';
   if (status === 'pending') return 'pending';
   return 'inactive';
 };
@@ -178,7 +178,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                   </div>
                 </td>
                 <td style={{ padding: '10px 16px' }}>
-                  <StatusChip status={getStatusChip(user.status)} label={user.status.charAt(0).toUpperCase() + user.status.slice(1)} />
+                  <StatusChip state={getStatusChip(user.status)} label={user.status.charAt(0).toUpperCase() + user.status.slice(1)} />
                 </td>
               </tr>
             ))}

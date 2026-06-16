@@ -37,7 +37,7 @@ const METRIC_ACCENTS = [
 export const MetricsCards: React.FC<MetricsCardsProps> = ({ dateFrom = '', dateTo = '' }) => {
   const [metrics, setMetrics] = useState<Metric[]>(MOCK_METRICS);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   const fetchMetrics = useCallback(async () => {
     try {

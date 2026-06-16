@@ -88,7 +88,7 @@ export const WorkflowList: React.FC<WorkflowListProps> = ({ workflows, selectedI
                 {workflow.owner}
               </div>
             </div>
-            <StatusChip status={workflow.status === 'ACTIVE' ? 'active' : 'inactive'} />
+            <StatusChip state={workflow.status === 'ACTIVE' ? 'healthy' : workflow.status === 'PAUSED' ? 'pending' : 'inactive'} />
           </button>
         ))}
         {filtered.length === 0 && (

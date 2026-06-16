@@ -16,7 +16,7 @@ interface KPICardsProps {
 
 export const KPICards: React.FC<KPICardsProps> = ({ dateFrom = '', dateTo = '' }) => {
   const [kpis, setKpis] = useState<KPI[]>(MOCK_KPIS);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   const fetchKpis = useCallback(async () => {
     try {

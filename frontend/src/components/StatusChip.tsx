@@ -1,21 +1,85 @@
 import React from 'react';
+import styles from './StatusChip.module.css';
 
-export interface StatusChipProps {
-  status: 'healthy' | 'running' | 'active' | 'degraded' | 'warning' | 'warn' |
-          'error' | 'off' | 'inactive' | 'pending' | 'trial' |
-          'info' | 'sky' | 'purple' |
-          'get' | 'post' | 'put' | 'patch' | 'delete' | string;
+export type StatusState = 'healthy' | 'running' | 'degraded' | 'warning' | 'error' | 'off' | 'inactive' | 'pending';
+
+interface StatusChipProps {
+  state: StatusState;
   label?: string;
   pulse?: boolean;
+  updatedAt?: string;
+  size?: 'sm' | 'md';
 }
 
-export const StatusChip: React.FC<StatusChipProps> = ({ status, label, pulse }) => {
+const STATUS_CONFIG: Record<StatusState, { color: string; bgColor: string; defaultLabel: string }> = {
+  healthy: {
+    color: 'var(--accent-success)',
+    bgColor: 'var(--accent-success-dim)',
+    defaultLabel: 'Healthy',
+  },
+  running: {
+    color: 'var(--accent-primary)',
+    bgColor: 'var(--accent-primary-dim)',
+    defaultLabel: 'Running',
+  },
+  degraded: {
+    color: 'var(--accent-warning)',
+    bgColor: 'var(--accent-warning-dim)',
+    defaultLabel: 'Degraded',
+  },
+  warning: {
+    color: 'var(--accent-warning)',
+    bgColor: 'var(--accent-warning-dim)',
+    defaultLabel: 'Warning',
+  },
+  error: {
+    color: 'var(--accent-error)',
+    bgColor: 'var(--accent-error-dim)',
+    defaultLabel: 'Error',
+  },
+  off: {
+    color: 'var(--text-muted)',
+    bgColor: 'rgba(148,163,184,0.08)',
+    defaultLabel: 'Off',
+  },
+  inactive: {
+    color: 'var(--text-muted)',
+    bgColor: 'rgba(148,163,184,0.08)',
+    defaultLabel: 'Inactive',
+  },
+  pending: {
+    color: 'var(--accent-warning)',
+    bgColor: 'var(--accent-warning-dim)',
+    defaultLabel: 'Pending',
+  },
+};
+
+export const StatusChip: React.FC<StatusChipProps> = ({
+  state,
+  label,
+  pulse = false,
+  updatedAt,
+  size = 'md',
+}) => {
+  const config = STATUS_CONFIG[state];
+  const displayLabel = label || config.defaultLabel;
+  const shouldAnimate = pulse && (state === 'running' || state === 'healthy');
+
+  const accentColorAtOpacity = `${config.color}33`;
+
   return (
     <span
-      className={`status-chip status-chip--${status.toLowerCase()}`}
-      style={pulse ? { animation: 'statusGlow 2.5s ease-in-out infinite' } : undefined}
+      className={`${styles.chip} ${styles[`size--${size}`]} ${shouldAnimate ? styles.breathing : ''}`}
+      style={{
+        backgroundColor: config.bgColor,
+        color: config.color,
+        borderColor: accentColorAtOpacity,
+      }}
+      title={updatedAt ? `Updated: ${updatedAt}` : undefined}
+      role="status"
+      aria-label={`${displayLabel}${updatedAt ? ` - ${updatedAt}` : ''}`}
     >
-      {label || status}
+      {displayLabel}
     </span>
   );
 };

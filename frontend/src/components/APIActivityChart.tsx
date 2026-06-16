@@ -27,7 +27,7 @@ interface APIActivityChartProps {
 }
 
 export const APIActivityChart: React.FC<APIActivityChartProps> = ({ dateFrom = '', dateTo = '' }) => {
-  const { data, loading, error, refetch } = useAPIActivity(7, dateFrom, dateTo);
+  const { data, loading } = useAPIActivity(7, dateFrom, dateTo);
 
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr);

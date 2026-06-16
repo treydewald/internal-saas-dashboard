@@ -1,3 +1,4 @@
+import { ActionTypeBadge } from './ActionTypeBadge';
 import { StatusChip } from './StatusChip';
 
 interface AuditLog {
@@ -18,13 +19,6 @@ interface AuditLogTableProps {
   onSelectLog: (log: AuditLog) => void;
   totalCount: number;
 }
-
-const getActionStatus = (action: string): string => {
-  if (action.startsWith('user.')) return 'info';
-  if (action.startsWith('api_key.')) return 'warn';
-  if (action.startsWith('org.')) return 'purple';
-  return 'inactive';
-};
 
 const formatDate = (dateString: string): string => {
   return new Date(dateString).toLocaleTimeString();
@@ -75,13 +69,13 @@ export default function AuditLogTable({ logs, loading, onSelectLog, totalCount }
                   }}
                 >
                   <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                    <StatusChip status={getActionStatus(log.action)} label={log.action.replace(/_/g, ' ')} />
+                    <ActionTypeBadge actionType={log.action} label={log.action.replace(/_/g, ' ')} />
                   </td>
                   <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
                     {log.resource_type} {log.resource_id && `#${log.resource_id}`}
                   </td>
                   <td style={{ padding: '8px 12px' }}>
-                    <StatusChip status={log.status === 'success' ? 'active' : 'error'} label={log.status} />
+                    <StatusChip state={log.status === 'success' ? 'healthy' : 'error'} label={log.status} />
                   </td>
                   <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>
                     {log.user_id ? `User #${log.user_id}` : 'System'}
