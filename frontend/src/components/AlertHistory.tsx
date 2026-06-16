@@ -1,3 +1,6 @@
+import React from 'react';
+import { Activity } from 'lucide-react';
+
 interface Alert {
   id: number;
   alert_rule_id: number;
@@ -14,82 +17,86 @@ interface AlertHistoryProps {
   loading: boolean;
 }
 
+const getStatusStyle = (status: string): React.CSSProperties => {
+  switch (status) {
+    case 'triggered':
+      return { backgroundColor: 'var(--accent-error-dim)', color: 'var(--accent-error)', borderColor: 'rgba(220,38,38,0.2)' };
+    case 'acknowledged':
+      return { backgroundColor: 'rgba(234,179,8,0.12)', color: 'var(--accent-warning)', borderColor: 'rgba(234,179,8,0.2)' };
+    case 'resolved':
+      return { backgroundColor: 'var(--accent-success-dim)', color: 'var(--accent-success)', borderColor: 'rgba(22,163,74,0.2)' };
+    default:
+      return { backgroundColor: 'var(--border-default)', color: 'var(--text-tertiary)' };
+  }
+};
+
+const formatDate = (dateString: string | undefined) => {
+  if (!dateString) return '—';
+  return new Date(dateString).toLocaleString();
+};
+
 export default function AlertHistory({ alerts, loading }: AlertHistoryProps) {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'triggered':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      case 'acknowledged':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-      case 'resolved':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
-    }
-  };
-
-  const formatDate = (dateString: string | undefined) => {
-    if (!dateString) return '-';
-    return new Date(dateString).toLocaleString();
-  };
-
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg shadow">
-      <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Alert History</h2>
+    <div className="card" style={{ padding: 0, overflow: 'hidden', position: 'relative' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'linear-gradient(90deg, #DC2626, #D97706)' }} />
+      <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'rgba(220,38,38,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#DC2626' }}>
+          <Activity size={15} />
+        </div>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>Alert History</h2>
+          {!loading && <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)' }}>{alerts.length} events recorded</p>}
+        </div>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr className="border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                Message
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                Metric Value
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                Created
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                Resolved
-              </th>
+            <tr style={{ borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-secondary)' }}>
+              {['Message', 'Status', 'Metric Value', 'Triggered', 'Resolved'].map((col) => (
+                <th
+                  key={col}
+                  style={{ padding: '10px 24px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.06em', textTransform: 'uppercase' }}
+                >
+                  {col}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={5} style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '14px' }}>
                   Loading alerts...
                 </td>
               </tr>
             ) : alerts.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={5} style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '14px' }}>
                   No alerts yet
                 </td>
               </tr>
             ) : (
               alerts.map((alert) => (
-                <tr key={alert.id} className="border-b border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition">
-                  <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                <tr
+                  key={alert.id}
+                  className="table-row--hoverable"
+                  style={{ borderBottom: '1px solid var(--border-subtle)', transition: 'background-color var(--duration-sm)' }}
+                >
+                  <td style={{ padding: '14px 24px', fontSize: '14px', color: 'var(--text-primary)' }}>
                     {alert.message}
                   </td>
-                  <td className="px-6 py-4 text-sm">
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(alert.status)}`}>
+                  <td style={{ padding: '14px 24px' }}>
+                    <span className="status-badge" style={getStatusStyle(alert.status)}>
                       {alert.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                  <td style={{ padding: '14px 24px', fontSize: '14px', color: 'var(--text-primary)' }}>
                     {alert.metric_value.toFixed(2)}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                  <td style={{ padding: '14px 24px', fontSize: '13px', color: 'var(--text-tertiary)' }}>
                     {formatDate(alert.created_at)}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                  <td style={{ padding: '14px 24px', fontSize: '13px', color: 'var(--text-tertiary)' }}>
                     {formatDate(alert.resolved_at)}
                   </td>
                 </tr>

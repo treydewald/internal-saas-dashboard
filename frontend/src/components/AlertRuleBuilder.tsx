@@ -45,42 +45,56 @@ export default function AlertRuleBuilder({ onClose, onCreate }: AlertRuleBuilder
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md w-full mx-4">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Create Alert Rule</h2>
+    <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="card" style={{ width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', gap: 0 }}>
+        {/* Header */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingBottom: '16px',
+            marginBottom: '20px',
+            borderBottom: '1px solid var(--border-default)',
+          }}
+        >
+          <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
+            Create Alert Rule
+          </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '18px',
+              color: 'var(--text-tertiary)',
+              lineHeight: 1,
+              padding: '4px',
+            }}
+            aria-label="Close"
           >
             ✕
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {/* Rule Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Rule Name
-            </label>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="form-group">
+            <label>Rule Name</label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => handleChange('name', e.target.value)}
               placeholder="e.g., High Error Rate"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              required
             />
           </div>
 
-          {/* Metric Selection */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Metric
-            </label>
+          <div className="form-group">
+            <label>Metric</label>
             <select
               value={formData.metric_name}
               onChange={(e) => handleChange('metric_name', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
             >
               {METRIC_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -90,15 +104,11 @@ export default function AlertRuleBuilder({ onClose, onCreate }: AlertRuleBuilder
             </select>
           </div>
 
-          {/* Operator Selection */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Operator
-            </label>
+          <div className="form-group">
+            <label>Operator</label>
             <select
               value={formData.operator}
               onChange={(e) => handleChange('operator', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
             >
               {OPERATOR_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -108,33 +118,21 @@ export default function AlertRuleBuilder({ onClose, onCreate }: AlertRuleBuilder
             </select>
           </div>
 
-          {/* Threshold Value */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Threshold Value
-            </label>
+          <div className="form-group">
+            <label>Threshold Value</label>
             <input
               type="number"
               step="0.1"
               value={formData.threshold}
               onChange={(e) => handleChange('threshold', parseFloat(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-3 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition"
-            >
+          <div style={{ display: 'flex', gap: '12px', paddingTop: '8px' }}>
+            <button type="button" onClick={onClose} className="btn-secondary" style={{ flex: 1 }}>
               Cancel
             </button>
-            <button
-              type="submit"
-              className="flex-1 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition"
-            >
+            <button type="submit" className="btn-primary" style={{ flex: 1 }}>
               Create Rule
             </button>
           </div>

@@ -21,7 +21,7 @@ export const WorkflowList: React.FC<WorkflowListProps> = ({ workflows, selectedI
   return (
     <div className="glass-panel" style={{ display: 'grid', gridTemplateRows: 'auto 1fr', minHeight: 0, padding: '14px', gap: '10px' }}>
       <div>
-        <h3 style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-0)', marginBottom: '8px' }}>
+        <h3 style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>
           Workflows
         </h3>
         <input
@@ -33,8 +33,8 @@ export const WorkflowList: React.FC<WorkflowListProps> = ({ workflows, selectedI
             width: '100%',
             borderRadius: 'var(--radius-sm)',
             border: '1px solid rgba(148,163,184,0.18)',
-            background: 'rgba(5,9,22,0.90)',
-            color: 'var(--text-2)',
+            background: 'var(--layer-0)',
+            color: 'var(--text-primary)',
             fontSize: '0.67rem',
             padding: '4px 8px',
             outline: 'none',
@@ -59,8 +59,8 @@ export const WorkflowList: React.FC<WorkflowListProps> = ({ workflows, selectedI
               justifyContent: 'space-between',
               gap: '8px',
               padding: '9px 11px',
-              background: selectedId === workflow.id ? 'rgba(120,192,255,0.08)' : 'transparent',
-              border: selectedId === workflow.id ? '1px solid rgba(120,192,255,0.22)' : '1px solid transparent',
+              background: selectedId === workflow.id ? 'var(--accent-primary-dim)' : 'transparent',
+              border: selectedId === workflow.id ? '1px solid var(--border-highlight)' : '1px solid transparent',
               borderRadius: 'var(--radius-sm)',
               cursor: 'pointer',
               transition: 'all var(--duration-sm) var(--ease-out)',
@@ -69,8 +69,8 @@ export const WorkflowList: React.FC<WorkflowListProps> = ({ workflows, selectedI
             }}
             onMouseEnter={(e) => {
               if (selectedId !== workflow.id) {
-                e.currentTarget.style.background = 'rgba(120,192,255,0.04)';
-                e.currentTarget.style.borderColor = 'rgba(120,192,255,0.12)';
+                e.currentTarget.style.background = 'var(--bg-tertiary)';
+                e.currentTarget.style.borderColor = 'var(--border-default)';
               }
             }}
             onMouseLeave={(e) => {
@@ -81,10 +81,10 @@ export const WorkflowList: React.FC<WorkflowListProps> = ({ workflows, selectedI
             }}
           >
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-0)' }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                 {workflow.name}
               </div>
-              <div style={{ fontSize: '0.67rem', color: 'var(--text-2)', marginTop: '2px' }}>
+              <div style={{ fontSize: '0.67rem', color: 'var(--text-tertiary)', marginTop: '2px' }}>
                 {workflow.owner}
               </div>
             </div>
@@ -92,7 +92,7 @@ export const WorkflowList: React.FC<WorkflowListProps> = ({ workflows, selectedI
           </button>
         ))}
         {filtered.length === 0 && (
-          <div style={{ padding: '12px', textAlign: 'center', color: 'var(--text-2)', fontSize: '0.67rem' }}>
+          <div style={{ padding: '12px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '0.67rem' }}>
             No workflows found
           </div>
         )}

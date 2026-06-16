@@ -1,62 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Download } from 'lucide-react';
 import { useExport } from '../hooks/useExport';
 
 interface ExportButtonProps {
   exportType: 'kpis' | 'users' | 'api-logs';
   label?: string;
-  className?: string;
+  style?: React.CSSProperties;
 }
 
 const ExportButton: React.FC<ExportButtonProps> = ({
   exportType,
   label = 'Export',
-  className = '',
+  style,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const { isLoading, error, exportKPIs, exportUsers, exportAPILogs } = useExport();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+    if (showMenu) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showMenu]);
 
   const handleExport = async (format: 'csv' | 'pdf') => {
-    if (exportType === 'kpis') {
-      await exportKPIs(format);
-    } else if (exportType === 'users') {
-      await exportUsers(format);
-    } else if (exportType === 'api-logs') {
-      await exportAPILogs(format);
-    }
+    if (exportType === 'kpis') await exportKPIs(format);
+    else if (exportType === 'users') await exportUsers(format);
+    else if (exportType === 'api-logs') await exportAPILogs(format);
     setShowMenu(false);
   };
 
   return (
-    <div className={`relative inline-block ${className}`}>
+    <div ref={containerRef} style={{ position: 'relative', display: 'inline-block', ...style }}>
       <button
         onClick={() => setShowMenu(!showMenu)}
         disabled={isLoading}
-        className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg disabled:opacity-50"
+        className="btn-secondary"
+        style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', opacity: isLoading ? 0.6 : 1 }}
       >
-        <Download size={18} />
+        <Download size={16} />
         {isLoading ? 'Exporting...' : label}
       </button>
 
       {showMenu && (
-        <div className="absolute right-0 mt-2 w-40 bg-white border border-slate-200 rounded-lg shadow-lg z-10">
-          <button
-            onClick={() => handleExport('csv')}
-            className="w-full text-left px-4 py-2 hover:bg-slate-100 first:rounded-t-lg"
-          >
-            Export as CSV
-          </button>
-          <button
-            onClick={() => handleExport('pdf')}
-            className="w-full text-left px-4 py-2 hover:bg-slate-100 last:rounded-b-lg border-t border-slate-200"
-          >
-            Export as PDF
-          </button>
+        <div
+          style={{
+            position: 'absolute',
+            right: 0,
+            top: 'calc(100% + 6px)',
+            width: '160px',
+            backgroundColor: 'var(--layer-2)',
+            border: '1px solid var(--border-default)',
+            borderRadius: 'var(--radius-card)',
+            boxShadow: 'var(--shadow-card)',
+            zIndex: 50,
+            overflow: 'hidden',
+          }}
+        >
+          {(['csv', 'pdf'] as const).map((fmt) => (
+            <button
+              key={fmt}
+              onClick={() => handleExport(fmt)}
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                padding: '10px 16px',
+                fontSize: '14px',
+                color: 'var(--text-secondary)',
+                backgroundColor: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'block',
+                borderBottom: fmt === 'csv' ? '1px solid var(--border-subtle)' : 'none',
+                transition: 'background-color var(--duration-sm)',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--layer-1)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+            >
+              Export as {fmt.toUpperCase()}
+            </button>
+          ))}
         </div>
       )}
 
       {error && (
-        <div className="mt-2 p-2 bg-red-100 text-red-700 rounded text-sm">
+        <div className="alert alert-error" style={{ marginTop: '8px', fontSize: '13px' }}>
           {error}
         </div>
       )}

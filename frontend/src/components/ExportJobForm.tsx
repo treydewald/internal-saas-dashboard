@@ -13,7 +13,6 @@ export const ExportJobForm: React.FC<ExportJobFormProps> = ({ onSubmit, loading 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError('');
-
     try {
       await onSubmit(jobType);
       setJobType('users');
@@ -23,43 +22,55 @@ export const ExportJobForm: React.FC<ExportJobFormProps> = ({ onSubmit, loading 
   };
 
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-      <h2 className="text-lg font-semibold text-white mb-4">Create Export Job</h2>
+    <div className="card">
+      <h2 style={{ fontSize: '17px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px', marginTop: 0 }}>
+        Create Export Job
+      </h2>
 
       {(error || submitError) && (
-        <div className="mb-4 bg-red-900 bg-opacity-50 border border-red-700 rounded-md p-3 text-red-200 text-sm">
+        <div className="alert alert-error" style={{ marginBottom: '16px' }}>
           {error || submitError}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">Export Type</label>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="form-group">
+          <label className="label-text" style={{ display: 'block', marginBottom: '8px' }}>Export Type</label>
           <select
             value={jobType}
             onChange={(e) => setJobType(e.target.value)}
-            className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
             required
           >
             <option value="users">Users</option>
             <option value="api_logs">API Logs</option>
             <option value="kpis">KPI Metrics</option>
           </select>
-          <p className="text-xs text-slate-400 mt-1">Select the data type you want to export</p>
+          <p style={{ margin: '6px 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>
+            Select the data type you want to export
+          </p>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-cyan-600 disabled:opacity-50 text-white font-medium rounded-md transition-colors"
+          className="btn-primary"
+          style={{ opacity: loading ? 0.6 : 1 }}
         >
           {loading ? 'Creating Export Job...' : 'Create Export Job'}
         </button>
       </form>
 
-      <div className="mt-4 p-4 bg-slate-700 bg-opacity-50 rounded-md">
-        <p className="text-sm text-slate-300">
-          <strong>Note:</strong> Export jobs are processed asynchronously. You can monitor the progress below and download the file once it's ready.
+      <div
+        style={{
+          marginTop: '16px',
+          padding: '12px 16px',
+          backgroundColor: 'var(--layer-1)',
+          borderRadius: 'var(--radius-card)',
+          border: '1px solid var(--border-subtle)',
+        }}
+      >
+        <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)' }}>
+          <strong>Note:</strong> Export jobs are processed asynchronously. You can monitor the progress below and download the file once it&apos;s ready.
         </p>
       </div>
     </div>

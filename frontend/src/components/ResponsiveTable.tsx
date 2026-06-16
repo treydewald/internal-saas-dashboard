@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface Column {
   key: string;
@@ -16,11 +16,6 @@ interface ResponsiveTableProps {
   emptyMessage?: string;
 }
 
-/**
- * ResponsiveTable component that automatically adapts to mobile and desktop views.
- * On mobile: displays as stacked cards
- * On desktop: displays as traditional table
- */
 export const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
   columns,
   data,
@@ -30,42 +25,57 @@ export const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
   onRetry,
   emptyMessage = 'No data available',
 }) => {
-  const SkeletonRow = () => (
-    <tr className="border-b border-slate-800 hover:bg-gray-900 transition-colors">
-      {columns.map((col) => (
-        <td key={col.key} className="px-6 py-4">
-          <div className="h-4 bg-slate-700 rounded w-20 animate-pulse" />
-        </td>
-      ))}
-    </tr>
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
   );
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
 
   if (error) {
     return (
-      <div className="p-6 text-center">
-        <div className="text-red-400 mb-4">{error}</div>
+      <div style={{ padding: '24px', textAlign: 'center' }}>
+        <div className="alert alert-error" style={{ display: 'inline-block', marginBottom: '16px' }}>
+          {error}
+        </div>
         {onRetry && (
-          <button
-            onClick={onRetry}
-            className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
-          >
-            Retry
-          </button>
+          <div>
+            <button onClick={onRetry} className="btn-primary">Retry</button>
+          </div>
         )}
       </div>
     );
   }
 
   if (loading && data.length === 0) {
+    if (isMobile) {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '16px' }}>
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={i}
+              className="card"
+              style={{ animation: 'live-breathe 1.4s ease-in-out infinite' }}
+            >
+              <div style={{ height: '14px', backgroundColor: 'var(--border-default)', borderRadius: 'var(--radius-sm)', width: '50%', marginBottom: '8px' }} />
+              <div style={{ height: '14px', backgroundColor: 'var(--border-default)', borderRadius: 'var(--radius-sm)', width: '75%' }} />
+            </div>
+          ))}
+        </div>
+      );
+    }
     return (
-      <div className="overflow-x-auto">
-        <table className="w-full hidden md:table">
-          <thead className="bg-gray-900 border-b border-slate-700 sticky top-0">
-            <tr>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid var(--border-default)', backgroundColor: 'var(--layer-1)' }}>
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="px-6 py-3 text-left text-sm font-semibold text-slate-300"
+                  style={{ padding: '12px 24px', textAlign: 'left', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}
                 >
                   {col.label}
                 </th>
@@ -74,59 +84,18 @@ export const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
           </thead>
           <tbody>
             {[...Array(5)].map((_, i) => (
-              <SkeletonRow key={i} />
-            ))}
-          </tbody>
-        </table>
-
-        {/* Mobile skeleton */}
-        <div className="md:hidden space-y-4">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-slate-800 rounded-lg p-4 animate-pulse">
-              <div className="h-4 bg-slate-700 rounded w-1/2 mb-2"></div>
-              <div className="h-4 bg-slate-700 rounded w-3/4"></div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (data.length === 0) {
-    return (
-      <div className="p-12 text-center">
-        <div className="text-slate-400 text-lg">{emptyMessage}</div>
-      </div>
-    );
-  }
-
-  return (
-    <>
-      {/* Desktop Table */}
-      <div className="overflow-x-auto hidden md:block">
-        <table className="w-full">
-          <thead className="bg-gray-900 border-b border-slate-700 sticky top-0">
-            <tr>
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className="px-6 py-3 text-left text-sm font-semibold text-slate-300"
-                >
-                  {col.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, idx) => (
-              <tr
-                key={idx}
-                className="border-b border-slate-800 hover:bg-gray-900 transition-colors cursor-pointer"
-                onClick={() => onRowClick?.(row)}
-              >
+              <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                 {columns.map((col) => (
-                  <td key={col.key} className="px-6 py-4 text-sm text-white">
-                    {col.render ? col.render(row[col.key], row) : row[col.key]}
+                  <td key={col.key} style={{ padding: '16px 24px' }}>
+                    <div
+                      style={{
+                        height: '14px',
+                        backgroundColor: 'var(--border-default)',
+                        borderRadius: 'var(--radius-sm)',
+                        width: '80px',
+                        animation: 'live-breathe 1.4s ease-in-out infinite',
+                      }}
+                    />
                   </td>
                 ))}
               </tr>
@@ -134,19 +103,41 @@ export const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
           </tbody>
         </table>
       </div>
+    );
+  }
 
-      {/* Mobile Card View */}
-      <div className="md:hidden space-y-4">
+  if (data.length === 0) {
+    return (
+      <div style={{ padding: '48px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '15px' }}>
+        {emptyMessage}
+      </div>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '16px' }}>
         {data.map((row, idx) => (
           <div
             key={idx}
-            className="bg-slate-800 border border-slate-700 rounded-lg p-4 cursor-pointer hover:bg-slate-750 transition-colors"
+            className="card"
+            style={{ cursor: onRowClick ? 'pointer' : 'default' }}
             onClick={() => onRowClick?.(row)}
           >
             {columns.map((col) => (
-              <div key={col.key} className="flex justify-between items-start mb-3 last:mb-0">
-                <span className="text-slate-400 text-sm font-medium">{col.label}</span>
-                <span className="text-white text-sm text-right ml-2 flex-1">
+              <div
+                key={col.key}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  marginBottom: '10px',
+                }}
+              >
+                <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-tertiary)' }}>
+                  {col.label}
+                </span>
+                <span style={{ fontSize: '13px', color: 'var(--text-primary)', textAlign: 'right', marginLeft: '8px', flex: 1 }}>
                   {col.render ? col.render(row[col.key], row) : row[col.key]}
                 </span>
               </div>
@@ -154,7 +145,46 @@ export const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
           </div>
         ))}
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div style={{ overflowX: 'auto' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr style={{ borderBottom: '1px solid var(--border-default)', backgroundColor: 'var(--layer-1)', position: 'sticky', top: 0 }}>
+            {columns.map((col) => (
+              <th
+                key={col.key}
+                style={{ padding: '12px 24px', textAlign: 'left', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}
+              >
+                {col.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, idx) => (
+            <tr
+              key={idx}
+              className={onRowClick ? 'table-row--hoverable' : undefined}
+              style={{
+                borderBottom: '1px solid var(--border-subtle)',
+                cursor: onRowClick ? 'pointer' : 'default',
+                transition: 'background-color var(--duration-sm)',
+              }}
+              onClick={() => onRowClick?.(row)}
+            >
+              {columns.map((col) => (
+                <td key={col.key} style={{ padding: '16px 24px', fontSize: '14px', color: 'var(--text-primary)' }}>
+                  {col.render ? col.render(row[col.key], row) : row[col.key]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

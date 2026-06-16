@@ -46,10 +46,10 @@ function CreateWorkflowModal({ isOpen, onClose, onCreate }: CreateWorkflowModalP
           onChange={(e) => setDescription(e.target.value)}
         />
         <div className="modal-actions">
-          <button style={{ background: 'transparent', color: 'var(--text-1)', border: '1px solid var(--border-default)' }} onClick={onClose}>
+          <button className="btn-secondary" onClick={onClose}>
             Cancel
           </button>
-          <button style={{ background: 'var(--primary-bright)', color: '#000' }} onClick={handleSubmit}>
+          <button className="btn-primary" onClick={handleSubmit}>
             Create
           </button>
         </div>

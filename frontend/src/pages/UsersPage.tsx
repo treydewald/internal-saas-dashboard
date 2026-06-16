@@ -6,6 +6,7 @@ import { Pagination } from '../components/Pagination';
 import ExportButton from '../components/ExportButton';
 import { useFilters } from '../hooks/useFilters';
 import UserDetailModal from '../components/UserDetailModal';
+import { Users } from 'lucide-react';
 
 export const UsersPage: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
@@ -35,10 +36,23 @@ export const UsersPage: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Header */}
-      <div className="page-header">
-        <h1>Users</h1>
-        <p>Manage and view all system users</p>
+      {/* Hero Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '24px', flexWrap: 'wrap' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: 'rgba(37,99,235,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)' }}>
+              <Users size={14} />
+            </div>
+            <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent-primary)', margin: 0 }}>
+              User Management
+            </p>
+          </div>
+          <h1 style={{ margin: '0 0 4px 0' }}>Users</h1>
+          <p style={{ fontSize: '14px', color: 'var(--text-tertiary)', margin: 0 }}>
+            Manage accounts, plans, and access across your organization
+          </p>
+        </div>
+        <ExportButton exportType="users" label="Export Users" />
       </div>
 
       {/* Filter Bar */}
@@ -58,20 +72,15 @@ export const UsersPage: React.FC = () => {
         statusValue={filters.status}
       />
 
-      {/* Users Table with Export */}
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
-          <ExportButton exportType="users" label="Export Users" />
-        </div>
-        <div className="card" style={{ overflow: 'hidden' }}>
-          <UsersTable
-            users={users}
-            loading={loading}
-            error={error}
-            onRefetch={refetch}
-            onRowClick={handleRowClick}
-          />
-        </div>
+      {/* Users Table */}
+      <div className="card" style={{ overflow: 'hidden' }}>
+        <UsersTable
+          users={users}
+          loading={loading}
+          error={error}
+          onRefetch={refetch}
+          onRowClick={handleRowClick}
+        />
       </div>
 
       {/* User Detail Modal */}

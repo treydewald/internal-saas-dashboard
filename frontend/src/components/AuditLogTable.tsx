@@ -34,7 +34,7 @@ export default function AuditLogTable({ logs, loading, onSelectLog, totalCount }
   return (
     <div className="glass-panel" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
       <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-default)' }}>
-        <h3 style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-0)', margin: 0 }}>
+        <h3 style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
           Audit Events ({totalCount})
         </h3>
       </div>
@@ -43,7 +43,7 @@ export default function AuditLogTable({ logs, loading, onSelectLog, totalCount }
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
               {['Action', 'Resource', 'Status', 'User', 'Timestamp'].map((col) => (
-                <th key={col} style={{ padding: '10px 12px', textAlign: 'left', fontSize: '0.65rem', fontWeight: 600, color: 'var(--text-2)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                <th key={col} style={{ padding: '10px 12px', textAlign: 'left', fontSize: '0.65rem', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                   {col}
                 </th>
               ))}
@@ -52,13 +52,13 @@ export default function AuditLogTable({ logs, loading, onSelectLog, totalCount }
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} style={{ padding: '16px', textAlign: 'center', color: 'var(--text-2)' }}>
+                <td colSpan={5} style={{ padding: '16px', textAlign: 'center', color: 'var(--text-tertiary)' }}>
                   Loading...
                 </td>
               </tr>
             ) : logs.length === 0 ? (
               <tr>
-                <td colSpan={5} style={{ padding: '16px', textAlign: 'center', color: 'var(--text-2)' }}>
+                <td colSpan={5} style={{ padding: '16px', textAlign: 'center', color: 'var(--text-tertiary)' }}>
                   No audit logs found
                 </td>
               </tr>
@@ -74,19 +74,19 @@ export default function AuditLogTable({ logs, loading, onSelectLog, totalCount }
                     cursor: 'pointer',
                   }}
                 >
-                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-1)' }}>
+                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
                     <StatusChip status={getActionStatus(log.action)} label={log.action.replace(/_/g, ' ')} />
                   </td>
-                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-1)' }}>
+                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
                     {log.resource_type} {log.resource_id && `#${log.resource_id}`}
                   </td>
                   <td style={{ padding: '8px 12px' }}>
                     <StatusChip status={log.status === 'success' ? 'active' : 'error'} label={log.status} />
                   </td>
-                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-2)' }}>
+                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>
                     {log.user_id ? `User #${log.user_id}` : 'System'}
                   </td>
-                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-2)' }}>
+                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-tertiary)' }}>
                     {formatDate(log.created_at)}
                   </td>
                 </tr>

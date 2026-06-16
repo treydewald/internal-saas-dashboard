@@ -1,14 +1,5 @@
 /* Mobile Optimization Styles */
 
-/* Ensure touch targets are at least 44x44px */
-button, a, .interactive {
-  min-height: 44px;
-  min-width: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* Readable font sizes on mobile */
 @media (max-width: 768px) {
   body {
@@ -31,21 +22,11 @@ button, a, .interactive {
     font-size: 14px;
   }
 
-  /* Ensure inputs have proper touch targets */
+  /* Ensure inputs have proper touch targets on mobile */
   input, select, textarea {
     min-height: 44px;
     font-size: 16px; /* Prevent zoom on iOS */
     padding: 12px;
-  }
-
-  /* Make links and buttons larger on mobile */
-  button {
-    padding: 12px 16px;
-    font-size: 16px;
-  }
-
-  a {
-    padding: 8px 12px;
   }
 
   /* Responsive padding and margins */
@@ -81,23 +62,22 @@ button, a, .interactive {
     padding: 8px;
   }
 
-  nav a {
-    padding: 12px;
-    display: block;
-  }
-
   /* Responsive flex layouts */
   .flex {
     flex-wrap: wrap;
   }
 
-  /* Disable hover states on touch devices */
-  @media (hover: none) and (pointer: coarse) {
-    button:hover,
-    a:hover,
-    .interactive:hover {
-      background-color: inherit;
-    }
+  /* Responsive card padding */
+  .card {
+    padding: 16px;
+  }
+
+  .card-title {
+    font-size: 16px;
+  }
+
+  .card-content {
+    font-size: 14px;
   }
 }
 
@@ -115,11 +95,6 @@ button, a, .interactive {
     font-size: 18px;
   }
 
-  button {
-    padding: 8px 12px;
-    font-size: 14px;
-  }
-
   input, select, textarea {
     min-height: 40px;
     font-size: 14px;
@@ -128,6 +103,13 @@ button, a, .interactive {
 
   .container {
     padding: 8px;
+  }
+}
+
+/* Login page — hide brand panel on narrow screens */
+@media (max-width: 900px) {
+  .login-brand-panel {
+    display: none !important;
   }
 }
 
@@ -163,19 +145,4 @@ button, a, .interactive {
 img, video {
   max-width: 100%;
   height: auto;
-}
-
-/* Responsive typography for cards */
-@media (max-width: 768px) {
-  .card {
-    padding: 16px;
-  }
-
-  .card-title {
-    font-size: 16px;
-  }
-
-  .card-content {
-    font-size: 14px;
-  }
 }

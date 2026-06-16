@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface AuditEntryDetailProps {
   log: {
     id: number;
@@ -13,78 +15,91 @@ interface AuditEntryDetailProps {
   onClose: () => void;
 }
 
+const getStatusStyle = (status: string): React.CSSProperties => {
+  if (status === 'success') {
+    return { backgroundColor: 'var(--accent-success-dim)', color: 'var(--accent-success)', borderColor: 'rgba(22,163,74,0.2)' };
+  }
+  return { backgroundColor: 'var(--accent-error-dim)', color: 'var(--accent-error)', borderColor: 'rgba(220,38,38,0.2)' };
+};
+
 export default function AuditEntryDetail({ log, onClose }: AuditEntryDetailProps) {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString();
-  };
+  const formatDate = (dateString: string) => new Date(dateString).toLocaleString();
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Entry Details</h3>
+    <div className="card">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>
+          Entry Details
+        </h3>
         <button
           onClick={onClose}
-          className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-lg"
+          aria-label="Close"
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '16px',
+            color: 'var(--text-tertiary)',
+            lineHeight: 1,
+            padding: '4px',
+          }}
         >
           ✕
         </button>
       </div>
 
-      <div className="space-y-4">
-        {/* Action */}
-        <div>
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Action</p>
-          <p className="text-gray-900 dark:text-white capitalize">{log.action.replace(/_/g, ' ')}</p>
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        {[
+          { label: 'Action', value: log.action.replace(/_/g, ' '), style: { textTransform: 'capitalize' as const } },
+          {
+            label: 'Resource',
+            value: log.resource_type + (log.resource_id ? ` #${log.resource_id}` : ''),
+          },
+          { label: 'User', value: log.user_id ? `User #${log.user_id}` : 'System' },
+          ...(log.ip_address ? [{ label: 'IP Address', value: log.ip_address, mono: true }] : []),
+          { label: 'Timestamp', value: formatDate(log.created_at) },
+        ].map(({ label, value, style: extraStyle, mono }) => (
+          <div key={label}>
+            <p className="label-text" style={{ marginBottom: '4px' }}>{label}</p>
+            <p
+              style={{
+                margin: 0,
+                color: 'var(--text-primary)',
+                fontSize: '14px',
+                fontFamily: mono ? 'monospace' : undefined,
+                ...extraStyle,
+              }}
+            >
+              {value}
+            </p>
+          </div>
+        ))}
 
-        {/* Resource */}
         <div>
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Resource</p>
-          <p className="text-gray-900 dark:text-white">
-            {log.resource_type}
-            {log.resource_id && ` #${log.resource_id}`}
-          </p>
-        </div>
-
-        {/* Status */}
-        <div>
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Status</p>
-          <span
-            className={`inline-block px-2 py-1 rounded text-sm font-semibold ${
-              log.status === 'success'
-                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-            }`}
-          >
+          <p className="label-text" style={{ marginBottom: '4px' }}>Status</p>
+          <span className="status-badge" style={getStatusStyle(log.status)}>
             {log.status}
           </span>
         </div>
 
-        {/* User */}
-        <div>
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">User</p>
-          <p className="text-gray-900 dark:text-white">{log.user_id ? `User #${log.user_id}` : 'System'}</p>
-        </div>
-
-        {/* IP Address */}
-        {log.ip_address && (
-          <div>
-            <p className="text-sm font-medium text-gray-600 dark:text-gray-400">IP Address</p>
-            <p className="text-gray-900 dark:text-white font-mono text-sm">{log.ip_address}</p>
-          </div>
-        )}
-
-        {/* Timestamp */}
-        <div>
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Timestamp</p>
-          <p className="text-gray-900 dark:text-white text-sm">{formatDate(log.created_at)}</p>
-        </div>
-
-        {/* Details */}
         {Object.keys(log.details).length > 0 && (
           <div>
-            <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Additional Details</p>
-            <div className="bg-gray-50 dark:bg-slate-700 rounded p-3 text-xs text-gray-900 dark:text-gray-100 font-mono overflow-auto max-h-40">
+            <p className="label-text" style={{ marginBottom: '8px' }}>Additional Details</p>
+            <div
+              style={{
+                backgroundColor: 'var(--layer-0)',
+                border: '1px solid var(--border-default)',
+                borderRadius: 'var(--radius-sm)',
+                padding: '12px',
+                fontSize: '12px',
+                color: 'var(--text-secondary)',
+                fontFamily: 'monospace',
+                overflowX: 'auto',
+                maxHeight: '160px',
+                overflowY: 'auto',
+                whiteSpace: 'pre',
+              }}
+            >
               {JSON.stringify(log.details, null, 2)}
             </div>
           </div>

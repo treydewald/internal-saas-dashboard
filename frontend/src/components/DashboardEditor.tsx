@@ -22,6 +22,7 @@ export const DashboardEditor = ({
   isSaving = false,
 }: DashboardEditorProps) => {
   const [draggedWidget, setDraggedWidget] = useState<LayoutWidget | null>(null);
+  const [hoveredWidgetId, setHoveredWidgetId] = useState<string | null>(null);
 
   const handleDragStart = (widget: LayoutWidget) => {
     setDraggedWidget(widget);
@@ -31,18 +32,17 @@ export const DashboardEditor = ({
     setDraggedWidget(null);
   };
 
-  const handleRemoveWidget = (widgetId: string) => {
-    onRemoveWidget(widgetId);
-  };
-
   return (
-    <div className="flex-1">
-      <div className="mb-4 flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-white">Dashboard Layout</h3>
+    <div style={{ flex: 1 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
+          Dashboard Layout
+        </h3>
         <button
           onClick={() => onSave(widgets)}
           disabled={isSaving}
-          className="flex items-center gap-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:opacity-50 text-white rounded-lg transition"
+          className="btn-primary"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', opacity: isSaving ? 0.5 : 1 }}
         >
           <Save size={18} />
           {isSaving ? 'Saving...' : 'Save Dashboard'}
@@ -50,49 +50,100 @@ export const DashboardEditor = ({
       </div>
 
       {widgets.length === 0 ? (
-        <div className="border-2 border-dashed border-slate-600 rounded-lg p-8 text-center text-slate-400">
-          <p>Drag widgets here to build your dashboard</p>
+        <div
+          style={{
+            border: '2px dashed var(--border-default)',
+            borderRadius: 'var(--radius-card)',
+            padding: '48px 32px',
+            textAlign: 'center',
+            color: 'var(--text-tertiary)',
+            fontSize: '14px',
+          }}
+        >
+          <p style={{ margin: 0 }}>Drag widgets here to build your dashboard</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-slate-800 rounded-lg border border-slate-700 min-h-96">
-          {widgets.map((widget) => (
-            <div
-              key={widget.id}
-              draggable
-              onDragStart={() => handleDragStart(widget)}
-              onDragEnd={handleDragEnd}
-              className={`p-4 bg-slate-700 rounded-lg border border-slate-600 cursor-move hover:border-cyan-500 transition relative group ${
-                draggedWidget?.id === widget.id ? 'opacity-50' : ''
-              }`}
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">{widget.icon}</span>
-                  <div>
-                    <h4 className="font-medium text-white">{widget.name}</h4>
-                    <p className="text-xs text-slate-400">{widget.description}</p>
+        <div
+          className="card"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: '16px',
+            minHeight: '384px',
+          }}
+        >
+          {widgets.map((widget) => {
+            const isDragging = draggedWidget?.id === widget.id;
+            const isHovered = hoveredWidgetId === widget.id;
+            return (
+              <div
+                key={widget.id}
+                draggable
+                onDragStart={() => handleDragStart(widget)}
+                onDragEnd={handleDragEnd}
+                onMouseEnter={() => setHoveredWidgetId(widget.id)}
+                onMouseLeave={() => setHoveredWidgetId(null)}
+                style={{
+                  padding: '16px',
+                  backgroundColor: 'var(--layer-1)',
+                  borderRadius: 'var(--radius-card)',
+                  border: `1px solid ${isHovered ? 'var(--accent-primary)' : 'var(--border-default)'}`,
+                  cursor: 'move',
+                  position: 'relative',
+                  opacity: isDragging ? 0.5 : 1,
+                  transition: 'border-color var(--duration-sm)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '24px' }}>{widget.icon}</span>
+                    <div>
+                      <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                        {widget.name}
+                      </h4>
+                      <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-tertiary)' }}>
+                        {widget.description}
+                      </p>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => onRemoveWidget(widget.id)}
+                    title="Remove widget"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '24px',
+                      height: '24px',
+                      padding: 0,
+                      backgroundColor: 'var(--accent-error)',
+                      border: 'none',
+                      borderRadius: 'var(--radius-sm)',
+                      cursor: 'pointer',
+                      color: '#fff',
+                      opacity: isHovered ? 1 : 0,
+                      transition: 'opacity var(--duration-sm)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <X size={14} />
+                  </button>
                 </div>
-                <button
-                  onClick={() => handleRemoveWidget(widget.id)}
-                  className="p-1 bg-red-600 hover:bg-red-700 text-white rounded opacity-0 group-hover:opacity-100 transition"
-                  title="Remove widget"
-                >
-                  <X size={16} />
-                </button>
+                <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '8px' }}>
+                  Size: <span style={{ textTransform: 'capitalize' }}>{widget.size}</span>
+                </div>
               </div>
-              <div className="text-xs text-slate-400 mt-2">
-                Size: <span className="capitalize">{widget.size}</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
-      <div className="mt-4 p-3 bg-slate-800 rounded-lg border border-slate-700">
-        <h4 className="text-sm font-medium text-slate-400 mb-2">Quick Actions</h4>
-        <div className="flex gap-2">
-          <button className="flex items-center gap-2 px-3 py-2 text-sm bg-slate-700 hover:bg-slate-600 text-white rounded transition">
+      <div className="card" style={{ marginTop: '16px', padding: '12px 16px' }}>
+        <h4 style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-tertiary)', marginBottom: '8px', marginTop: 0 }}>
+          Quick Actions
+        </h4>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button className="btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}>
             <Copy size={14} />
             Duplicate Layout
           </button>

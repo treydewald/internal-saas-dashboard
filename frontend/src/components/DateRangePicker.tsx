@@ -54,43 +54,67 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   );
 
   return (
-    <div className="bg-gray-800 border border-slate-700 rounded-lg p-4 space-y-4">
-      <div>
-        <h3 className="text-sm font-medium text-slate-300 mb-3">Date Range</h3>
+    <div
+      style={{
+        backgroundColor: 'var(--layer-2)',
+        border: '1px solid var(--border-default)',
+        borderRadius: 'var(--radius-card)',
+        padding: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+      }}
+    >
+      <h3
+        style={{
+          fontSize: '13px',
+          fontWeight: 600,
+          color: 'var(--text-secondary)',
+          margin: 0,
+        }}
+      >
+        Date Range
+      </h3>
 
-        {/* Preset Buttons */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {presets.map((preset) => (
-            <button
-              key={preset.label}
-              onClick={() => handlePreset(preset.days)}
-              className="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-md transition-colors"
-            >
-              {preset.label}
-            </button>
-          ))}
+      {/* Preset Buttons */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+        {presets.map((preset) => (
+          <button
+            key={preset.label}
+            onClick={() => handlePreset(preset.days)}
+            className="btn-secondary"
+            style={{ fontSize: '13px', padding: '6px 12px' }}
+          >
+            {preset.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Custom Date Inputs */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '12px',
+        }}
+      >
+        <div className="form-group" style={{ marginBottom: 0 }}>
+          <label>From</label>
+          <input
+            type="date"
+            value={fromDate}
+            onChange={handleFromDateChange}
+            style={{ width: '100%' }}
+          />
         </div>
-
-        {/* Custom Date Inputs */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm text-slate-400 mb-2">From</label>
-            <input
-              type="date"
-              value={fromDate}
-              onChange={handleFromDateChange}
-              className="w-full px-3 py-2 bg-gray-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-slate-400 mb-2">To</label>
-            <input
-              type="date"
-              value={toDate}
-              onChange={handleToDateChange}
-              className="w-full px-3 py-2 bg-gray-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-            />
-          </div>
+        <div className="form-group" style={{ marginBottom: 0 }}>
+          <label>To</label>
+          <input
+            type="date"
+            value={toDate}
+            onChange={handleToDateChange}
+            style={{ width: '100%' }}
+          />
         </div>
       </div>
     </div>

@@ -113,8 +113,8 @@ export function WorkflowCanvas({
             <tbody>
               {tableRows.map((row, i) => (
                 <tr key={`${row.user}-${i}`} className="table-row--hoverable">
-                  <td style={{ fontWeight: 600, color: 'var(--text-0)' }}>{row.user}</td>
-                  <td style={{ color: 'var(--text-1)' }}>{row.plan}</td>
+                  <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{row.user}</td>
+                  <td style={{ color: 'var(--text-secondary)' }}>{row.plan}</td>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <div style={{
@@ -133,7 +133,7 @@ export function WorkflowCanvas({
                             : 'linear-gradient(90deg, #78c0ff, #6d7dff)',
                         }} />
                       </div>
-                      <span style={{ fontSize: '0.72rem', color: row.usage > 80 ? '#fb7185' : 'var(--text-1)' }}>
+                      <span style={{ fontSize: '0.72rem', color: row.usage > 80 ? '#fb7185' : 'var(--text-secondary)' }}>
                         {row.usage}%
                       </span>
                     </div>

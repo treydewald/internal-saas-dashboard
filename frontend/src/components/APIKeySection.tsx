@@ -44,91 +44,98 @@ const APIKeySection: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 animate-pulse">
-        <div className="h-6 bg-slate-700 rounded w-32 mb-6"></div>
-        <div className="space-y-4">
-          <div className="h-4 bg-slate-700 rounded w-full"></div>
-          <div className="h-4 bg-slate-700 rounded w-3/4"></div>
+      <div
+        className="card"
+        style={{ animation: 'live-breathe 1.4s ease-in-out infinite' }}
+      >
+        <div style={{ height: '22px', backgroundColor: 'var(--border-default)', borderRadius: 'var(--radius-sm)', width: '128px', marginBottom: '24px' }} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ height: '14px', backgroundColor: 'var(--border-default)', borderRadius: 'var(--radius-sm)', width: '100%' }} />
+          <div style={{ height: '14px', backgroundColor: 'var(--border-default)', borderRadius: 'var(--radius-sm)', width: '75%' }} />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-      <h2 className="text-xl font-semibold text-white mb-6">API Keys</h2>
+    <div className="card">
+      <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '24px', marginTop: 0 }}>
+        API Keys
+      </h2>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-900 bg-opacity-50 border border-red-700 rounded text-red-200 text-sm">
+        <div className="alert alert-error" style={{ marginBottom: '16px' }}>
           {error}
         </div>
       )}
+
       {apiKey ? (
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label className="text-sm font-medium text-slate-300 block mb-2">
+            <label className="label-text" style={{ display: 'block', marginBottom: '8px' }}>
               Primary API Key
             </label>
-            <div className="bg-slate-700 px-3 py-2 rounded font-mono text-sm text-slate-300 break-all">
+            <div
+              style={{
+                backgroundColor: 'var(--layer-0)',
+                border: '1px solid var(--border-default)',
+                borderRadius: 'var(--radius-input)',
+                padding: '8px 12px',
+                fontFamily: 'monospace',
+                fontSize: '13px',
+                color: 'var(--text-secondary)',
+                wordBreak: 'break-all',
+              }}
+            >
               {apiKey.key_prefix}***
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div>
-              <label className="text-xs font-medium text-slate-400 uppercase">
-                Name
-              </label>
-              <p className="text-white mt-1">{apiKey.name}</p>
+              <label className="label-text">Name</label>
+              <p className="value-text" style={{ marginTop: '4px' }}>{apiKey.name}</p>
             </div>
             <div>
-              <label className="text-xs font-medium text-slate-400 uppercase">
-                Created
-              </label>
-              <p className="text-white mt-1">
+              <label className="label-text">Created</label>
+              <p className="value-text" style={{ marginTop: '4px' }}>
                 {new Date(apiKey.created_at).toLocaleDateString()}
               </p>
             </div>
             {apiKey.last_used_at && (
               <div>
-                <label className="text-xs font-medium text-slate-400 uppercase">
-                  Last Used
-                </label>
-                <p className="text-white mt-1">
+                <label className="label-text">Last Used</label>
+                <p className="value-text" style={{ marginTop: '4px' }}>
                   {new Date(apiKey.last_used_at).toLocaleDateString()}
                 </p>
               </div>
             )}
             <div>
-              <label className="text-xs font-medium text-slate-400 uppercase">
-                Status
-              </label>
-              <p className="text-white mt-1">{apiKey.is_active ? 'Active' : 'Revoked'}</p>
+              <label className="label-text">Status</label>
+              <p className="value-text" style={{ marginTop: '4px' }}>
+                {apiKey.is_active ? 'Active' : 'Revoked'}
+              </p>
             </div>
           </div>
 
-          <div className="flex gap-3 pt-4">
-            <button
-              onClick={() => navigate('/api-keys')}
-              className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded font-medium transition-colors"
-            >
+          <div style={{ display: 'flex', gap: '12px', paddingTop: '8px' }}>
+            <button onClick={() => navigate('/api-keys')} className="btn-primary">
               Manage Keys
             </button>
           </div>
 
-          <p className="text-xs text-slate-400 mt-4">
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
             API secrets are only shown once at creation time. Use the API Keys page to create, revoke, or delete keys.
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
-          <p className="text-slate-400">No API keys created yet.</p>
-          <button
-            onClick={() => navigate('/api-keys')}
-            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded font-medium transition-colors"
-          >
-            Open API Key Manager
-          </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <p style={{ color: 'var(--text-tertiary)', margin: 0 }}>No API keys created yet.</p>
+          <div>
+            <button onClick={() => navigate('/api-keys')} className="btn-primary">
+              Open API Key Manager
+            </button>
+          </div>
         </div>
       )}
     </div>

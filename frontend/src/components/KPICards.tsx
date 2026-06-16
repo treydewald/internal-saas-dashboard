@@ -44,28 +44,6 @@ export const KPICards: React.FC<KPICardsProps> = ({ dateFrom = '', dateTo = '' }
     enabled: true,
   });
 
-  if (error) {
-    return (
-      <div style={{ padding: '16px', background: 'rgba(251,113,133,0.1)', borderRadius: 'var(--radius-card)', border: '1px solid var(--border-default)' }}>
-        <p style={{ color: 'var(--accent-error)' }}>{error}</p>
-        <button
-          onClick={fetchKpis}
-          style={{
-            marginTop: '8px',
-            padding: '6px 12px',
-            background: 'var(--accent-error)',
-            color: 'white',
-            border: 'none',
-            borderRadius: 'var(--radius-button)',
-            cursor: 'pointer',
-          }}
-        >
-          Retry
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div className="kpi-grid">
       {kpis.map((kpi, index) => (

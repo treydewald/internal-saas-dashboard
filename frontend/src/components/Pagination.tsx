@@ -30,25 +30,37 @@ export const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-700">
-      <div className="text-sm text-slate-400">
-        Page <span className="font-semibold text-white">{currentPage}</span> of{' '}
-        <span className="font-semibold text-white">{totalPages}</span>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '12px 0',
+        flexWrap: 'wrap',
+        gap: '12px',
+      }}
+    >
+      <div style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
+        Page{' '}
+        <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{currentPage}</span>
+        {' '}of{' '}
+        <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{totalPages}</span>
       </div>
 
-      <div className="flex gap-2">
+      <div style={{ display: 'flex', gap: '8px' }}>
         <button
           onClick={handlePrev}
           disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-900 border border-slate-700 rounded-lg text-slate-300 hover:text-white hover:border-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="btn-secondary"
+          style={{ fontSize: '13px', padding: '6px 14px' }}
         >
           ← Prev
         </button>
-
         <button
           onClick={handleNext}
           disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-900 border border-slate-700 rounded-lg text-slate-300 hover:text-white hover:border-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="btn-secondary"
+          style={{ fontSize: '13px', padding: '6px 14px' }}
         >
           Next →
         </button>

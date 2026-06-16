@@ -35,71 +35,96 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   const hasActiveFilters = searchValue || planValue || statusValue;
 
   return (
-    <div className="bg-gray-800 border border-slate-700 rounded-lg p-4 space-y-4">
-      <div className="flex flex-col gap-4">
-        {/* Search Bar */}
-        {onSearch && (
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-slate-300 mb-2">Search</label>
-            <SearchBar
-              placeholder="Search by name or email..."
-              onSearch={onSearch}
-              debounceMs={300}
-            />
+    <div
+      style={{
+        backgroundColor: 'var(--layer-2)',
+        border: '1px solid var(--border-default)',
+        borderRadius: 'var(--radius-card)',
+        padding: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+      }}
+    >
+      {/* Search Bar */}
+      {onSearch && (
+        <div>
+          <label
+            style={{
+              display: 'block',
+              fontSize: '13px',
+              fontWeight: 500,
+              color: 'var(--text-tertiary)',
+              marginBottom: '6px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}
+          >
+            Search
+          </label>
+          <SearchBar
+            placeholder="Search by name or email..."
+            onSearch={onSearch}
+            debounceMs={300}
+          />
+        </div>
+      )}
+
+      {/* Filter Controls */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: '12px',
+        }}
+      >
+        {/* Plan Filter */}
+        {showPlan && onPlanChange && (
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label>Plan</label>
+            <select
+              value={planValue}
+              onChange={(e) => onPlanChange(e.target.value)}
+              style={{ width: '100%' }}
+            >
+              <option value="">All Plans</option>
+              {plans.map((plan) => (
+                <option key={plan} value={plan}>
+                  {plan.charAt(0).toUpperCase() + plan.slice(1)}
+                </option>
+              ))}
+            </select>
           </div>
         )}
 
-        {/* Filter Controls */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Plan Filter */}
-          {showPlan && onPlanChange && (
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Plan</label>
-              <select
-                value={planValue}
-                onChange={(e) => onPlanChange(e.target.value)}
-                className="w-full px-3 py-2 bg-gray-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-              >
-                <option value="">All Plans</option>
-                {plans.map((plan) => (
-                  <option key={plan} value={plan}>
-                    {plan.charAt(0).toUpperCase() + plan.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {/* Status Filter */}
-          {showStatus && onStatusChange && (
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Status</label>
-              <select
-                value={statusValue}
-                onChange={(e) => onStatusChange(e.target.value)}
-                className="w-full px-3 py-2 bg-gray-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-              >
-                <option value="">All Statuses</option>
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </div>
-
-        {/* Clear Filters Button */}
-        {hasActiveFilters && onClearFilters && (
-          <button
-            onClick={handleClearAll}
-            className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm font-medium transition-colors"
-          >
-            Clear Filters
-          </button>
+        {/* Status Filter */}
+        {showStatus && onStatusChange && (
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label>Status</label>
+            <select
+              value={statusValue}
+              onChange={(e) => onStatusChange(e.target.value)}
+              style={{ width: '100%' }}
+            >
+              <option value="">All Statuses</option>
+              {statuses.map((status) => (
+                <option key={status} value={status}>
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
         )}
       </div>
+
+      {/* Clear Filters Button */}
+      {hasActiveFilters && onClearFilters && (
+        <div>
+          <button onClick={handleClearAll} className="btn-secondary" style={{ fontSize: '13px', padding: '6px 12px' }}>
+            Clear Filters
+          </button>
+        </div>
+      )}
     </div>
   );
 };

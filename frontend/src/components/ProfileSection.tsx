@@ -30,8 +30,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onSave }) => {
   }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setFormData({ name: value });
+    setFormData({ name: e.target.value });
   };
 
   const handleSave = async () => {
@@ -39,16 +38,11 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onSave }) => {
       setError('Name cannot be empty');
       return;
     }
-
     setLoading(true);
     setError('');
     setSuccess('');
-
     try {
-      if (!user) {
-        throw new Error('User is not available');
-      }
-
+      if (!user) throw new Error('User is not available');
       const response = await axios.put(`/api/users/${user.id}`, { name: formData.name });
       setProfile(response.data);
       updateUser({ name: response.data.name });
@@ -73,62 +67,41 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onSave }) => {
   };
 
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-      <h2 className="text-xl font-semibold text-white mb-6">Profile Settings</h2>
+    <div className="card">
+      <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '24px', marginTop: 0 }}>
+        Profile Settings
+      </h2>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-900 bg-opacity-50 border border-red-700 rounded text-red-200 text-sm">
-          {error}
-        </div>
+        <div className="alert alert-error" style={{ marginBottom: '16px' }}>{error}</div>
       )}
-
       {success && (
-        <div className="mb-4 p-3 bg-green-900 bg-opacity-50 border border-green-700 rounded text-green-200 text-sm">
-          {success}
-        </div>
+        <div className="alert alert-success" style={{ marginBottom: '16px' }}>{success}</div>
       )}
 
-      <div className="space-y-4">
-        {/* Name Field */}
-        <div>
-          <label className="text-sm font-medium text-slate-300 block mb-2">
-            Name
-          </label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="form-group">
+          <label className="label-text" style={{ display: 'block', marginBottom: '8px' }}>Name</label>
           {editMode ? (
-            <input
-              type="text"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
-            />
+            <input type="text" value={formData.name} onChange={handleChange} />
           ) : (
-            <p className="text-white">{profile?.name}</p>
+            <p className="value-text" style={{ margin: 0 }}>{profile?.name}</p>
           )}
         </div>
 
-        {/* Email Field (Read-only) */}
         <div>
-          <label className="text-sm font-medium text-slate-300 block mb-2">
-            Email
-          </label>
-          <p className="text-slate-400">{profile?.email}</p>
+          <label className="label-text" style={{ display: 'block', marginBottom: '8px' }}>Email</label>
+          <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '14px' }}>{profile?.email}</p>
         </div>
 
-        {/* Role Field (Read-only) */}
         <div>
-          <label className="text-sm font-medium text-slate-300 block mb-2">
-            Role
-          </label>
-          <p className="text-slate-400 capitalize">{profile?.role}</p>
+          <label className="label-text" style={{ display: 'block', marginBottom: '8px' }}>Role</label>
+          <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '14px', textTransform: 'capitalize' }}>{profile?.role}</p>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 pt-4">
+        <div style={{ display: 'flex', gap: '12px', paddingTop: '8px' }}>
           {!editMode ? (
-            <button
-              onClick={() => setEditMode(true)}
-              className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded font-medium transition-colors"
-            >
+            <button onClick={() => setEditMode(true)} className="btn-primary">
               Edit Profile
             </button>
           ) : (
@@ -136,14 +109,15 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onSave }) => {
               <button
                 onClick={handleSave}
                 disabled={loading}
-                className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded font-medium transition-colors disabled:bg-slate-600 disabled:cursor-not-allowed"
+                className="btn-primary"
+                style={{ opacity: loading ? 0.6 : 1 }}
               >
                 {loading ? 'Saving...' : 'Save'}
               </button>
               <button
                 onClick={handleCancel}
                 disabled={loading}
-                className="px-4 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded font-medium transition-colors disabled:cursor-not-allowed"
+                className="btn-secondary"
               >
                 Cancel
               </button>

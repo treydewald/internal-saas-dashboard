@@ -22,6 +22,18 @@ interface UserData {
   last_login?: string;
 }
 
+const getPlanStyle = (plan: string): React.CSSProperties => {
+  if (plan === 'enterprise') return { backgroundColor: 'var(--accent-purple-dim)', color: 'var(--accent-purple)' };
+  if (plan === 'pro') return { backgroundColor: 'var(--accent-info-dim)', color: 'var(--accent-info)' };
+  return { backgroundColor: 'var(--border-default)', color: 'var(--text-tertiary)' };
+};
+
+const getUsageColor = (pct: number) => {
+  if (pct > 80) return 'var(--accent-error)';
+  if (pct > 60) return 'var(--accent-warning)';
+  return 'var(--accent-success)';
+};
+
 const UserDetailModal: React.FC<UserDetailModalProps> = ({
   userId,
   isOpen,
@@ -69,192 +81,211 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <>
-      {/* Modal Overlay */}
+    <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && handleClose()}>
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40"
-        onClick={handleClose}
-      />
+        className="card"
+        style={{
+          width: '100%',
+          maxWidth: '480px',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: 0,
+          gap: 0,
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '20px 24px',
+            borderBottom: '1px solid var(--border-default)',
+            position: 'sticky',
+            top: 0,
+            backgroundColor: 'var(--layer-2)',
+            zIndex: 1,
+          }}
+        >
+          <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
+            {editMode ? 'Edit User' : 'User Details'}
+          </h2>
+          <button
+            onClick={handleClose}
+            aria-label="Close modal"
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '18px',
+              color: 'var(--text-tertiary)',
+              lineHeight: 1,
+              padding: '4px',
+            }}
+          >
+            ✕
+          </button>
+        </div>
 
-      {/* Modal Content */}
-      <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-        <div className="bg-slate-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto border border-slate-700">
-          {/* Header */}
-          <div className="sticky top-0 bg-slate-700 px-6 py-4 border-b border-slate-600 flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-white">
-              {editMode ? 'Edit User' : 'User Details'}
-            </h2>
-            <button
-              onClick={handleClose}
-              className="text-slate-400 hover:text-white transition-colors"
-              aria-label="Close modal"
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* Content */}
-          <div className="p-6">
-            {error && (
-              <div className="mb-4 p-3 bg-red-900 bg-opacity-50 border border-red-700 rounded text-red-200 text-sm">
-                {error}
-              </div>
-            )}
-
-            {successMessage && (
-              <div className="mb-4 p-3 bg-green-900 bg-opacity-50 border border-green-700 rounded text-green-200 text-sm">
-                {successMessage}
-              </div>
-            )}
-
-            {loading ? (
-              <div className="flex justify-center items-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border border-cyan-500 border-t-transparent"></div>
-              </div>
-            ) : user ? (
-              <>
-                {editMode ? (
-                  <UserEditForm
-                    user={user}
-                    onSave={handleSave}
-                    onCancel={() => {
-                      setEditMode(false);
-                      setHasUnsavedChanges(false);
-                    }}
-                    onChange={handleEditChange}
-                  />
-                ) : (
-                  <div className="space-y-4">
-                    {/* User Details - Read Only */}
-                    <div>
-                      <label className="text-xs font-semibold text-slate-400 uppercase">
-                        Name
-                      </label>
-                      <p className="text-white font-medium">{user.name}</p>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-semibold text-slate-400 uppercase">
-                        Email
-                      </label>
-                      <p className="text-white font-medium">{user.email}</p>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-semibold text-slate-400 uppercase">
-                        Role
-                      </label>
-                      <p className="text-white font-medium capitalize">{user.role}</p>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-semibold text-slate-400 uppercase">
-                        Plan
-                      </label>
-                      <div className="mt-1">
-                        <span
-                          className={`px-3 py-1 rounded text-xs font-semibold capitalize inline-block ${
-                            user.plan === 'free'
-                              ? 'bg-slate-600 text-slate-200'
-                              : user.plan === 'pro'
-                                ? 'bg-blue-900 text-blue-200'
-                                : 'bg-yellow-900 text-yellow-200'
-                          }`}
-                        >
-                          {user.plan}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-semibold text-slate-400 uppercase">
-                        Status
-                      </label>
-                      <div className="mt-1">
-                        <span
-                          className={`px-3 py-1 rounded text-xs font-semibold inline-block ${
-                            user.status === 'active'
-                              ? 'bg-green-900 text-green-200'
-                              : 'bg-red-900 text-red-200'
-                          }`}
-                        >
-                          {user.status}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-semibold text-slate-400 uppercase">
-                        Usage
-                      </label>
-                      <div className="mt-1 flex items-center gap-2">
-                        <div className="flex-1 bg-slate-700 rounded-full h-2 overflow-hidden">
-                          <div
-                            className={`h-full ${
-                              user.usage_percent > 80
-                                ? 'bg-red-500'
-                                : user.usage_percent > 60
-                                  ? 'bg-yellow-500'
-                                  : 'bg-green-500'
-                            }`}
-                            style={{ width: `${user.usage_percent}%` }}
-                          ></div>
-                        </div>
-                        <span className="text-white font-medium text-sm">
-                          {user.usage_percent}%
-                        </span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-semibold text-slate-400 uppercase">
-                        Created At
-                      </label>
-                      <p className="text-white font-medium">
-                        {new Date(user.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-
-                    {user.last_login && (
-                      <div>
-                        <label className="text-xs font-semibold text-slate-400 uppercase">
-                          Last Login
-                        </label>
-                        <p className="text-white font-medium">
-                          {new Date(user.last_login).toLocaleString()}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </>
-            ) : (
-              <p className="text-slate-400">User not found</p>
-            )}
-          </div>
-
-          {/* Footer */}
-          {!loading && user && (
-            <div className="sticky bottom-0 bg-slate-700 px-6 py-4 border-t border-slate-600 flex gap-3 justify-end">
-              <button
-                onClick={handleClose}
-                className="px-4 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded font-medium transition-colors"
-              >
-                Close
-              </button>
-              {isAdmin && !editMode && (
-                <button
-                  onClick={() => setEditMode(true)}
-                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded font-medium transition-colors"
-                >
-                  Edit
-                </button>
-              )}
+        {/* Content */}
+        <div style={{ padding: '24px', flex: 1 }}>
+          {error && (
+            <div className="alert alert-error" style={{ marginBottom: '16px' }}>
+              <p style={{ margin: 0 }}>{error}</p>
             </div>
           )}
+
+          {successMessage && (
+            <div className="alert alert-success" style={{ marginBottom: '16px' }}>
+              <p style={{ margin: 0 }}>{successMessage}</p>
+            </div>
+          )}
+
+          {loading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  border: '3px solid var(--border-default)',
+                  borderTopColor: 'var(--accent-primary)',
+                  animation: 'spin 0.9s linear infinite',
+                }}
+              />
+            </div>
+          ) : user ? (
+            <>
+              {editMode ? (
+                <UserEditForm
+                  user={user}
+                  onSave={handleSave}
+                  onCancel={() => {
+                    setEditMode(false);
+                    setHasUnsavedChanges(false);
+                  }}
+                  onChange={handleEditChange}
+                />
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {[
+                    { label: 'Name', value: user.name },
+                    { label: 'Email', value: user.email },
+                    { label: 'Role', value: user.role },
+                  ].map(({ label, value }) => (
+                    <div key={label}>
+                      <label className="label-text">{label}</label>
+                      <p className="value-text" style={{ marginTop: '4px' }}>{value}</p>
+                    </div>
+                  ))}
+
+                  <div>
+                    <label className="label-text">Plan</label>
+                    <div style={{ marginTop: '6px' }}>
+                      <span
+                        className="status-badge"
+                        style={getPlanStyle(user.plan)}
+                      >
+                        {user.plan}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="label-text">Status</label>
+                    <div style={{ marginTop: '6px' }}>
+                      <span
+                        className="status-badge"
+                        style={
+                          user.status === 'active'
+                            ? { backgroundColor: 'var(--accent-success-dim)', color: 'var(--accent-success)', borderColor: 'rgba(22,163,74,0.2)' }
+                            : { backgroundColor: 'var(--accent-error-dim)', color: 'var(--accent-error)', borderColor: 'rgba(220,38,38,0.2)' }
+                        }
+                      >
+                        {user.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="label-text">Usage</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' }}>
+                      <div
+                        style={{
+                          flex: 1,
+                          height: '6px',
+                          borderRadius: '999px',
+                          backgroundColor: 'var(--border-default)',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: `${user.usage_percent}%`,
+                            height: '100%',
+                            borderRadius: '999px',
+                            backgroundColor: getUsageColor(user.usage_percent),
+                            transition: 'width 0.3s ease',
+                          }}
+                        />
+                      </div>
+                      <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>
+                        {user.usage_percent}%
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="label-text">Created At</label>
+                    <p className="value-text" style={{ marginTop: '4px' }}>
+                      {new Date(user.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  {user.last_login && (
+                    <div>
+                      <label className="label-text">Last Login</label>
+                      <p className="value-text" style={{ marginTop: '4px' }}>
+                        {new Date(user.last_login).toLocaleString()}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          ) : (
+            <p style={{ color: 'var(--text-tertiary)', margin: 0 }}>User not found</p>
+          )}
         </div>
+
+        {/* Footer */}
+        {!loading && user && (
+          <div
+            style={{
+              display: 'flex',
+              gap: '12px',
+              justifyContent: 'flex-end',
+              padding: '16px 24px',
+              borderTop: '1px solid var(--border-default)',
+              position: 'sticky',
+              bottom: 0,
+              backgroundColor: 'var(--layer-2)',
+            }}
+          >
+            <button onClick={handleClose} className="btn-secondary">
+              Close
+            </button>
+            {isAdmin && !editMode && (
+              <button onClick={() => setEditMode(true)} className="btn-primary">
+                Edit
+              </button>
+            )}
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

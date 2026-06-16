@@ -15,9 +15,9 @@ export default function AuditLogPage() {
         <p>View all system actions and user activities for compliance and security</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '24px' }}>
         {/* Log Table */}
-        <div style={{ gridColumn: 'span 2' }}>
+        <div style={{ minWidth: 0 }}>
           <AuditLogTable
             logs={logs}
             loading={loading}
@@ -27,7 +27,7 @@ export default function AuditLogPage() {
         </div>
 
         {/* Detail Sidebar */}
-        <div>
+        <div style={{ minWidth: 0 }}>
           {selectedLog ? (
             <AuditEntryDetail log={selectedLog} onClose={() => setSelectedLog(null)} />
           ) : (

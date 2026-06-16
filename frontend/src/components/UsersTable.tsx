@@ -4,6 +4,21 @@ import type { User } from '../hooks/useUsers';
 import { sortData } from '../utils/tableUtils';
 import type { SortConfig } from '../utils/tableUtils';
 
+const AVATAR_COLORS = [
+  { bg: 'rgba(37,99,235,0.12)', color: '#2563EB' },
+  { bg: 'rgba(22,163,74,0.12)', color: '#16A34A' },
+  { bg: 'rgba(124,58,237,0.12)', color: '#7C3AED' },
+  { bg: 'rgba(220,38,38,0.12)', color: '#DC2626' },
+  { bg: 'rgba(217,119,6,0.12)', color: '#D97706' },
+  { bg: 'rgba(6,182,212,0.12)', color: '#0891B2' },
+];
+
+const PLAN_STYLES: Record<string, { bg: string; color: string; border: string }> = {
+  enterprise: { bg: 'rgba(124,58,237,0.1)', color: '#7C3AED', border: 'rgba(124,58,237,0.2)' },
+  pro: { bg: 'rgba(37,99,235,0.08)', color: '#2563EB', border: 'rgba(37,99,235,0.18)' },
+  free: { bg: 'rgba(100,116,139,0.08)', color: 'var(--text-secondary)', border: 'var(--border-subtle)' },
+};
+
 interface UsersTableProps {
   users: User[];
   loading: boolean;
@@ -39,9 +54,9 @@ export const UsersTable: React.FC<UsersTableProps> = ({
 
   const SortIcon = ({ column }: { column: string }) => {
     if (sortConfig?.column !== column) {
-      return <span style={{ color: 'var(--text-2)', marginLeft: '4px' }}>⇅</span>;
+      return <span style={{ color: 'var(--text-muted)', marginLeft: '4px' }}>⇅</span>;
     }
-    return <span style={{ color: 'var(--primary-bright)', marginLeft: '4px' }}>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>;
+    return <span style={{ color: 'var(--accent-primary)', marginLeft: '4px' }}>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>;
   };
 
   if (error) {
@@ -82,8 +97,8 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   if (users.length === 0) {
     return (
       <div className="glass-panel" style={{ padding: '24px', textAlign: 'center' }}>
-        <p style={{ color: 'var(--text-2)', fontSize: '0.9rem' }}>No users found</p>
-        <p style={{ color: 'var(--text-tertiary)', fontSize: '0.8rem', marginTop: '4px' }}>Try adjusting your search or filters</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: 0 }}>No users found</p>
+        <p style={{ color: 'var(--text-tertiary)', fontSize: '13px', marginTop: '4px' }}>Try adjusting your search or filters</p>
       </div>
     );
   }
@@ -99,11 +114,11 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                   key={col}
                   onClick={() => handleSort(col.toLowerCase())}
                   style={{
-                    padding: '10px 12px',
+                    padding: '12px 16px',
                     textAlign: 'left',
-                    fontSize: '0.65rem',
+                    fontSize: '11px',
                     fontWeight: 600,
-                    color: 'var(--text-2)',
+                    color: 'var(--text-tertiary)',
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
                     cursor: 'pointer',
@@ -127,24 +142,42 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                   cursor: 'pointer',
                 }}
               >
-                <td style={{ padding: '8px 12px' }}>
-                  <div>
-                    <div style={{ fontWeight: 600, color: 'var(--text-0)', fontSize: '0.72rem' }}>{user.name}</div>
-                    <div style={{ fontSize: '0.67rem', color: 'var(--text-2)', marginTop: '2px' }}>{user.email}</div>
-                  </div>
-                </td>
-                <td style={{ padding: '8px 12px' }}>
-                  <StatusChip status="pending" label={user.plan.charAt(0).toUpperCase() + user.plan.slice(1)} />
-                </td>
-                <td style={{ padding: '8px 12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <div style={{ flex: 1, maxWidth: '80px', height: '4px', borderRadius: '3px', background: 'rgba(100,116,139,0.25)', overflow: 'hidden' }}>
-                      <div style={{ width: `${user.usage_percent}%`, height: '100%', borderRadius: '3px', background: 'var(--primary-bright)' }} />
+                <td style={{ padding: '10px 16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{
+                      width: '32px', height: '32px', borderRadius: '50%', flexShrink: 0,
+                      background: AVATAR_COLORS[idx % AVATAR_COLORS.length].bg,
+                      color: AVATAR_COLORS[idx % AVATAR_COLORS.length].color,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: '12px', fontWeight: 700, letterSpacing: '0.02em',
+                    }}>
+                      {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                     </div>
-                    <span style={{ fontSize: '0.67rem', color: 'var(--text-2)' }}>{user.usage_percent}%</span>
+                    <div>
+                      <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '13px' }}>{user.name}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '1px' }}>{user.email}</div>
+                    </div>
                   </div>
                 </td>
-                <td style={{ padding: '8px 12px' }}>
+                <td style={{ padding: '10px 16px' }}>
+                  {(() => {
+                    const ps = PLAN_STYLES[user.plan] || PLAN_STYLES.free;
+                    return (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: '100px', fontSize: '11px', fontWeight: 600, letterSpacing: '0.04em', background: ps.bg, color: ps.color, border: `1px solid ${ps.border}` }}>
+                        {user.plan.charAt(0).toUpperCase() + user.plan.slice(1)}
+                      </span>
+                    );
+                  })()}
+                </td>
+                <td style={{ padding: '10px 16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ flex: 1, maxWidth: '80px', height: '5px', borderRadius: '3px', background: 'var(--border-default)', overflow: 'hidden' }}>
+                      <div style={{ width: `${user.usage_percent}%`, height: '100%', borderRadius: '3px', background: user.usage_percent > 80 ? '#DC2626' : user.usage_percent > 60 ? '#D97706' : 'var(--accent-primary)' }} />
+                    </div>
+                    <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-secondary)', minWidth: '32px' }}>{user.usage_percent}%</span>
+                  </div>
+                </td>
+                <td style={{ padding: '10px 16px' }}>
                   <StatusChip status={getStatusChip(user.status)} label={user.status.charAt(0).toUpperCase() + user.status.slice(1)} />
                 </td>
               </tr>

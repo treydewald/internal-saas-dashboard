@@ -6,51 +6,72 @@ interface AnomalyAlertProps {
   type: 'response_time' | 'error_rate' | 'traffic';
 }
 
-const AnomalyAlert: React.FC<AnomalyAlertProps> = ({ anomaly, type }) => {
-  const getIcon = () => {
-    return anomaly.confidence_score > 0.8 ? <AlertTriangle /> : <AlertCircle />;
+const getAlertStyle = (confidenceScore: number): React.CSSProperties => {
+  if (confidenceScore > 0.8) {
+    return {
+      border: '1px solid rgba(220,38,38,0.4)',
+      backgroundColor: 'rgba(220,38,38,0.08)',
+      borderRadius: 'var(--radius-card)',
+      padding: '16px',
+    };
+  }
+  if (confidenceScore > 0.6) {
+    return {
+      border: '1px solid rgba(234,88,12,0.4)',
+      backgroundColor: 'rgba(234,88,12,0.08)',
+      borderRadius: 'var(--radius-card)',
+      padding: '16px',
+    };
+  }
+  return {
+    border: '1px solid rgba(234,179,8,0.4)',
+    backgroundColor: 'rgba(234,179,8,0.08)',
+    borderRadius: 'var(--radius-card)',
+    padding: '16px',
   };
+};
 
-  const getColor = () => {
-    if (anomaly.confidence_score > 0.8) return 'border-red-500 bg-red-500/10';
-    if (anomaly.confidence_score > 0.6) return 'border-orange-500 bg-orange-500/10';
-    return 'border-yellow-500 bg-yellow-500/10';
-  };
+const AnomalyAlert: React.FC<AnomalyAlertProps> = ({ anomaly, type }) => {
+  const iconSize = 18;
+  const icon = anomaly.confidence_score > 0.8
+    ? <AlertTriangle size={iconSize} style={{ color: 'var(--accent-error)' }} />
+    : <AlertCircle size={iconSize} style={{ color: 'var(--accent-warning)' }} />;
 
   const renderDetails = () => {
     switch (type) {
       case 'response_time':
         return (
-          <div className="space-y-2">
-            <p className="text-gray-300">
-              <span className="font-semibold">{anomaly.endpoint}</span> responded in{' '}
-              <span className="font-bold text-red-400">{anomaly.response_time_ms}ms</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '14px' }}>
+              <span style={{ fontWeight: 600 }}>{anomaly.endpoint}</span> responded in{' '}
+              <span style={{ fontWeight: 700, color: 'var(--accent-error)' }}>{anomaly.response_time_ms}ms</span>
             </p>
-            <p className="text-gray-400 text-sm">
+            <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '13px' }}>
               Z-Score: {anomaly.z_score} (deviation: {Math.round(anomaly.z_score * 100)}%)
             </p>
           </div>
         );
       case 'error_rate':
         return (
-          <div className="space-y-2">
-            <p className="text-gray-300">
-              Error rate of <span className="font-bold text-orange-400">{anomaly.error_rate_pct}%</span> on{' '}
-              <span className="font-semibold">{anomaly.date}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '14px' }}>
+              Error rate of{' '}
+              <span style={{ fontWeight: 700, color: 'var(--accent-warning)' }}>{anomaly.error_rate_pct}%</span> on{' '}
+              <span style={{ fontWeight: 600 }}>{anomaly.date}</span>
             </p>
-            <p className="text-gray-400 text-sm">
+            <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '13px' }}>
               {anomaly.errors} errors out of {anomaly.total_requests} requests
             </p>
           </div>
         );
       case 'traffic':
         return (
-          <div className="space-y-2">
-            <p className="text-gray-300">
-              <span className="font-bold text-cyan-400">{anomaly.request_count}</span> requests on{' '}
-              <span className="font-semibold">{anomaly.date}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '14px' }}>
+              <span style={{ fontWeight: 700, color: 'var(--accent-info)' }}>{anomaly.request_count}</span> requests on{' '}
+              <span style={{ fontWeight: 600 }}>{anomaly.date}</span>
             </p>
-            <p className="text-gray-400 text-sm">
+            <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '13px' }}>
               Expected: {anomaly.expected_count} requests (Z-Score: {anomaly.z_score})
             </p>
           </div>
@@ -61,20 +82,32 @@ const AnomalyAlert: React.FC<AnomalyAlertProps> = ({ anomaly, type }) => {
   };
 
   return (
-    <div className={`border rounded-lg p-4 ${getColor()}`}>
-      <div className="flex items-start gap-3">
-        <div className="text-gray-300 mt-1 flex-shrink-0">{getIcon()}</div>
-        <div className="flex-grow">
+    <div style={getAlertStyle(anomaly.confidence_score)}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+        <div style={{ flexShrink: 0, marginTop: '2px' }}>{icon}</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
           {renderDetails()}
-          <div className="mt-3">
-            <div className="flex items-center gap-2">
-              <div className="bg-gray-700 rounded-full h-2 flex-grow">
+          <div style={{ marginTop: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div
+                style={{
+                  flex: 1,
+                  height: '6px',
+                  borderRadius: '999px',
+                  backgroundColor: 'var(--border-default)',
+                  overflow: 'hidden',
+                }}
+              >
                 <div
-                  className="bg-cyan-500 h-2 rounded-full"
-                  style={{ width: `${anomaly.confidence_score * 100}%` }}
+                  style={{
+                    width: `${anomaly.confidence_score * 100}%`,
+                    height: '100%',
+                    borderRadius: '999px',
+                    backgroundColor: 'var(--accent-info)',
+                  }}
                 />
               </div>
-              <span className="text-xs text-gray-400">
+              <span style={{ fontSize: '12px', color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>
                 {Math.round(anomaly.confidence_score * 100)}% confidence
               </span>
             </div>

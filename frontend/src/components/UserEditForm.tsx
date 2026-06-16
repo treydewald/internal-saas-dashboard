@@ -45,91 +45,64 @@ const UserEditForm: React.FC<UserEditFormProps> = ({
     e.preventDefault();
     setSaving(true);
     setError('');
-
     try {
       await onSave(formData);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to update user'
-      );
+      setError(err instanceof Error ? err.message : 'Failed to update user');
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {error && (
-        <div className="p-3 bg-red-900 bg-opacity-50 border border-red-700 rounded text-red-200 text-sm">
-          {error}
-        </div>
+        <div className="alert alert-error">{error}</div>
       )}
 
-      {/* Name Field */}
-      <div>
-        <label htmlFor="name" className="text-xs font-semibold text-slate-400 uppercase">
-          Name
-        </label>
+      <div className="form-group">
+        <label htmlFor="name" className="label-text">Name</label>
         <input
           id="name"
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
-          className="mt-1 w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
           required
         />
       </div>
 
-      {/* Plan Field */}
-      <div>
-        <label htmlFor="plan" className="text-xs font-semibold text-slate-400 uppercase">
-          Plan
-        </label>
-        <select
-          id="plan"
-          name="plan"
-          value={formData.plan}
-          onChange={handleChange}
-          className="mt-1 w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-cyan-500"
-        >
+      <div className="form-group">
+        <label htmlFor="plan" className="label-text">Plan</label>
+        <select id="plan" name="plan" value={formData.plan} onChange={handleChange}>
           <option value="free">Free</option>
           <option value="pro">Pro</option>
           <option value="enterprise">Enterprise</option>
         </select>
       </div>
 
-      {/* Status Field */}
-      <div>
-        <label htmlFor="status" className="text-xs font-semibold text-slate-400 uppercase">
-          Status
-        </label>
-        <select
-          id="status"
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          className="mt-1 w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-cyan-500"
-        >
+      <div className="form-group">
+        <label htmlFor="status" className="label-text">Status</label>
+        <select id="status" name="status" value={formData.status} onChange={handleChange}>
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </select>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex gap-3 justify-end pt-4">
+      <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', paddingTop: '8px' }}>
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded font-medium transition-colors"
+          className="btn-secondary"
           disabled={saving}
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded font-medium transition-colors disabled:bg-slate-600 disabled:cursor-not-allowed"
+          className="btn-primary"
           disabled={saving}
+          style={{ opacity: saving ? 0.6 : 1 }}
         >
           {saving ? 'Saving...' : 'Save'}
         </button>
