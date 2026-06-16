@@ -109,9 +109,9 @@ export const KPICard: React.FC<KPICardProps> = ({
         }
       </div>
 
-      <div style={{ paddingTop: '4px' }}>
+      <div>
         <p className="kpi-card__label">{label}</p>
-        <p className="kpi-card__value" style={{ fontSize: '34px', marginTop: '6px' }}>{value}</p>
+        <p className="kpi-card__value">{value}</p>
 
         {sparkline && (
           <div className="kpi-card__sparkline" style={{ marginTop: '10px' }}>
