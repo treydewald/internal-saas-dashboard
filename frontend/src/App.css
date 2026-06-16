@@ -518,29 +518,61 @@
   border: 1px solid transparent;
 }
 
-.status-chip--active,
-.status-chip--healthy,
-.status-chip--running {
+/* RUNNING + HEALTHY only get breathing animation */
+.status-chip--running,
+.status-chip--healthy {
   color: var(--ok);
   background: rgba(52,211,153,0.10);
   border-color: rgba(52,211,153,0.28);
   animation: live-breathe 2.5s ease-in-out infinite;
 }
 
+/* ACTIVE = success/mint but static (no animation) */
+.status-chip--active {
+  color: var(--ok);
+  background: rgba(52,211,153,0.10);
+  border-color: rgba(52,211,153,0.28);
+}
+
+/* WARN/PENDING/DEGRADED/TRIAL/WARNING = amber */
 .status-chip--trial,
 .status-chip--pending,
 .status-chip--degraded,
-.status-chip--warn {
+.status-chip--warn,
+.status-chip--warning {
   color: var(--warn);
   background: rgba(250,204,21,0.10);
   border-color: rgba(250,204,21,0.28);
 }
 
-.status-chip--error,
-.status-chip--inactive {
+/* ERROR = rose */
+.status-chip--error {
   color: var(--danger);
   background: rgba(251,113,133,0.10);
   border-color: rgba(251,113,133,0.28);
+}
+
+/* INACTIVE + OFF = muted slate (not rose — these are just disabled, not failed) */
+.status-chip--inactive,
+.status-chip--off {
+  color: #64748B;
+  background: rgba(100,116,139,0.12);
+  border-color: rgba(100,116,139,0.22);
+}
+
+/* INFO / SKY = sky blue (for user.* actions, info status codes) */
+.status-chip--info,
+.status-chip--sky {
+  color: var(--primary-bright);
+  background: rgba(120,192,255,0.10);
+  border-color: rgba(120,192,255,0.28);
+}
+
+/* PURPLE = org.* actions, ML/forecast */
+.status-chip--purple {
+  color: var(--purple);
+  background: rgba(167,139,250,0.10);
+  border-color: rgba(167,139,250,0.28);
 }
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -1036,9 +1068,31 @@ td {
   justify-content: flex-end;
 }
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-   LEGACY STATUS CLASSES (kept for compat)
-â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.status-chip--get {
+  color: var(--primary-bright);
+  background: rgba(120,192,255,0.10);
+  border-color: rgba(120,192,255,0.28);
+}
+
+.status-chip--post {
+  color: var(--ok);
+  background: rgba(52,211,153,0.10);
+  border-color: rgba(52,211,153,0.28);
+}
+
+.status-chip--put,
+.status-chip--patch {
+  color: var(--warn);
+  background: rgba(250,204,21,0.10);
+  border-color: rgba(250,204,21,0.28);
+}
+
+.status-chip--delete {
+  color: var(--danger);
+  background: rgba(251,113,133,0.10);
+  border-color: rgba(251,113,133,0.28);
+}
+
 .status {
   display: inline-flex;
   align-items: center;
@@ -1059,4 +1113,13 @@ td {
 .status--healthy {
   color: #02280f;
   background: linear-gradient(135deg, #86efac, var(--ok));
+}
+
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+   MOBILE OPTIMIZATION
+â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+@media (max-width: 640px) {
+  .connection-status__text {
+    display: none;
+  }
 }

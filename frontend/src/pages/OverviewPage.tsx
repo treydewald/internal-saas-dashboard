@@ -10,20 +10,20 @@ export const OverviewPage: React.FC = () => {
   const { dateRange, updateDateRange } = useDateRange();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
-      <div style={{ borderBottom: '1px solid #1e2d4a', paddingBottom: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <div style={{ borderBottom: '1px solid var(--panel-border)', paddingBottom: '24px' }}>
         <h1
           style={{
             fontSize: '2rem',
             fontWeight: 800,
-            color: '#F1F5F9',
+            color: 'var(--text-0)',
             letterSpacing: '-0.02em',
             marginBottom: '6px',
           }}
         >
           Overview
         </h1>
-        <p style={{ color: '#64748B', fontSize: '14px' }}>
+        <p style={{ color: 'var(--text-2)', fontSize: '14px' }}>
           Monitor your key metrics at a glance.
         </p>
       </div>
@@ -46,37 +46,14 @@ export const OverviewPage: React.FC = () => {
             marginBottom: '20px',
           }}
         >
-          <div>
-            <h2
-              style={{
-                fontWeight: 700,
-                color: '#CBD5E1',
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-                fontSize: '11px',
-              }}
-            >
-              Key Performance Indicators
-            </h2>
-          </div>
+          <p className="eyebrow">Key Performance Indicators</p>
           <ExportButton exportType="kpis" label="Export KPIs" />
         </div>
         <KPICards dateFrom={dateRange.from} dateTo={dateRange.to} />
       </section>
 
       <section>
-        <h2
-          style={{
-            fontSize: '11px',
-            fontWeight: 700,
-            color: '#CBD5E1',
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-            marginBottom: '20px',
-          }}
-        >
-          Advanced Metrics
-        </h2>
+        <p className="eyebrow" style={{ marginBottom: '20px' }}>Advanced Metrics</p>
         <MetricsCards dateFrom={dateRange.from} dateTo={dateRange.to} />
       </section>
 

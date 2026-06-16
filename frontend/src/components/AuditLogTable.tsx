@@ -1,3 +1,5 @@
+import { StatusChip } from './StatusChip';
+
 interface AuditLog {
   id: number;
   user_id?: number;
@@ -17,78 +19,74 @@ interface AuditLogTableProps {
   totalCount: number;
 }
 
+const getActionStatus = (action: string): string => {
+  if (action.startsWith('user.')) return 'info';
+  if (action.startsWith('api_key.')) return 'warn';
+  if (action.startsWith('org.')) return 'purple';
+  return 'inactive';
+};
+
+const formatDate = (dateString: string): string => {
+  return new Date(dateString).toLocaleTimeString();
+};
+
 export default function AuditLogTable({ logs, loading, onSelectLog, totalCount }: AuditLogTableProps) {
-  const getStatusColor = (status: string) => {
-    return status === 'success'
-      ? 'text-green-600 dark:text-green-400'
-      : 'text-red-600 dark:text-red-400';
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString();
-  };
-
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg shadow overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+    <div className="glass-panel" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-default)' }}>
+        <h3 style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-0)', margin: 0 }}>
           Audit Events ({totalCount})
-        </h2>
+        </h3>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div style={{ overflowX: 'auto', flex: 1 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr className="border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                Action
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                Resource
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                User
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                Timestamp
-              </th>
+            <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
+              {['Action', 'Resource', 'Status', 'User', 'Timestamp'].map((col) => (
+                <th key={col} style={{ padding: '10px 12px', textAlign: 'left', fontSize: '0.65rem', fontWeight: 600, color: 'var(--text-2)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                  {col}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
-                  Loading audit logs...
+                <td colSpan={5} style={{ padding: '16px', textAlign: 'center', color: 'var(--text-2)' }}>
+                  Loading...
                 </td>
               </tr>
             ) : logs.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={5} style={{ padding: '16px', textAlign: 'center', color: 'var(--text-2)' }}>
                   No audit logs found
                 </td>
               </tr>
             ) : (
-              logs.map((log) => (
+              logs.map((log, idx) => (
                 <tr
                   key={log.id}
                   onClick={() => onSelectLog(log)}
-                  className="border-b border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/50 cursor-pointer transition"
+                  className="table-row--hoverable"
+                  style={{
+                    borderBottom: '1px solid var(--border-subtle)',
+                    backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)',
+                    cursor: 'pointer',
+                  }}
                 >
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
-                    {log.action.replace(/_/g, ' ')}
+                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-1)' }}>
+                    <StatusChip status={getActionStatus(log.action)} label={log.action.replace(/_/g, ' ')} />
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-1)' }}>
                     {log.resource_type} {log.resource_id && `#${log.resource_id}`}
                   </td>
-                  <td className={`px-6 py-4 text-sm font-semibold ${getStatusColor(log.status)}`}>
-                    {log.status}
+                  <td style={{ padding: '8px 12px' }}>
+                    <StatusChip status={log.status === 'success' ? 'active' : 'error'} label={log.status} />
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-2)' }}>
                     {log.user_id ? `User #${log.user_id}` : 'System'}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                  <td style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--text-2)' }}>
                     {formatDate(log.created_at)}
                   </td>
                 </tr>

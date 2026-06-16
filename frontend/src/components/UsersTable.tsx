@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { StatusChip } from './StatusChip';
 import type { User } from '../hooks/useUsers';
 import { sortData } from '../utils/tableUtils';
 import type { SortConfig } from '../utils/tableUtils';
@@ -10,6 +11,12 @@ interface UsersTableProps {
   onRefetch?: () => void;
   onRowClick?: (userId: number) => void;
 }
+
+const getStatusChip = (status: string): 'active' | 'inactive' | 'pending' => {
+  if (status === 'active') return 'active';
+  if (status === 'pending') return 'pending';
+  return 'inactive';
+};
 
 export const UsersTable: React.FC<UsersTableProps> = ({
   users,
@@ -30,53 +37,28 @@ export const UsersTable: React.FC<UsersTableProps> = ({
 
   const sortedUsers = sortData(users, sortConfig);
 
-  const getPlanColor = (plan: string) => {
-    switch (plan) {
-      case 'free':
-        return 'bg-slate-700 text-slate-200';
-      case 'pro':
-        return 'bg-blue-900 text-blue-200';
-      case 'enterprise':
-        return 'bg-amber-900 text-amber-200';
-      default:
-        return 'bg-slate-700 text-slate-200';
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    return status === 'active'
-      ? 'bg-green-900 text-green-200'
-      : 'bg-red-900 text-red-200';
-  };
-
   const SortIcon = ({ column }: { column: string }) => {
     if (sortConfig?.column !== column) {
-      return <span className="text-slate-500 ml-1">⇅</span>;
+      return <span style={{ color: 'var(--text-2)', marginLeft: '4px' }}>⇅</span>;
     }
-    return (
-      <span className="text-cyan-400 ml-1">
-        {sortConfig.direction === 'asc' ? '↑' : '↓'}
-      </span>
-    );
+    return <span style={{ color: 'var(--primary-bright)', marginLeft: '4px' }}>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>;
   };
-
-  const SkeletonRow = () => (
-    <tr className="border-b border-slate-800 hover:bg-gray-900 transition-colors">
-      <td className="px-6 py-4"><div className="h-4 bg-slate-700 rounded w-24 animate-pulse" /></td>
-      <td className="px-6 py-4"><div className="h-4 bg-slate-700 rounded w-20 animate-pulse" /></td>
-      <td className="px-6 py-4"><div className="h-4 bg-slate-700 rounded w-16 animate-pulse" /></td>
-      <td className="px-6 py-4"><div className="h-4 bg-slate-700 rounded w-16 animate-pulse" /></td>
-    </tr>
-  );
 
   if (error) {
     return (
-      <div className="p-6 text-center">
-        <div className="text-red-400 mb-4">{error}</div>
+      <div className="glass-panel" style={{ padding: '16px', textAlign: 'center' }}>
+        <p style={{ color: 'var(--accent-error)', marginBottom: '12px' }}>{error}</p>
         {onRefetch && (
           <button
             onClick={onRefetch}
-            className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+            style={{
+              padding: '6px 12px',
+              background: 'var(--accent-error)',
+              color: 'white',
+              border: 'none',
+              borderRadius: 'var(--radius-button)',
+              cursor: 'pointer',
+            }}
           >
             Retry
           </button>
@@ -87,112 +69,89 @@ export const UsersTable: React.FC<UsersTableProps> = ({
 
   if (loading && users.length === 0) {
     return (
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-900 border-b border-slate-700 sticky top-0">
-            <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-slate-300">Name</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-slate-300">Plan</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-slate-300">Usage</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-slate-300">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...Array(5)].map((_, i) => (
-              <SkeletonRow key={i} />
-            ))}
-          </tbody>
-        </table>
+      <div className="glass-panel" style={{ padding: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {[...Array(5)].map((_, i) => (
+            <div key={i} style={{ height: '28px', background: 'rgba(148,163,184,0.1)', borderRadius: 'var(--radius-sm)', animation: 'live-breathe 1.5s ease-in-out infinite' }} />
+          ))}
+        </div>
       </div>
     );
   }
 
   if (users.length === 0) {
     return (
-      <div className="p-12 text-center">
-        <div className="text-slate-400 text-lg">No users found</div>
-        <div className="text-slate-500 text-sm mt-1">Try adjusting your search or filters</div>
+      <div className="glass-panel" style={{ padding: '24px', textAlign: 'center' }}>
+        <p style={{ color: 'var(--text-2)', fontSize: '0.9rem' }}>No users found</p>
+        <p style={{ color: 'var(--text-tertiary)', fontSize: '0.8rem', marginTop: '4px' }}>Try adjusting your search or filters</p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead className="bg-gray-900 border-b border-slate-700 sticky top-0">
-          <tr>
-            <th
-              className="px-6 py-3 text-left text-sm font-semibold text-slate-300 cursor-pointer hover:text-white transition-colors"
-              onClick={() => handleSort('name')}
-            >
-              Name <SortIcon column="name" />
-            </th>
-            <th
-              className="px-6 py-3 text-left text-sm font-semibold text-slate-300 cursor-pointer hover:text-white transition-colors"
-              onClick={() => handleSort('plan')}
-            >
-              Plan <SortIcon column="plan" />
-            </th>
-            <th
-              className="px-6 py-3 text-left text-sm font-semibold text-slate-300 cursor-pointer hover:text-white transition-colors"
-              onClick={() => handleSort('usage_percent')}
-            >
-              Usage <SortIcon column="usage_percent" />
-            </th>
-            <th
-              className="px-6 py-3 text-left text-sm font-semibold text-slate-300 cursor-pointer hover:text-white transition-colors"
-              onClick={() => handleSort('status')}
-            >
-              Status <SortIcon column="status" />
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedUsers.map((user) => (
-            <tr
-              key={user.id}
-              className="border-b border-slate-800 hover:bg-gray-900 transition-colors cursor-pointer"
-              onClick={() => onRowClick?.(user.id)}
-            >
-              <td className="px-6 py-4">
-                <div>
-                  <div className="font-medium text-white">{user.name}</div>
-                  <div className="text-sm text-slate-400">{user.email}</div>
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${getPlanColor(
-                    user.plan
-                  )}`}
+    <div className="glass-panel" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ overflowX: 'auto', flex: 1 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
+              {['Name', 'Plan', 'Usage', 'Status'].map((col) => (
+                <th
+                  key={col}
+                  onClick={() => handleSort(col.toLowerCase())}
+                  style={{
+                    padding: '10px 12px',
+                    textAlign: 'left',
+                    fontSize: '0.65rem',
+                    fontWeight: 600,
+                    color: 'var(--text-2)',
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                    userSelect: 'none',
+                  }}
                 >
-                  {user.plan.charAt(0).toUpperCase() + user.plan.slice(1)}
-                </span>
-              </td>
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 max-w-xs bg-gray-900 rounded-full h-2">
-                    <div
-                      className="bg-cyan-500 h-2 rounded-full transition-all"
-                      style={{ width: `${user.usage_percent}%` }}
-                    />
-                  </div>
-                  <span className="text-sm text-slate-400">{user.usage_percent}%</span>
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                    user.status
-                  )}`}
-                >
-                  {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
-                </span>
-              </td>
+                  {col} <SortIcon column={col.toLowerCase()} />
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {sortedUsers.map((user, idx) => (
+              <tr
+                key={user.id}
+                className="table-row--hoverable"
+                onClick={() => onRowClick?.(user.id)}
+                style={{
+                  borderBottom: '1px solid var(--border-subtle)',
+                  backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)',
+                  cursor: 'pointer',
+                }}
+              >
+                <td style={{ padding: '8px 12px' }}>
+                  <div>
+                    <div style={{ fontWeight: 600, color: 'var(--text-0)', fontSize: '0.72rem' }}>{user.name}</div>
+                    <div style={{ fontSize: '0.67rem', color: 'var(--text-2)', marginTop: '2px' }}>{user.email}</div>
+                  </div>
+                </td>
+                <td style={{ padding: '8px 12px' }}>
+                  <StatusChip status="pending" label={user.plan.charAt(0).toUpperCase() + user.plan.slice(1)} />
+                </td>
+                <td style={{ padding: '8px 12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{ flex: 1, maxWidth: '80px', height: '4px', borderRadius: '3px', background: 'rgba(100,116,139,0.25)', overflow: 'hidden' }}>
+                      <div style={{ width: `${user.usage_percent}%`, height: '100%', borderRadius: '3px', background: 'var(--primary-bright)' }} />
+                    </div>
+                    <span style={{ fontSize: '0.67rem', color: 'var(--text-2)' }}>{user.usage_percent}%</span>
+                  </div>
+                </td>
+                <td style={{ padding: '8px 12px' }}>
+                  <StatusChip status={getStatusChip(user.status)} label={user.status.charAt(0).toUpperCase() + user.status.slice(1)} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
