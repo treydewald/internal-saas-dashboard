@@ -75,8 +75,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.detail || 'Login failed');
+        try {
+          const data = await response.json();
+          throw new Error(data.detail || 'Login failed');
+        } catch (e) {
+          throw new Error('Login failed. Backend may not be available. Using demo user.');
+        }
       }
 
       const data = await response.json();
