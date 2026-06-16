@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useScheduledReports } from '../hooks/useScheduledReports';
 import type { ScheduledReportCreate } from '../hooks/useScheduledReports';
+import { FileText } from 'lucide-react';
 
 const REPORT_TYPES = [
   { value: 'kpis', label: 'KPI Summary' },
@@ -72,12 +73,62 @@ export const ReportsPage: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Header */}
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      {/* Hero Header */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          gap: '24px',
+          flexWrap: 'wrap',
+          paddingBottom: '16px',
+          borderBottom: '1px solid var(--border-subtle)',
+        }}
+      >
         <div>
-          <h1>Reports</h1>
-          <p>Schedule automated reports for delivery via email</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <div
+              style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '7px',
+                background: 'rgba(37,99,235,0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--accent-primary)',
+              }}
+            >
+              <FileText size={14} />
+            </div>
+            <p
+              style={{
+                fontSize: '11px',
+                fontWeight: 'var(--fw-semibold)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: 'var(--accent-primary)',
+                margin: 0,
+              }}
+            >
+              Automation
+            </p>
+          </div>
+          <h1
+            style={{
+              margin: '0 0 4px 0',
+              fontSize: '32px',
+              fontWeight: 'var(--fw-bold)',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.01em',
+            }}
+          >
+            Reports
+          </h1>
+          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>
+            Schedule automated reports for delivery via email
+          </p>
         </div>
         <button
           onClick={() => setShowForm(true)}
@@ -89,10 +140,18 @@ export const ReportsPage: React.FC = () => {
 
       {/* Create Report Form */}
       {showForm && (
-        <div className="card">
-          <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
+        <section style={{ flex: '0 0 auto' }}>
+          <h2 style={{
+            fontSize: '14px',
+            fontWeight: 'var(--fw-semibold)',
+            color: 'var(--text-secondary)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+            margin: '0 0 16px 0'
+          }}>
             New Scheduled Report
           </h2>
+          <div className="card">
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
               <div className="form-group">
@@ -188,14 +247,23 @@ export const ReportsPage: React.FC = () => {
               </button>
             </div>
           </form>
-          </div>
+            </div>
+        </section>
         )}
 
       {/* Reports List */}
-      <div className="card">
-        <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
+      <section style={{ flex: '1 1 auto' }}>
+        <h2 style={{
+          fontSize: '14px',
+          fontWeight: 'var(--fw-semibold)',
+          color: 'var(--text-secondary)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          margin: '0 0 16px 0'
+        }}>
           Scheduled Reports ({reports.length})
         </h2>
+        <div className="card">
         {loading && <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-tertiary)' }}>Loading reports...</div>}
         {error && <div className="alert alert-error"><p style={{ margin: 0 }}>{error}</p></div>}
         {!loading && !error && reports.length === 0 && (
@@ -244,7 +312,8 @@ export const ReportsPage: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      </section>
     </div>
   );
 };

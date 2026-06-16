@@ -736,6 +736,12 @@ html.dark .alert-info {
    TABLE ROW POLISH (T4-12)
 ─────────────────────────────────────────────────────────────────────────────── */
 
+/* Base table styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 /* Table row base styling */
 .table-row {
   transition: background-color var(--duration-sm) var(--ease-out);
@@ -770,12 +776,22 @@ html.dark .alert-info {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   background-color: rgba(15, 23, 42, 0.02);
-  padding: 12px 16px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-primary);
+  text-align: left;
 }
 
 .table tbody td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Reduce padding for smaller cells (badges, etc) */
+.table tbody td:has(.status-chip),
+.table tbody td:has(.status-badge) {
   padding: 10px 16px;
 }
 
