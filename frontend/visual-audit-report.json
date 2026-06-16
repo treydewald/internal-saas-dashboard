@@ -1,141 +1,251 @@
 {
-  "timestamp": "2026-06-16T19:30:59.979Z",
-  "totalScreens": 5,
-  "averageScores": {
-    "visualImpact": 0,
-    "readability": 0,
-    "hierarchy": 0,
-    "contentDensity": 0,
-    "professionalPolish": 0,
-    "screenshotReadiness": 0,
-    "demoReadiness": 0,
-    "portfolioQuality": 0
-  },
+  "timestamp": "2026-06-16T20:09:54.523Z",
+  "screenshotDirectory": "C:\\Users\\Trey\\Projects\\internal-saas-dashboard\\frontend\\.visual-audit-screenshots",
   "screens": [
     {
-      "name": "Login Page",
-      "url": "http://localhost:5173",
-      "viewport": "1440x900",
-      "scores": {
-        "visualImpact": 0,
-        "readability": 0,
-        "hierarchy": 0,
-        "contentDensity": 0,
-        "professionalPolish": 0,
-        "screenshotReadiness": 0,
-        "demoReadiness": 0,
-        "portfolioQuality": 0
+      "routeName": "Login",
+      "routePath": "/",
+      "description": "Authentication entry point - login form",
+      "screenshotPath": "C:\\Users\\Trey\\Projects\\internal-saas-dashboard\\frontend\\.visual-audit-screenshots\\Login-2026-06-16T20-09-44.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "documentHeight": 900,
+        "requires_scroll": false
       },
-      "observations": [
-        "Viewport Height: 900px",
-        "Document Height: 900px",
-        "Requires Scrolling: NO",
-        "Background Color: rgb(248, 250, 252)",
-        "Text Color: rgb(15, 23, 42)",
-        "Interactive Elements: {\"buttons\":4,\"links\":0,\"forms\":1,\"inputs\":2}"
-      ],
-      "issues": [],
-      "recommendations": []
+      "readability": {
+        "totalElements": 38,
+        "legibleElements": 20,
+        "score": 0.5263157894736842
+      },
+      "hierarchy": {
+        "headingCount": 6,
+        "headingSize": 32,
+        "bodySize": 14,
+        "hasDistinction": true,
+        "regionCount": 10
+      },
+      "aboveFoldContent": {
+        "visibleCount": 14,
+        "totalCount": 16
+      },
+      "timestamp": "2026-06-16T20-09-44",
+      "scores": {
+        "visualImpact": 7,
+        "readability": 6,
+        "hierarchy": 7,
+        "contentDensity": 8,
+        "professionalPolish": 6,
+        "screenshotReadiness": 8,
+        "demoReadiness": 7,
+        "portfolioQuality": 7,
+        "overall": 7
+      }
     },
     {
-      "name": "Dashboard Overview",
-      "url": "http://localhost:5173/dashboard",
-      "viewport": "1440x900",
-      "scores": {
-        "visualImpact": 0,
-        "readability": 0,
-        "hierarchy": 0,
-        "contentDensity": 0,
-        "professionalPolish": 0,
-        "screenshotReadiness": 0,
-        "demoReadiness": 0,
-        "portfolioQuality": 0
+      "routeName": "Dashboard-Overview",
+      "routePath": "/dashboard",
+      "description": "Main dashboard with KPI cards and analytics",
+      "screenshotPath": "C:\\Users\\Trey\\Projects\\internal-saas-dashboard\\frontend\\.visual-audit-screenshots\\Dashboard-Overview-2026-06-16T20-09-46.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "documentHeight": 900,
+        "requires_scroll": false
       },
-      "observations": [
-        "Viewport Height: 900px",
-        "Document Height: 842px",
-        "Requires Scrolling: NO",
-        "Background Color: rgb(248, 250, 252)",
-        "Text Color: rgb(15, 23, 42)",
-        "Interactive Elements: {\"buttons\":3,\"links\":5,\"forms\":0,\"inputs\":0}"
-      ],
-      "issues": [],
-      "recommendations": []
+      "readability": {
+        "totalElements": 4,
+        "legibleElements": 2,
+        "score": 0.5
+      },
+      "hierarchy": {
+        "headingCount": 0,
+        "headingSize": 0,
+        "bodySize": 14,
+        "hasDistinction": false,
+        "regionCount": 0
+      },
+      "aboveFoldContent": {
+        "visibleCount": 3,
+        "totalCount": 4
+      },
+      "timestamp": "2026-06-16T20-09-46",
+      "scores": {
+        "visualImpact": 5,
+        "readability": 6,
+        "hierarchy": 5,
+        "contentDensity": 8,
+        "professionalPolish": 6,
+        "screenshotReadiness": 8,
+        "demoReadiness": 7,
+        "portfolioQuality": 4,
+        "overall": 6
+      }
     },
     {
-      "name": "Users Management",
-      "url": "http://localhost:5173/users",
-      "viewport": "1440x900",
-      "scores": {
-        "visualImpact": 0,
-        "readability": 0,
-        "hierarchy": 0,
-        "contentDensity": 0,
-        "professionalPolish": 0,
-        "screenshotReadiness": 0,
-        "demoReadiness": 0,
-        "portfolioQuality": 0
+      "routeName": "Users-Table",
+      "routePath": "/dashboard/users",
+      "description": "User management table with CRUD operations",
+      "screenshotPath": "C:\\Users\\Trey\\Projects\\internal-saas-dashboard\\frontend\\.visual-audit-screenshots\\Users-Table-2026-06-16T20-09-48.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "documentHeight": 900,
+        "requires_scroll": false
       },
-      "observations": [
-        "Viewport Height: 900px",
-        "Document Height: 900px",
-        "Requires Scrolling: NO",
-        "Background Color: rgb(248, 250, 252)",
-        "Text Color: rgb(15, 23, 42)",
-        "Interactive Elements: {\"buttons\":4,\"links\":0,\"forms\":1,\"inputs\":2}"
-      ],
-      "issues": [],
-      "recommendations": []
+      "readability": {
+        "totalElements": 4,
+        "legibleElements": 2,
+        "score": 0.5
+      },
+      "hierarchy": {
+        "headingCount": 0,
+        "headingSize": 0,
+        "bodySize": 14,
+        "hasDistinction": false,
+        "regionCount": 0
+      },
+      "aboveFoldContent": {
+        "visibleCount": 3,
+        "totalCount": 4
+      },
+      "timestamp": "2026-06-16T20-09-48",
+      "scores": {
+        "visualImpact": 5,
+        "readability": 6,
+        "hierarchy": 5,
+        "contentDensity": 8,
+        "professionalPolish": 6,
+        "screenshotReadiness": 8,
+        "demoReadiness": 7,
+        "portfolioQuality": 4,
+        "overall": 6
+      }
     },
     {
-      "name": "API Logs",
-      "url": "http://localhost:5173/logs",
-      "viewport": "1440x900",
-      "scores": {
-        "visualImpact": 0,
-        "readability": 0,
-        "hierarchy": 0,
-        "contentDensity": 0,
-        "professionalPolish": 0,
-        "screenshotReadiness": 0,
-        "demoReadiness": 0,
-        "portfolioQuality": 0
+      "routeName": "API-Logs",
+      "routePath": "/dashboard/logs",
+      "description": "API activity logs and performance metrics",
+      "screenshotPath": "C:\\Users\\Trey\\Projects\\internal-saas-dashboard\\frontend\\.visual-audit-screenshots\\API-Logs-2026-06-16T20-09-49.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "documentHeight": 900,
+        "requires_scroll": false
       },
-      "observations": [
-        "Viewport Height: 900px",
-        "Document Height: 842px",
-        "Requires Scrolling: NO",
-        "Background Color: rgb(248, 250, 252)",
-        "Text Color: rgb(15, 23, 42)",
-        "Interactive Elements: {\"buttons\":3,\"links\":5,\"forms\":0,\"inputs\":0}"
-      ],
-      "issues": [],
-      "recommendations": []
+      "readability": {
+        "totalElements": 4,
+        "legibleElements": 2,
+        "score": 0.5
+      },
+      "hierarchy": {
+        "headingCount": 0,
+        "headingSize": 0,
+        "bodySize": 14,
+        "hasDistinction": false,
+        "regionCount": 0
+      },
+      "aboveFoldContent": {
+        "visibleCount": 3,
+        "totalCount": 4
+      },
+      "timestamp": "2026-06-16T20-09-49",
+      "scores": {
+        "visualImpact": 5,
+        "readability": 6,
+        "hierarchy": 5,
+        "contentDensity": 8,
+        "professionalPolish": 6,
+        "screenshotReadiness": 8,
+        "demoReadiness": 7,
+        "portfolioQuality": 4,
+        "overall": 6
+      }
     },
     {
-      "name": "Settings",
-      "url": "http://localhost:5173/settings",
-      "viewport": "1440x900",
-      "scores": {
-        "visualImpact": 0,
-        "readability": 0,
-        "hierarchy": 0,
-        "contentDensity": 0,
-        "professionalPolish": 0,
-        "screenshotReadiness": 0,
-        "demoReadiness": 0,
-        "portfolioQuality": 0
+      "routeName": "Reports",
+      "routePath": "/dashboard/reports",
+      "description": "Report generation and viewing",
+      "screenshotPath": "C:\\Users\\Trey\\Projects\\internal-saas-dashboard\\frontend\\.visual-audit-screenshots\\Reports-2026-06-16T20-09-51.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "documentHeight": 900,
+        "requires_scroll": false
       },
-      "observations": [
-        "Viewport Height: 900px",
-        "Document Height: 900px",
-        "Requires Scrolling: NO",
-        "Background Color: rgb(248, 250, 252)",
-        "Text Color: rgb(15, 23, 42)",
-        "Interactive Elements: {\"buttons\":4,\"links\":0,\"forms\":1,\"inputs\":2}"
-      ],
-      "issues": [],
-      "recommendations": []
+      "readability": {
+        "totalElements": 4,
+        "legibleElements": 2,
+        "score": 0.5
+      },
+      "hierarchy": {
+        "headingCount": 0,
+        "headingSize": 0,
+        "bodySize": 14,
+        "hasDistinction": false,
+        "regionCount": 0
+      },
+      "aboveFoldContent": {
+        "visibleCount": 3,
+        "totalCount": 4
+      },
+      "timestamp": "2026-06-16T20-09-51",
+      "scores": {
+        "visualImpact": 5,
+        "readability": 6,
+        "hierarchy": 5,
+        "contentDensity": 8,
+        "professionalPolish": 6,
+        "screenshotReadiness": 8,
+        "demoReadiness": 7,
+        "portfolioQuality": 4,
+        "overall": 6
+      }
+    },
+    {
+      "routeName": "Settings",
+      "routePath": "/dashboard/settings",
+      "description": "User account and application settings",
+      "screenshotPath": "C:\\Users\\Trey\\Projects\\internal-saas-dashboard\\frontend\\.visual-audit-screenshots\\Settings-2026-06-16T20-09-52.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "documentHeight": 900,
+        "requires_scroll": false
+      },
+      "readability": {
+        "totalElements": 4,
+        "legibleElements": 2,
+        "score": 0.5
+      },
+      "hierarchy": {
+        "headingCount": 0,
+        "headingSize": 0,
+        "bodySize": 14,
+        "hasDistinction": false,
+        "regionCount": 0
+      },
+      "aboveFoldContent": {
+        "visibleCount": 3,
+        "totalCount": 4
+      },
+      "timestamp": "2026-06-16T20-09-52",
+      "scores": {
+        "visualImpact": 5,
+        "readability": 6,
+        "hierarchy": 5,
+        "contentDensity": 8,
+        "professionalPolish": 6,
+        "screenshotReadiness": 8,
+        "demoReadiness": 7,
+        "portfolioQuality": 4,
+        "overall": 6
+      }
     }
-  ]
+  ],
+  "summary": {
+    "totalScreensAudited": 6,
+    "averageScore": 6,
+    "screenshotsPath": "C:\\Users\\Trey\\Projects\\internal-saas-dashboard\\frontend\\.visual-audit-screenshots"
+  }
 }
