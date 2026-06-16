@@ -99,74 +99,78 @@ export const DashboardBuilderPage = ({ dashboardId, onClose }: DashboardBuilderP
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0', minHeight: '100vh' }}>
       {/* Header */}
-      <div className="border-b border-slate-700 p-6">
+      <div style={{ borderBottom: '1px solid var(--border-default)', padding: '24px', backgroundColor: 'var(--bg-secondary)' }}>
         <button
           onClick={handleClose}
-          className="flex items-center gap-2 mb-4 text-slate-400 hover:text-white transition"
+          className="btn-ghost"
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', fontSize: '14px', padding: '6px 12px' }}
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft size={18} />
           Back
         </button>
-        <h1 className="text-3xl font-bold">
+        <h1 style={{ fontSize: '32px', fontWeight: '700', color: 'var(--text-primary)', margin: 0 }}>
           {dashboardId ? 'Edit Dashboard' : 'Create New Dashboard'}
         </h1>
       </div>
 
       {/* Form */}
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Left Sidebar - Widget Library */}
-          <div className="lg:col-span-1">
-            <WidgetLibrary onAddWidget={handleAddWidget} />
-          </div>
+      <div style={{ flex: 1, display: 'flex', maxWidth: '1400px', margin: '0 auto', padding: '24px', width: '100%', gap: '24px' }}>
+        {/* Left Sidebar - Widget Library */}
+        <div style={{ width: '240px', flexShrink: 0 }}>
+          <WidgetLibrary onAddWidget={handleAddWidget} />
+        </div>
 
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            {/* Dashboard Settings */}
-            <div className="mb-8 p-6 bg-slate-800 rounded-lg border border-slate-700">
-              <h2 className="text-xl font-semibold mb-4">Dashboard Settings</h2>
+        {/* Main Content */}
+        <div style={{ flex: 1 }}>
+          {/* Dashboard Settings */}
+          <div className="card" style={{ marginBottom: '24px' }}>
+            <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
+              Dashboard Settings
+            </h2>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Dashboard Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={dashboardName}
-                    onChange={(e) => setDashboardName(e.target.value)}
-                    placeholder="e.g., Sales Overview"
-                    className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Description
-                  </label>
-                  <textarea
-                    value={dashboardDescription}
-                    onChange={(e) => setDashboardDescription(e.target.value)}
-                    placeholder="Add a description (optional)"
-                    rows={3}
-                    className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
-                  />
-                </div>
-
-                {error && <div className="p-3 bg-red-600 bg-opacity-20 border border-red-600 rounded text-red-200 text-sm">{error}</div>}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="form-group">
+                <label>Dashboard Name *</label>
+                <input
+                  type="text"
+                  value={dashboardName}
+                  onChange={(e) => setDashboardName(e.target.value)}
+                  placeholder="e.g., Sales Overview"
+                />
               </div>
-            </div>
 
-            {/* Dashboard Editor */}
-            <DashboardEditor
-              widgets={widgets}
-              onRemoveWidget={handleRemoveWidget}
-              onSave={handleSave}
-              isSaving={isSaving}
-            />
+              <div className="form-group">
+                <label>Description</label>
+                <textarea
+                  value={dashboardDescription}
+                  onChange={(e) => setDashboardDescription(e.target.value)}
+                  placeholder="Add a description (optional)"
+                  rows={3}
+                  style={{
+                    backgroundColor: 'var(--layer-2)',
+                    color: 'var(--text-primary)',
+                    border: '1px solid var(--border-default)',
+                    padding: '10px 12px',
+                    borderRadius: 'var(--radius-input)',
+                    fontFamily: 'inherit',
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+
+              {error && <div className="alert alert-error"><p style={{ margin: 0 }}>{error}</p></div>}
+            </div>
           </div>
+
+          {/* Dashboard Editor */}
+          <DashboardEditor
+            widgets={widgets}
+            onRemoveWidget={handleRemoveWidget}
+            onSave={handleSave}
+            isSaving={isSaving}
+          />
         </div>
       </div>
     </div>
