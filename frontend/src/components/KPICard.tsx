@@ -1,105 +1,85 @@
 import React from 'react';
 
-interface Trend {
-  direction: 'up' | 'down';
-  percent: number;
-}
-
 interface KPICardProps {
-  name: string;
-  value: number;
-  unit?: string;
-  trend?: Trend;
+  label: string;
+  value: string;
+  delta: string;
+  trend: 'UP' | 'DOWN';
+  sparkline?: number[];
+  context?: string;
+  updatedAt?: string;
+  accentIndex?: 0 | 1 | 2 | 3;
 }
 
-export const KPICard: React.FC<KPICardProps> = ({ name, value, unit, trend }) => {
-  const formattedValue = typeof value === 'number'
-    ? value.toLocaleString('en-US', { maximumFractionDigits: 2 })
-    : value;
-
-  const isUp = trend?.direction === 'up';
-  const trendBg = isUp ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)';
-  const trendBorder = isUp ? '#22C55E' : '#EF4444';
-  const trendColor = isUp ? '#4ADE80' : '#F87171';
-  const trendArrow = isUp ? '↑' : '↓';
-
+function KPISparkline({ data, trend }: { data: number[]; trend: 'UP' | 'DOWN' }) {
+  if (!data || data.length < 2) return null;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const w = 60;
+  const h = 22;
+  const step = w / (data.length - 1);
+  const points = data
+    .map((v, i) => `${i * step},${h - ((v - min) / range) * (h - 2) - 1}`)
+    .join(' ');
+  const color = trend === 'UP' ? '#34d399' : '#fb7185';
   return (
-    <div
-      style={{
-        background: 'linear-gradient(135deg, #1e2d4a 0%, #1a2342 100%)',
-        border: '1px solid #334155',
-        borderTop: '2px solid #38BDF8',
-        borderRadius: '12px',
-        padding: '24px',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04)',
-        transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow =
-          '0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(56,189,248,0.3), inset 0 1px 0 rgba(255,255,255,0.06)';
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow =
-          '0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04)';
-      }}
+    <svg
+      width={w}
+      height={h}
+      viewBox={`0 0 ${w} ${h}`}
+      aria-hidden="true"
+      style={{ display: 'block', overflow: 'visible' }}
     >
-      <p
-        style={{
-          color: '#94A3B8',
-          fontSize: '11px',
-          fontWeight: 600,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          marginBottom: '12px',
-        }}
-      >
-        {name}
-      </p>
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-        <div>
-          <span
-            style={{
-              fontSize: '2.25rem',
-              fontWeight: 800,
-              color: '#F1F5F9',
-              letterSpacing: '-0.02em',
-              lineHeight: 1,
-            }}
-          >
-            {formattedValue}
-          </span>
-          {unit && (
-            <span
-              style={{
-                fontSize: '1rem',
-                color: '#64748B',
-                marginLeft: '6px',
-                fontWeight: 500,
-              }}
-            >
-              {unit}
-            </span>
-          )}
+      <polyline
+        points={points}
+        fill="none"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.85"
+      />
+      <circle
+        cx={(data.length - 1) * step}
+        cy={h - ((data[data.length - 1] - min) / range) * (h - 2) - 1}
+        r="2.5"
+        fill={color}
+        opacity="0.9"
+      />
+    </svg>
+  );
+}
+
+export const KPICard: React.FC<KPICardProps> = ({
+  label,
+  value,
+  delta,
+  trend,
+  sparkline,
+  context,
+  updatedAt,
+  accentIndex,
+}) => {
+  return (
+    <article
+      className="kpi-card glass-panel kpi-card--hover"
+      style={accentIndex !== undefined ? { '--kpi-accent': `var(--kpi-${accentIndex + 1})` } as any : undefined}
+    >
+      <p className="kpi-card__label">{label}</p>
+      <p className="kpi-card__value">{value}</p>
+      {sparkline && (
+        <div className="kpi-card__sparkline">
+          <KPISparkline data={sparkline} trend={trend} />
         </div>
-        {trend && (
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px',
-              padding: '4px 10px',
-              borderRadius: '20px',
-              background: trendBg,
-              border: `1px solid ${trendBorder}`,
-              color: trendColor,
-              fontSize: '13px',
-              fontWeight: 700,
-            }}
-          >
-            {trendArrow} {trend.percent}%
-          </div>
-        )}
+      )}
+      <div className="kpi-card__footer">
+        <span className={`kpi-card__delta ${trend === 'UP' ? 'trend-up' : 'trend-down'}`}>
+          {trend === 'UP' ? '↑' : '↓'} {delta}
+        </span>
+        {context && <span className="kpi-card__context">{context}</span>}
       </div>
-    </div>
+      {updatedAt && <p className="kpi-card__updated">{updatedAt}</p>}
+    </article>
   );
 };

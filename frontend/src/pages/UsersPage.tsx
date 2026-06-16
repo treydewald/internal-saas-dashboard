@@ -34,11 +34,11 @@ export const UsersPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white">Users</h1>
-        <p className="text-slate-400 mt-1">Manage and view all system users</p>
+      <div className="page-header">
+        <h1>Users</h1>
+        <p>Manage and view all system users</p>
       </div>
 
       {/* Filter Bar */}
@@ -60,10 +60,10 @@ export const UsersPage: React.FC = () => {
 
       {/* Users Table with Export */}
       <div>
-        <div className="flex justify-end mb-4">
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
           <ExportButton exportType="users" label="Export Users" />
         </div>
-        <div className="bg-gray-900 border border-slate-700 rounded-lg overflow-hidden">
+        <div className="card" style={{ overflow: 'hidden' }}>
           <UsersTable
             users={users}
             loading={loading}

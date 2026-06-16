@@ -1,19 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { KPICard } from './KPICard';
 import { usePolling } from '../hooks/usePolling';
+import { MOCK_KPIS } from '../data/mockDashboard';
+import type { KPI } from '../types/dashboard';
 import axios from 'axios';
-
-interface Trend {
-  direction: 'up' | 'down';
-  percent: number;
-}
-
-interface KPI {
-  name: string;
-  value: number;
-  unit?: string;
-  trend?: Trend;
-}
 
 interface KPIsResponse {
   kpis: KPI[];
@@ -25,8 +15,7 @@ interface KPICardsProps {
 }
 
 export const KPICards: React.FC<KPICardsProps> = ({ dateFrom = '', dateTo = '' }) => {
-  const [kpis, setKpis] = useState<KPI[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [kpis, setKpis] = useState<KPI[]>(MOCK_KPIS);
   const [error, setError] = useState<string | null>(null);
 
   const fetchKpis = useCallback(async () => {
@@ -41,45 +30,35 @@ export const KPICards: React.FC<KPICardsProps> = ({ dateFrom = '', dateTo = '' }
     } catch (err) {
       console.error('Failed to fetch KPIs:', err);
       setError('Failed to load KPI data');
-    } finally {
-      setLoading(false);
+      setKpis(MOCK_KPIS);
     }
   }, [dateFrom, dateTo]);
 
   useEffect(() => {
-    setLoading(true);
     fetchKpis();
   }, [dateFrom, dateTo, fetchKpis]);
 
-  const { isPolling } = usePolling({
+  usePolling({
     intervalMs: 30000,
     onPoll: fetchKpis,
     enabled: true,
   });
 
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {[1, 2, 3, 4].map((i) => (
-          <div
-            key={i}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow p-6 animate-pulse"
-          >
-            <div className="h-4 bg-gray-300 dark:bg-slate-700 rounded mb-2 w-1/2"></div>
-            <div className="h-8 bg-gray-300 dark:bg-slate-700 rounded w-3/4"></div>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4">
-        <p className="text-red-700 dark:text-red-300">{error}</p>
+      <div style={{ padding: '16px', background: 'rgba(251,113,133,0.1)', borderRadius: 'var(--radius-card)', border: '1px solid var(--border-default)' }}>
+        <p style={{ color: 'var(--accent-error)' }}>{error}</p>
         <button
           onClick={fetchKpis}
-          className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          style={{
+            marginTop: '8px',
+            padding: '6px 12px',
+            background: 'var(--accent-error)',
+            color: 'white',
+            border: 'none',
+            borderRadius: 'var(--radius-button)',
+            cursor: 'pointer',
+          }}
         >
           Retry
         </button>
@@ -88,31 +67,20 @@ export const KPICards: React.FC<KPICardsProps> = ({ dateFrom = '', dateTo = '' }
   }
 
   return (
-    <div className="space-y-4">
-      {/* Refresh Button */}
-      <div className="flex justify-end">
-        <button
-          onClick={() => fetchKpis()}
-          disabled={loading || isPolling}
-          className="px-3 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-slate-600 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-        >
-          <span className={isPolling ? 'animate-spin' : ''}>⟲</span>
-          Refresh
-        </button>
-      </div>
-
-      {/* KPI Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {kpis.map((kpi) => (
-          <KPICard
-            key={kpi.name}
-            name={kpi.name}
-            value={kpi.value}
-            unit={kpi.unit}
-            trend={kpi.trend}
-          />
-        ))}
-      </div>
+    <div className="kpi-grid">
+      {kpis.map((kpi, index) => (
+        <KPICard
+          key={kpi.id}
+          label={kpi.label}
+          value={kpi.value}
+          delta={kpi.delta}
+          trend={kpi.trend}
+          sparkline={kpi.sparkline}
+          context={kpi.context}
+          updatedAt={kpi.updatedAt}
+          accentIndex={index as 0 | 1 | 2 | 3}
+        />
+      ))}
     </div>
   );
 };

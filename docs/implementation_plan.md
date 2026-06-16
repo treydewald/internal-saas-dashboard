@@ -585,29 +585,43 @@ group_candidate: true
 isolation_level: medium
 
 Description
-Build StatusIndicator primitives and placements that reflect platform and workflow health in near real-time from mock execution state.
+Build the StatusChip/StatusIndicator primitive system and ConnectionStatus live indicator that reflect platform and workflow health from mock execution state. StatusChip is a shared primitive used across tables, alerts, logs, and cards — it must be built as a standalone reusable component before downstream feature assembly.
 
 Requirements
 
-- Support states: healthy, warning, degraded, error, unknown.
+- Support states: healthy, running, degraded, warning, error, off, inactive, pending.
+- Render correct background/text color per state using the semantic color map from UI System Spec Section 4.6.
+- Apply glow breathing animation to active/live states (running, healthy) only: very slow opacity oscillation, `animation-duration: 2.5s`, `ease-in-out`, `infinite` — NOT a ping/scale animation.
+- Terminal states (error, off, inactive) render as static — no animation.
+- Accept optional `label` override prop and `pulse` boolean toggle.
+- Apply `border-radius: var(--radius-chip)`, `padding: 3px 10px`, `font-size: 11px`, `font-weight: --fw-semibold`, uppercase text.
+- Apply `border: 1px solid <accent-color-at-20%-opacity>` matching the text color.
 - Bind status badges to simulated execution and system state.
-- Surface last-updated context for operator trust.
-- Keep status visibility high without overwhelming layout.
+- Surface `updatedAt` context for operator trust where space allows.
+- Build ConnectionStatus component with three-state live dot (connected=mint, connecting=amber, disconnected=rose).
+- ConnectionStatus connected-dot uses the same 2.5s glow breathing animation.
+- ConnectionStatus shows text label on desktop; dot-only on mobile (< 640px breakpoint).
+- Wire ConnectionStatus into Header topbar.
 
 Inputs
 
 - Execution engine status snapshots.
 - Optional mock platform health map.
+- Color token map from `globals.css` `--accent-*` and `--accent-*-dim` variables.
 
 Outputs
 
-- Status indicator UI instances across topbar/cards/panels.
-- Centralized status mapping utility.
+- `StatusChip` reusable primitive — usable by APILogsTable, AlertHistory, AuditLogTable, UsersTable, and KPI surfaces.
+- `ConnectionStatus` component wired into Header.
+- Status indicator UI instances across topbar, cards, and panels.
+- Centralized status color-mapping utility function.
 
 Components
 
+- StatusChip
 - StatusIndicator
 - StatusPill
+- ConnectionStatus
 - StatusSummaryStrip
 
 Dependencies
@@ -616,8 +630,11 @@ Dependencies
 
 Success Criteria
 
-- Status changes are reflected within one render cycle of event updates.
+- StatusChip renders all 8 states with correct colors from the spec color map.
+- Breathing animation is present on running/healthy states and absent on terminal states.
+- ConnectionStatus shows live pulsing dot in header when WebSocket/mock is "connected".
 - Warning/error states are visually clear and accessible.
+- StatusChip is importable and renders correctly in isolation (no execution engine required).
 - Indicators remain legible in hero screenshot.
 
 Feature [T4-08]: KPI Cards & Success Rate Charts
@@ -636,7 +653,7 @@ group_candidate: true
 isolation_level: medium
 
 Description
-Implement KPIStatsCards and success-rate chart surfaces using mock analytics metrics with responsive dashboard placement.
+Implement KPIStatsCards and success-rate chart surfaces using mock analytics metrics with responsive dashboard placement. Cards must include the full A+ composition layer defined in the UI System Spec: sparkline micro-trend, contextual comparison label, and live-freshness metadata.
 
 Requirements
 
@@ -644,21 +661,29 @@ Requirements
 - Render success-rate trend chart tied to mock time-series data.
 - Support loading, stale, and empty metric states.
 - Keep KPI row visible in default viewport composition.
+- Extend KPICard props to include: `sparkline` (7-point number array), `context` (string, e.g. "vs last 24h"), `updatedAt` (string, e.g. "Updated 12 sec ago").
+- Render sparkline as a micro 40×20px inline trend visualization within the card body.
+- Render `context` as secondary text beneath the delta chip (color: `--text-tertiary`, weight: `--fw-normal`).
+- Render `updatedAt` as bottom metadata line (11px, `--text-muted`, weight: `--fw-normal`).
+- Apply A+ card composition order: `[icon + label] → [value] → [sparkline] → [delta chip + context] → [updatedAt]`.
+- Seed all four KPI mock entries with sparkline arrays and context strings.
 
 Inputs
 
-- Mock analytics metrics and time-series datasets.
+- Mock analytics metrics and time-series datasets (extended with sparkline and context fields).
 - Date range and refresh events (frontend-only).
 
 Outputs
 
-- KPI card grid and chart components bound to mock model.
+- KPI card grid and chart components bound to extended mock model.
 - Derived trend/delta formatting utilities.
+- Sparkline rendering utility (pure SVG or canvas, no charting library dependency required).
 
 Components
 
 - KPIStatsCards
 - KPIStatCard
+- KPISparkline
 - SuccessRateChart
 
 Dependencies
@@ -668,8 +693,10 @@ Dependencies
 Success Criteria
 
 - KPI cards and chart render without backend connectivity.
-- Metric deltas and trends are visually consistent and readable.
+- Metric deltas, trends, context labels, and updatedAt metadata are all visible per card.
+- Sparkline renders correctly for both up-trend and down-trend mock data.
 - KPI row remains visible in screenshot-focused layout.
+- Cards match UI System Spec Section 4.3 composition exactly.
 
 Feature [T4-09]: Workflow Control System (Run/Create/Edit)
 
@@ -779,3 +806,224 @@ Success Criteria
 - Single viewport shows KPI cards, sidebar, workflow graph, log stream, and supporting analytics context.
 - View can be rendered and captured with no backend connectivity.
 - Composition communicates full-stack SaaS product maturity at first glance.
+
+Feature [T4-11]: Visual Design System Polish Layer
+
+Tier
+T4
+
+Execution Metadata
+status: NOT STARTED
+group: UNASSIGNED
+locked: false
+assigned_worker: null
+is_blocked: false
+depends_on: [T4-01, T4-07, T4-08]
+group_candidate: true
+isolation_level: medium
+
+Description
+Implement the complete visual polish layer defined in UI System Spec Section 8, upgrading the dashboard from A-/B+ to A+ SaaS product quality. This feature translates all 25 design critique items into concrete CSS and component changes. It does not introduce new functionality — it elevates the perceived quality of existing surfaces through depth, motion, lighting, and hierarchy.
+
+Requirements
+
+**Visual Hierarchy (Depth Layers)**
+- Enforce 4-layer depth: `--layer-0` (app background) → `--layer-1` (sections) → `--layer-2` (cards) → `--layer-3` (interactive elements). No two adjacent hierarchy levels may share the same background color.
+- All cards must use `var(--layer-2)` as base; panels use `var(--layer-1)`.
+
+**Directional Card Lighting**
+- All card backgrounds must use `linear-gradient(135deg, <top-left-tint> 0%, <base-color> 100%)` — light sourced from top-left, base at bottom-right.
+- Never make bottom-right brighter than top-left.
+
+**Glass Depth System**
+- All panel and card surfaces must combine: `backdrop-filter: blur(…)` + `border: 1px solid var(--border-default)` + `box-shadow: inset 0 1px 0 var(--border-inner)`.
+- The inner top highlight (`var(--border-inner)`) is non-negotiable for enterprise glass depth.
+
+**Premium Hover States (Cards)**
+- All cards: `transform: scale(1.01)` on hover — NOT `scale(1.05)`.
+- Hover shadow transitions from `var(--shadow-card)` to `var(--shadow-card-hover)`.
+- Hover border-color transitions to `var(--border-highlight)`.
+- Transition: `var(--duration-sm)` for color, `var(--duration-md)` for elevation.
+
+**Button Microinteractions**
+- Buttons depress on `:active` (`transform: scale(0.97)`, `var(--duration-sm)`).
+- Release snaps back (`transform: scale(1)`, `var(--duration-sm)`).
+- No jarring or over-exaggerated movement.
+
+**Layered Shadow System**
+- Apply `var(--shadow-sm)`, `var(--shadow-card)`, `var(--shadow-card-hover)` tokens to their respective elements — no ad-hoc `box-shadow` values.
+
+**Typography Hierarchy Enforcement**
+- Section titles: `var(--fw-semibold)` (600–700), 13–14px.
+- Card labels: `var(--fw-medium)` (500), 11px uppercase, `letter-spacing: 0.08em`.
+- Data values: `var(--fw-bold)` or `var(--fw-extrabold)` (700–800), 28–32px.
+- Delta/trend: `var(--fw-semibold)` (600), 12px.
+- Metadata (timestamps, context): `var(--fw-normal)` (400), 11px.
+- No component may use a font weight outside this scale.
+
+**Ambient Background**
+- Apply a very subtle radial gradient to `--layer-0` (app background): soft blue/navy glow at 2–5% opacity at center, fully transparent at edges.
+- Optionally overlay a CSS noise texture at 2–3% opacity for richness.
+- Must not distract from content. If it draws the eye, reduce opacity.
+
+**Motion System Enforcement**
+- All transitions must use one of: `var(--duration-sm)` (150ms), `var(--duration-md)` (250ms), `var(--duration-lg)` (350ms).
+- No arbitrary `transition: 0.3s` or similar — replace all with tokens.
+- Easing: `var(--ease-out)` for entrances and hovers; `var(--ease-in-out)` for toggles.
+
+**Border Treatment**
+- Outer borders: `1px solid var(--border-default)` (default) or `var(--border-highlight)` (active/hover).
+- Inner highlight line: `box-shadow: inset 0 1px 0 var(--border-inner)` on all cards and panels.
+- No uniform borders — every surface must have the outer + inner two-layer treatment.
+
+**Sidebar Opacity Tiers**
+- Active nav item: bright background fill, `--text-primary` label, left inset accent bar.
+- Hover nav item: `rgba(56,189,248,0.06)` fill, `--text-secondary` label.
+- Idle nav item: transparent, `--text-tertiary` label (clearly lower contrast than hover).
+- The three tiers must be visually distinguishable — not just on close inspection.
+
+**Section Anchoring**
+- Add `border-bottom: 1px solid var(--border-subtle)` section dividers between major page regions.
+- Section headers use strong weight (`var(--fw-semibold)`) and top spacing (`margin-top: 32px` min).
+
+**Spacing Scale Enforcement**
+- All spacing values must come from the 8px grid: 8, 16, 24, 32, 48, 64px.
+- No arbitrary pixel values for gaps, padding, or margins.
+
+Inputs
+
+- Existing `globals.css` CSS token definitions (all tokens already defined — this feature applies them).
+- UI System Spec Section 2 (Visual Design System), Section 3 (Layout), Section 8 (Polish Priorities).
+- All existing T4 components.
+
+Outputs
+
+- Updated `globals.css` and component-level styles enforcing the depth, motion, and hierarchy rules.
+- Shared CSS utility classes for hover lift, glass surface, and section anchor patterns.
+- All T4 components visually upgraded to A+ polish standard.
+
+Components
+
+- `globals.css` (updated utility classes)
+- `GlassSurface` (shared style wrapper or mixin)
+- `CardHoverLift` (shared hover style class)
+- `SectionAnchor` (divider + heading style pair)
+
+Dependencies
+
+- T4-01
+- T4-07
+- T4-08
+
+Success Criteria
+
+- 4-layer visual hierarchy is perceivable by eye across the full dashboard — background, sections, cards, and interactive elements are visually distinct planes.
+- Every card hovers with `scale(1.01)` elevation — confirmed by interaction test.
+- No component uses an arbitrary motion duration — all transitions use `--duration-*` tokens.
+- Typography weight scale is enforced: values are heavier than labels, which are heavier than metadata.
+- Ambient background glow is present but does not distract from content.
+- Screenshot frame visually matches Stripe/Vercel/Linear quality bar when compared side by side.
+- No new functionality was added — only visual quality was elevated.
+
+Feature [T4-12]: Premium Table Polish System
+
+Tier
+T4
+
+Execution Metadata
+status: NOT STARTED
+group: UNASSIGNED
+locked: false
+assigned_worker: null
+is_blocked: false
+depends_on: [T4-07, T4-11]
+group_candidate: true
+isolation_level: medium
+
+Description
+Apply the A+ table treatment from UI System Spec Section 4.7 and 4.10 to all dashboard data tables: APILogsTable, AuditLogTable, and UsersTable. Raises table scannability from functional to enterprise-grade through consistent row treatments, method/action badge coloring, and latency threshold encoding.
+
+Requirements
+
+**Row Alternating Opacity**
+- Odd rows: base background (`var(--layer-2)`).
+- Even rows: `rgba(255,255,255,0.015)` additive tint.
+- The difference must be subtle — legible scanning aid, not a zebra stripe.
+
+**Row Hover Highlight**
+- Full-width row hover: `background: rgba(56,189,248,0.04)`.
+- Transition: `var(--duration-sm)` ease.
+- No border change — background only.
+
+**Row Separators**
+- Replace hard borders between rows with `border-bottom: 1px solid var(--border-subtle)`.
+- Softer visual separation — improves reading flow vs. solid lines.
+
+**APILogsTable — Method Badge Colors**
+- Apply `StatusChip`-style badges (from T4-07) to HTTP method column.
+- Color map: `GET` = sky (`--accent-info`), `POST` = mint (`--accent-success`), `DELETE` = rose (`--accent-error`), `PATCH`/`PUT` = amber (`--accent-warning`).
+- Same chip shape: `border-radius: var(--radius-chip)`, uppercase, 11px.
+
+**APILogsTable — Latency Threshold Encoding**
+- Latency < 1000ms: default `--text-secondary`.
+- Latency 1000–2999ms: `--accent-warning` text color.
+- Latency ≥ 3000ms: `--accent-error` text color, optional subtle background tint.
+- No icons required — color alone communicates severity.
+
+**APILogsTable — Status Code Badges**
+- HTTP 2xx: mint (`--accent-success`).
+- HTTP 3xx: sky (`--accent-info`).
+- HTTP 4xx: amber (`--accent-warning`).
+- HTTP 5xx: rose (`--accent-error`).
+- Use `StatusChip` component from T4-07.
+
+**AuditLogTable — Event Type Badges**
+- Action type column uses `StatusChip`-style badges.
+- `user.*` actions: sky. `api_key.*`: amber. `org.*`: purple (`--accent-purple`). `system.*`: default/muted.
+- Row click opens `AuditEntryDetail` inline or drawer.
+
+**UsersTable — Status Column**
+- `active`: mint. `inactive`: muted. `pending`: amber.
+- Use `StatusChip` from T4-07 for visual consistency across all tables.
+
+**Clickable Row State**
+- All table rows are clickable (cursor: pointer).
+- Click action: expand inline detail or open side drawer depending on table type.
+- Selected row: `background: rgba(56,189,248,0.06)`, border-left accent `3px solid var(--accent-primary)`.
+
+Inputs
+
+- `StatusChip` component from T4-07 (required dependency).
+- Mock log, audit, and user data seeded with method/status/latency fields.
+- `globals.css` color tokens for all accent and border values.
+
+Outputs
+
+- Updated `APILogsTable`, `AuditLogTable`, `UsersTable` with uniform premium treatment.
+- Shared table row style utilities (hover, alternating, separator, selected).
+- Reusable `MethodBadge`, `StatusCodeBadge`, `ActionTypeBadge` wrappers around `StatusChip`.
+
+Components
+
+- APILogsTable (updated)
+- AuditLogTable (updated)
+- UsersTable (updated)
+- MethodBadge
+- StatusCodeBadge
+- ActionTypeBadge
+- TableRow (shared style class)
+
+Dependencies
+
+- T4-07
+- T4-11
+
+Success Criteria
+
+- APILogsTable displays method badges in correct semantic colors across GET/POST/DELETE/PATCH.
+- Latency ≥ 3000ms rows are visually flagged in rose without any configuration.
+- Row hover highlight is present and uses `var(--duration-sm)` transition.
+- Alternating row tint is visible but not jarring.
+- AuditLogTable action type badges are color-coded by action category.
+- All three tables share the same row hover/separator/selected visual treatment.
+- `StatusChip` from T4-07 is the only badge primitive used — no bespoke badge styles.

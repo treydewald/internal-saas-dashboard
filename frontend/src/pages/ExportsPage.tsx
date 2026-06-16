@@ -71,31 +71,31 @@ export const ExportsPage = () => {
     });
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): { bg: string, text: string } => {
     switch (status) {
       case 'completed':
-        return 'bg-green-900 text-green-300';
+        return { bg: 'var(--accent-success-dim)', text: 'var(--accent-success)' };
       case 'processing':
-        return 'bg-blue-900 text-blue-300';
+        return { bg: 'var(--accent-info-dim)', text: 'var(--accent-info)' };
       case 'pending':
-        return 'bg-yellow-900 text-yellow-300';
+        return { bg: 'var(--accent-warning-dim)', text: 'var(--accent-warning)' };
       case 'failed':
-        return 'bg-red-900 text-red-300';
+        return { bg: 'var(--accent-error-dim)', text: 'var(--accent-error)' };
       default:
-        return 'bg-slate-700 text-slate-300';
+        return { bg: 'var(--border-default)', text: 'var(--text-tertiary)' };
     }
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white">Data Exports</h1>
-        <p className="text-slate-400 mt-1">Create and manage bulk data exports</p>
+      <div className="page-header">
+        <h1>Data Exports</h1>
+        <p>Create and manage bulk data exports</p>
       </div>
 
       {error && (
-        <div className="bg-red-900 bg-opacity-50 border border-red-700 rounded-lg p-4 text-red-200 text-sm">
+        <div className="alert alert-error">
           {error}
         </div>
       )}
@@ -104,83 +104,98 @@ export const ExportsPage = () => {
       <ExportJobForm onSubmit={handleCreateExport} loading={loading} error={error ?? undefined} />
 
       {/* Export Jobs List */}
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Export Jobs</h2>
+      <div className="card">
+        <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
+          Export Jobs
+        </h2>
 
         {loading && jobs.length === 0 ? (
-          <div className="text-slate-400 text-sm">Loading export jobs...</div>
+          <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>Loading export jobs...</div>
         ) : jobs.length === 0 ? (
-          <div className="text-slate-400 text-sm">No export jobs yet. Create one above to get started.</div>
+          <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>No export jobs yet. Create one above to get started.</div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
               <thead>
-                <tr className="border-b border-slate-700">
-                  <th className="text-left py-3 px-4 text-slate-300 font-medium">Type</th>
-                  <th className="text-left py-3 px-4 text-slate-300 font-medium">Status</th>
-                  <th className="text-left py-3 px-4 text-slate-300 font-medium">Progress</th>
-                  <th className="text-left py-3 px-4 text-slate-300 font-medium">Rows</th>
-                  <th className="text-left py-3 px-4 text-slate-300 font-medium">Created</th>
-                  <th className="text-left py-3 px-4 text-slate-300 font-medium">Actions</th>
+                <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
+                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Type</th>
+                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Status</th>
+                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Progress</th>
+                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Rows</th>
+                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Created</th>
+                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {jobs.map((job: ExportJobDisplay) => (
-                  <tr key={job.id} className="border-b border-slate-700 hover:bg-slate-700 hover:bg-opacity-50">
-                    <td className="py-3 px-4 text-white capitalize">{job.job_type}</td>
-                    <td className="py-3 px-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(job.status)}`}>
-                        {job.status}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="w-32">
-                        <div className="bg-slate-700 rounded-full h-2 overflow-hidden">
-                          <div
-                            className="bg-cyan-500 h-full transition-all duration-300"
-                            style={{ width: `${job.progress_percent}%` }}
-                          />
+                {jobs.map((job: ExportJobDisplay) => {
+                  const statusColors = getStatusColor(job.status);
+                  return (
+                    <tr key={job.id} style={{ borderBottom: '1px solid var(--border-default)' }}>
+                      <td style={{ padding: '12px', color: 'var(--text-primary)', textTransform: 'capitalize' }}>{job.job_type}</td>
+                      <td style={{ padding: '12px' }}>
+                        <span className="status-badge" style={{ backgroundColor: statusColors.bg, color: statusColors.text, borderColor: 'transparent' }}>
+                          {job.status}
+                        </span>
+                      </td>
+                      <td style={{ padding: '12px' }}>
+                        <div style={{ width: '128px' }}>
+                          <div style={{ backgroundColor: 'var(--border-default)', borderRadius: '999px', height: '8px', overflow: 'hidden' }}>
+                            <div
+                              style={{
+                                backgroundColor: 'var(--accent-primary)',
+                                height: '100%',
+                                transition: 'width 0.3s ease',
+                                width: `${job.progress_percent}%`
+                              }}
+                            />
+                          </div>
+                          <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '4px' }}>
+                            {job.progress_percent.toFixed(0)}%
+                          </div>
                         </div>
-                        <div className="text-xs text-slate-400 mt-1">{job.progress_percent.toFixed(0)}%</div>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-slate-300">{job.row_count.toLocaleString()}</td>
-                    <td className="py-3 px-4 text-slate-400 text-xs">{formatDate(job.created_at)}</td>
-                    <td className="py-3 px-4 space-x-1">
-                      {job.status === 'completed' && job.file_url && (
-                        <a
-                          href={job.file_url}
-                          download
-                          className="px-2 py-1 bg-green-900 bg-opacity-50 hover:bg-opacity-100 text-green-300 text-xs rounded-md transition-colors"
-                        >
-                          Download
-                        </a>
-                      )}
-                      {(job.status === 'pending' || job.status === 'processing') && (
+                      </td>
+                      <td style={{ padding: '12px', color: 'var(--text-secondary)' }}>{job.row_count.toLocaleString()}</td>
+                      <td style={{ padding: '12px', color: 'var(--text-tertiary)', fontSize: '12px' }}>{formatDate(job.created_at)}</td>
+                      <td style={{ padding: '12px', display: 'flex', gap: '8px' }}>
+                        {job.status === 'completed' && job.file_url && (
+                          <a
+                            href={job.file_url}
+                            download
+                            className="btn-ghost"
+                            style={{ fontSize: '12px', padding: '4px 8px' }}
+                          >
+                            Download
+                          </a>
+                        )}
+                        {(job.status === 'pending' || job.status === 'processing') && (
+                          <button
+                            onClick={() => handleCancelJob(job.id)}
+                            className="btn-ghost"
+                            style={{ fontSize: '12px', padding: '4px 8px', color: 'var(--accent-warning)' }}
+                          >
+                            Cancel
+                          </button>
+                        )}
+                        {job.status === 'failed' && (
+                          <button
+                            onClick={() => handleRetryJob(job.id)}
+                            className="btn-ghost"
+                            style={{ fontSize: '12px', padding: '4px 8px', color: 'var(--accent-info)' }}
+                          >
+                            Retry
+                          </button>
+                        )}
                         <button
-                          onClick={() => handleCancelJob(job.id)}
-                          className="px-2 py-1 bg-yellow-900 bg-opacity-50 hover:bg-opacity-100 text-yellow-300 text-xs rounded-md transition-colors"
+                          onClick={() => handleDeleteJob(job.id)}
+                          className="btn-ghost"
+                          style={{ fontSize: '12px', padding: '4px 8px', color: 'var(--accent-error)' }}
                         >
-                          Cancel
+                          Delete
                         </button>
-                      )}
-                      {job.status === 'failed' && (
-                        <button
-                          onClick={() => handleRetryJob(job.id)}
-                          className="px-2 py-1 bg-blue-900 bg-opacity-50 hover:bg-opacity-100 text-blue-300 text-xs rounded-md transition-colors"
-                        >
-                          Retry
-                        </button>
-                      )}
-                      <button
-                        onClick={() => handleDeleteJob(job.id)}
-                        className="px-2 py-1 bg-red-900 bg-opacity-50 hover:bg-opacity-100 text-red-300 text-xs rounded-md transition-colors"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -188,14 +203,16 @@ export const ExportsPage = () => {
       </div>
 
       {/* Information Box */}
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-        <h3 className="text-sm font-semibold text-slate-300 mb-3">Export Information</h3>
-        <ul className="space-y-2 text-sm text-slate-400">
-          <li>• Exports are processed asynchronously to avoid blocking your requests</li>
-          <li>• You can monitor the progress of active exports in real-time</li>
-          <li>• Completed exports are available for download for 7 days</li>
-          <li>• Failed exports can be retried by clicking the Retry button</li>
-        </ul>
+      <div className="card">
+        <h3 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '12px' }}>Export Information</h3>
+        <div className="info-card">
+          <ul>
+            <li>Exports are processed asynchronously to avoid blocking your requests</li>
+            <li>You can monitor the progress of active exports in real-time</li>
+            <li>Completed exports are available for download for 7 days</li>
+            <li>Failed exports can be retried by clicking the Retry button</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

@@ -9,13 +9,13 @@ export const SettingsPage: React.FC = () => {
   // Restrict to admin users
   if (user?.role !== 'admin') {
     return (
-      <div className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-3xl font-bold text-white">Settings</h1>
-          <p className="text-slate-400 mt-1">Manage your account settings</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="page-header">
+          <h1>Settings</h1>
+          <p>Manage your account settings</p>
         </div>
 
-        <div className="bg-yellow-900 bg-opacity-50 border border-yellow-700 rounded-lg p-6 text-yellow-200">
+        <div className="alert alert-warning">
           <p>
             Only administrators can access the settings page. If you need assistance, please
             contact your system administrator.
@@ -26,11 +26,11 @@ export const SettingsPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white">Settings</h1>
-        <p className="text-slate-400 mt-1">Manage your account settings and API keys</p>
+      <div className="page-header">
+        <h1>Settings</h1>
+        <p>Manage your account settings and API keys</p>
       </div>
 
       {/* Profile Section */}
@@ -40,13 +40,17 @@ export const SettingsPage: React.FC = () => {
       <APIKeySection />
 
       {/* Additional Info */}
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Account Information</h2>
-        <div className="space-y-2 text-slate-400 text-sm">
-          <p>• All changes to your profile are saved immediately</p>
-          <p>• API keys are credentials—never share them with anyone</p>
-          <p>• Regenerating your API key will invalidate the previous one</p>
-          <p>• For security reasons, passwords cannot be changed in this interface</p>
+      <div className="card">
+        <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: 'var(--text-primary)' }}>
+          Account Information
+        </h3>
+        <div className="info-card">
+          <ul style={{ margin: 0, paddingLeft: '20px' }}>
+            <li>All changes to your profile are saved immediately</li>
+            <li>API keys are credentials—never share them with anyone</li>
+            <li>Regenerating your API key will invalidate the previous one</li>
+            <li>For security reasons, passwords cannot be changed in this interface</li>
+          </ul>
         </div>
       </div>
     </div>

@@ -18,21 +18,9 @@ export const APILogsPage: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
       {/* Header */}
-      <div style={{ borderBottom: '1px solid #1e2d4a', paddingBottom: '20px' }}>
-        <h1
-          style={{
-            fontSize: '2rem',
-            fontWeight: 800,
-            color: '#F1F5F9',
-            letterSpacing: '-0.02em',
-            marginBottom: '6px',
-          }}
-        >
-          API Logs
-        </h1>
-        <p style={{ color: '#64748B', fontSize: '14px' }}>
-          Monitor and analyze API request history
-        </p>
+      <div className="page-header">
+        <h1>API Logs</h1>
+        <p>Monitor and analyze API request history</p>
       </div>
 
       {/* Date Range Picker */}
@@ -47,15 +35,7 @@ export const APILogsPage: React.FC = () => {
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
           <ExportButton exportType="api-logs" label="Export Logs" />
         </div>
-        <div
-          style={{
-            background: 'linear-gradient(180deg, #0d1829 0%, #0a1422 100%)',
-            border: '1px solid #1e2d4a',
-            borderRadius: '12px',
-            overflow: 'hidden',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
-          }}
-        >
+        <div className="card">
           <APILogsTable logs={logs} loading={loading} error={error} onRefetch={refetch} />
         </div>
       </div>

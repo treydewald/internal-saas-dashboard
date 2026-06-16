@@ -11,21 +11,9 @@ export const OverviewPage: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ borderBottom: '1px solid var(--panel-border)', paddingBottom: '24px' }}>
-        <h1
-          style={{
-            fontSize: '2rem',
-            fontWeight: 800,
-            color: 'var(--text-0)',
-            letterSpacing: '-0.02em',
-            marginBottom: '6px',
-          }}
-        >
-          Overview
-        </h1>
-        <p style={{ color: 'var(--text-2)', fontSize: '14px' }}>
-          Monitor your key metrics at a glance.
-        </p>
+      <div className="page-header">
+        <h1>Overview</h1>
+        <p>Monitor your key metrics at a glance.</p>
       </div>
 
       {/* Date Range Selector */}

@@ -34,43 +34,45 @@ export const OrganizationSettingsPage: React.FC = () => {
 
   if (!currentOrg) {
     return (
-      <div className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-3xl font-bold text-white">Organization Settings</h1>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="page-header">
+          <h1>Organization Settings</h1>
         </div>
-        <div className="text-slate-400">Loading organization...</div>
+        <div style={{ color: 'var(--text-tertiary)' }}>Loading organization...</div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white">Organization Settings</h1>
-        <p className="text-slate-400 mt-1">Manage {currentOrg.name} settings</p>
+      <div className="page-header">
+        <h1>Organization Settings</h1>
+        <p>Manage {currentOrg.name} settings</p>
       </div>
 
       {error && (
-        <div className="bg-red-900 bg-opacity-50 border border-red-700 rounded-lg p-4 text-red-200 text-sm">
+        <div className="alert alert-error">
           {error}
         </div>
       )}
 
       {successMessage && (
-        <div className="bg-green-900 bg-opacity-50 border border-green-700 rounded-lg p-4 text-green-200 text-sm">
+        <div className="alert alert-success">
           {successMessage}
         </div>
       )}
 
       {/* Organization Details */}
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-white">Organization Details</h2>
+      <div className="card">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', margin: 0 }}>
+            Organization Details
+          </h2>
           {isAdmin && !editMode && (
             <button
               onClick={() => setEditMode(true)}
-              className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-md transition-colors text-sm"
+              className="btn-primary"
             >
               Edit
             </button>
@@ -78,22 +80,22 @@ export const OrganizationSettingsPage: React.FC = () => {
         </div>
 
         {!editMode ? (
-          <div className="space-y-4">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label className="text-sm font-medium text-slate-300">Organization Name</label>
-              <p className="text-white mt-1">{currentOrg.name}</p>
+              <label className="label-text">Organization Name</label>
+              <p className="value-text" style={{ marginTop: '6px' }}>{currentOrg.name}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300">Organization Slug</label>
-              <p className="text-white font-mono mt-1">{currentOrg.slug}</p>
+              <label className="label-text">Organization Slug</label>
+              <p className="value-text" style={{ marginTop: '6px', fontFamily: 'monospace' }}>{currentOrg.slug}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300">Description</label>
-              <p className="text-slate-400 mt-1">{currentOrg.description || 'No description'}</p>
+              <label className="label-text">Description</label>
+              <p className="body-text" style={{ marginTop: '6px' }}>{currentOrg.description || 'No description'}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300">Created</label>
-              <p className="text-slate-400 mt-1">
+              <label className="label-text">Created</label>
+              <p className="body-text" style={{ marginTop: '6px' }}>
                 {new Date(currentOrg.created_at).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -103,31 +105,38 @@ export const OrganizationSettingsPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Organization Name</label>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="form-group">
+              <label>Organization Name</label>
               <input
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 required
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Description</label>
+            <div className="form-group">
+              <label>Description</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 rows={3}
+                style={{
+                  backgroundColor: 'var(--layer-2)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid var(--border-default)',
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-input)',
+                  fontFamily: 'inherit',
+                  fontSize: '14px',
+                }}
               />
             </div>
-            <div className="flex gap-2">
+            <div style={{ display: 'flex', gap: '12px' }}>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-md transition-colors disabled:opacity-50"
+                className="btn-primary"
               >
                 {loading ? 'Saving...' : 'Save Changes'}
               </button>
@@ -140,7 +149,7 @@ export const OrganizationSettingsPage: React.FC = () => {
                     description: currentOrg.description || '',
                   });
                 }}
-                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-md transition-colors"
+                className="btn-secondary"
               >
                 Cancel
               </button>
@@ -150,14 +159,18 @@ export const OrganizationSettingsPage: React.FC = () => {
       </div>
 
       {/* Organization Info */}
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-        <h3 className="text-sm font-semibold text-slate-300 mb-3">Organization Information</h3>
-        <ul className="space-y-2 text-sm text-slate-400">
-          <li>• Each organization is completely isolated from others</li>
-          <li>• Members can have different roles (admin, member, viewer)</li>
-          <li>• Organization data is not shared with other organizations</li>
-          <li>• Only organization admins can modify organization settings</li>
-        </ul>
+      <div className="card">
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
+          Organization Information
+        </h3>
+        <div className="info-card">
+          <ul>
+            <li>Each organization is completely isolated from others</li>
+            <li>Members can have different roles (admin, member, viewer)</li>
+            <li>Organization data is not shared with other organizations</li>
+            <li>Only organization admins can modify organization settings</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

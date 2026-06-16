@@ -69,41 +69,29 @@ const InsightsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500"></div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div style={{
+          width: '48px',
+          height: '48px',
+          borderRadius: '50%',
+          border: '3px solid var(--border-default)',
+          borderTopColor: 'var(--accent-primary)',
+          animation: 'spin 1s linear infinite'
+        }} />
       </div>
     );
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
-      <div style={{ borderBottom: '1px solid #1e2d4a', paddingBottom: '24px' }}>
-        <h1
-          style={{
-            fontSize: '2rem',
-            fontWeight: 800,
-            color: '#F1F5F9',
-            letterSpacing: '-0.02em',
-            marginBottom: '6px',
-          }}
-        >
-          ML Insights
-        </h1>
-        <p style={{ color: '#64748B', fontSize: '14px' }}>
-          Anomaly detection, forecasts, and predictions for your API activity
-        </p>
+      <div className="page-header">
+        <h1>ML Insights</h1>
+        <p>Anomaly detection, forecasts, and predictions for your API activity</p>
       </div>
 
       {error && (
-        <div
-          style={{
-            background: 'rgba(239,68,68,0.08)',
-            border: '1px solid rgba(239,68,68,0.3)',
-            borderRadius: '10px',
-            padding: '16px',
-          }}
-        >
-          <p style={{ color: '#F87171' }}>{error}</p>
+        <div className="alert alert-error">
+          <p>{error}</p>
         </div>
       )}
 
@@ -115,18 +103,10 @@ const InsightsPage: React.FC = () => {
           {/* Anomalies Section */}
           {data.anomalies.total_anomalies > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <h2
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  letterSpacing: '0.07em',
-                  textTransform: 'uppercase',
-                  color: '#64748B',
-                }}
-              >
+              <h2 style={{ fontSize: '12px', fontWeight: '600', letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--text-tertiary)', margin: 0 }}>
                 Detected Anomalies
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '16px' }}>
                 {data.anomalies.response_time_anomalies.map((anomaly, idx) => (
                   <AnomalyAlert key={`rt-${idx}`} anomaly={anomaly} type="response_time" />
                 ))}
@@ -139,35 +119,12 @@ const InsightsPage: React.FC = () => {
 
           {/* Forecasts Section */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <h2
-              style={{
-                fontSize: '11px',
-                fontWeight: 700,
-                letterSpacing: '0.07em',
-                textTransform: 'uppercase',
-                color: '#64748B',
-              }}
-            >
+            <h2 style={{ fontSize: '12px', fontWeight: '600', letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--text-tertiary)', margin: 0 }}>
               Predictions &amp; Forecasts
             </h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div
-                style={{
-                  background: 'linear-gradient(135deg, #1a2542 0%, #131e35 100%)',
-                  borderRadius: '12px',
-                  padding: '24px',
-                  border: '1px solid #1e2d4a',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
-                }}
-              >
-                <h3
-                  style={{
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: '#94A3B8',
-                    marginBottom: '16px',
-                  }}
-                >
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
+              <div className="card">
+                <h3 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                   Request Volume Forecast
                 </h3>
                 <ForecastChart
@@ -176,23 +133,8 @@ const InsightsPage: React.FC = () => {
                   confidence={data.forecasts.requests.confidence_score}
                 />
               </div>
-              <div
-                style={{
-                  background: 'linear-gradient(135deg, #1a2542 0%, #131e35 100%)',
-                  borderRadius: '12px',
-                  padding: '24px',
-                  border: '1px solid #1e2d4a',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
-                }}
-              >
-                <h3
-                  style={{
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: '#94A3B8',
-                    marginBottom: '16px',
-                  }}
-                >
+              <div className="card">
+                <h3 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                   Error Rate Forecast
                 </h3>
                 <ForecastChart
