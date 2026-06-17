@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { ExportJobForm } from '../components/ExportJobForm';
 import { useExports } from '../hooks/useExports';
+import { Download } from 'lucide-react';
 
 interface ExportJobDisplay {
   id: number;
@@ -87,11 +88,31 @@ export const ExportsPage = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Header */}
-      <div className="page-header">
-        <h1>Data Exports</h1>
-        <p>Create and manage bulk data exports</p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      {/* Hero Header */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          gap: '32px',
+          flexWrap: 'wrap',
+          paddingBottom: '24px',
+          borderBottom: '1px solid var(--border-subtle)',
+        }}
+      >
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: 'rgba(37,99,235,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)' }}>
+              <Download size={14} />
+            </div>
+            <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent-primary)', margin: 0 }}>
+              Data Management
+            </p>
+          </div>
+          <h1 style={{ margin: '0 0 4px 0', fontSize: '32px', fontWeight: 'var(--fw-bold)', color: 'var(--text-primary)' }}>Data Exports</h1>
+          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>Create and manage bulk data exports</p>
+        </div>
       </div>
 
       {error && (
@@ -104,8 +125,8 @@ export const ExportsPage = () => {
       <ExportJobForm onSubmit={handleCreateExport} loading={loading} error={error ?? undefined} />
 
       {/* Export Jobs List */}
-      <div className="card">
-        <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
+      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+        <h2 className="section-anchor__title">
           Export Jobs
         </h2>
 
@@ -200,20 +221,20 @@ export const ExportsPage = () => {
             </table>
           </div>
         )}
-      </div>
+      </section>
 
       {/* Information Box */}
-      <div className="card">
-        <h3 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '12px' }}>Export Information</h3>
-        <div className="info-card">
-          <ul>
-            <li>Exports are processed asynchronously to avoid blocking your requests</li>
-            <li>You can monitor the progress of active exports in real-time</li>
-            <li>Completed exports are available for download for 7 days</li>
-            <li>Failed exports can be retried by clicking the Retry button</li>
+      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+        <h2 className="section-anchor__title">Export Information</h2>
+        <div className="glass-panel" style={{ padding: '16px' }}>
+          <ul style={{ margin: 0, paddingLeft: '20px' }}>
+            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Exports are processed asynchronously to avoid blocking your requests</li>
+            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>You can monitor the progress of active exports in real-time</li>
+            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Completed exports are available for download for 7 days</li>
+            <li style={{ color: 'var(--text-secondary)' }}>Failed exports can be retried by clicking the Retry button</li>
           </ul>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

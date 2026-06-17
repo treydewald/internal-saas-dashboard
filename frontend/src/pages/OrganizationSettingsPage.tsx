@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useOrganization } from '../hooks/useOrganization';
 import { useAuth } from '../hooks/useAuth';
+import { Building2 } from 'lucide-react';
 
 export const OrganizationSettingsPage: React.FC = () => {
   const { user } = useAuth();
@@ -34,21 +35,39 @@ export const OrganizationSettingsPage: React.FC = () => {
 
   if (!currentOrg) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div className="page-header">
-          <h1>Organization Settings</h1>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+        <div
+          style={{
+            paddingBottom: '24px',
+            borderBottom: '1px solid var(--border-subtle)',
+          }}
+        >
+          <h1 style={{ margin: 0, fontSize: '32px', fontWeight: 'var(--fw-bold)', color: 'var(--text-primary)' }}>Organization Settings</h1>
         </div>
-        <div style={{ color: 'var(--text-tertiary)' }}>Loading organization...</div>
+        <div style={{ color: 'var(--text-secondary)' }}>Loading organization...</div>
       </div>
     );
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Header */}
-      <div className="page-header">
-        <h1>Organization Settings</h1>
-        <p>Manage {currentOrg.name} settings</p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      {/* Hero Header */}
+      <div
+        style={{
+          paddingBottom: '24px',
+          borderBottom: '1px solid var(--border-subtle)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+          <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: 'rgba(37,99,235,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)' }}>
+            <Building2 size={14} />
+          </div>
+          <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent-primary)', margin: 0 }}>
+            Administration
+          </p>
+        </div>
+        <h1 style={{ margin: '0 0 4px 0', fontSize: '32px', fontWeight: 'var(--fw-bold)', color: 'var(--text-primary)' }}>Organization Settings</h1>
+        <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>Manage {currentOrg.name} settings</p>
       </div>
 
       {error && (
@@ -64,9 +83,9 @@ export const OrganizationSettingsPage: React.FC = () => {
       )}
 
       {/* Organization Details */}
-      <div className="card">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', margin: 0 }}>
+      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <h2 className="section-anchor__title" style={{ marginBottom: 0 }}>
             Organization Details
           </h2>
           {isAdmin && !editMode && (
@@ -78,6 +97,7 @@ export const OrganizationSettingsPage: React.FC = () => {
             </button>
           )}
         </div>
+        <div className="glass-panel" style={{ padding: '20px' }}>
 
         {!editMode ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -156,22 +176,21 @@ export const OrganizationSettingsPage: React.FC = () => {
             </div>
           </form>
         )}
-      </div>
+        </div>
+      </section>
 
       {/* Organization Info */}
-      <div className="card">
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
-          Organization Information
-        </h3>
-        <div className="info-card">
-          <ul>
-            <li>Each organization is completely isolated from others</li>
-            <li>Members can have different roles (admin, member, viewer)</li>
-            <li>Organization data is not shared with other organizations</li>
-            <li>Only organization admins can modify organization settings</li>
+      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+        <h2 className="section-anchor__title">Organization Information</h2>
+        <div className="glass-panel" style={{ padding: '16px' }}>
+          <ul style={{ margin: 0, paddingLeft: '20px' }}>
+            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Each organization is completely isolated from others</li>
+            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Members can have different roles (admin, member, viewer)</li>
+            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Organization data is not shared with other organizations</li>
+            <li style={{ color: 'var(--text-secondary)' }}>Only organization admins can modify organization settings</li>
           </ul>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

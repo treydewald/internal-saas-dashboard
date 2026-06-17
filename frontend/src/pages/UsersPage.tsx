@@ -35,9 +35,19 @@ export const UsersPage: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       {/* Hero Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '24px', flexWrap: 'wrap' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          gap: '32px',
+          flexWrap: 'wrap',
+          paddingBottom: '24px',
+          borderBottom: '1px solid var(--border-subtle)',
+        }}
+      >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
             <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: 'rgba(37,99,235,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)' }}>
@@ -47,8 +57,8 @@ export const UsersPage: React.FC = () => {
               User Management
             </p>
           </div>
-          <h1 style={{ margin: '0 0 4px 0' }}>Users</h1>
-          <p style={{ fontSize: '14px', color: 'var(--text-tertiary)', margin: 0 }}>
+          <h1 style={{ margin: '0 0 4px 0', fontSize: '32px', fontWeight: 'var(--fw-bold)', color: 'var(--text-primary)' }}>Users</h1>
+          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>
             Manage accounts, plans, and access across your organization
           </p>
         </div>
@@ -73,7 +83,7 @@ export const UsersPage: React.FC = () => {
       />
 
       {/* Users Table */}
-      <div className="card" style={{ overflow: 'hidden' }}>
+      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
         <UsersTable
           users={users}
           loading={loading}
@@ -81,7 +91,7 @@ export const UsersPage: React.FC = () => {
           onRefetch={refetch}
           onRowClick={handleRowClick}
         />
-      </div>
+      </section>
 
       {/* User Detail Modal */}
       {selectedUserId && (

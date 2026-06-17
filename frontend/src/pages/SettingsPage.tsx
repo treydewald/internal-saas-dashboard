@@ -10,15 +10,15 @@ export const SettingsPage: React.FC = () => {
   // Restrict to admin users
   if (user?.role !== 'admin') {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'flex-end',
-            gap: '24px',
+            gap: '32px',
             flexWrap: 'wrap',
-            paddingBottom: '16px',
+            paddingBottom: '24px',
             borderBottom: '1px solid var(--border-subtle)',
           }}
         >
@@ -79,16 +79,16 @@ export const SettingsPage: React.FC = () => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       {/* Hero Header */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
-          gap: '24px',
+          gap: '32px',
           flexWrap: 'wrap',
-          paddingBottom: '16px',
+          paddingBottom: '24px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -139,45 +139,24 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       {/* Profile Section */}
-      <section style={{ flex: '0 0 auto' }}>
-        <h2 style={{
-          fontSize: '14px',
-          fontWeight: 'var(--fw-semibold)',
-          color: 'var(--text-secondary)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          margin: '0 0 16px 0'
-        }}>
+      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
+        <h2 className="section-anchor__title">
           Profile
         </h2>
         <ProfileSection />
       </section>
 
       {/* API Keys Section */}
-      <section style={{ flex: '0 0 auto' }}>
-        <h2 style={{
-          fontSize: '14px',
-          fontWeight: 'var(--fw-semibold)',
-          color: 'var(--text-secondary)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          margin: '0 0 16px 0'
-        }}>
+      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
+        <h2 className="section-anchor__title">
           API Keys
         </h2>
         <APIKeySection />
       </section>
 
       {/* Additional Info */}
-      <section style={{ flex: '0 0 auto' }}>
-        <h2 style={{
-          fontSize: '14px',
-          fontWeight: 'var(--fw-semibold)',
-          color: 'var(--text-secondary)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          margin: '0 0 16px 0'
-        }}>
+      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
+        <h2 className="section-anchor__title">
           Information
         </h2>
         <div className="card">

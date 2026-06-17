@@ -9,7 +9,7 @@ export default function AlertsPage() {
   const { rules, alerts, loading, createRule, deleteRule } = useAlerts();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
 
       {/* ── Page Header ─────────────────────────────── */}
       <div
@@ -17,8 +17,10 @@ export default function AlertsPage() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
-          gap: '24px',
+          gap: '32px',
           flexWrap: 'wrap',
+          paddingBottom: '24px',
+          borderBottom: '1px solid var(--border-subtle)',
         }}
       >
         <div>
@@ -50,8 +52,8 @@ export default function AlertsPage() {
               Monitoring
             </p>
           </div>
-          <h1 style={{ margin: '0 0 4px 0' }}>Alerts</h1>
-          <p style={{ fontSize: '14px', color: 'var(--text-tertiary)', margin: 0 }}>
+          <h1 style={{ margin: '0 0 4px 0', fontSize: '32px', fontWeight: 'var(--fw-bold)', color: 'var(--text-primary)' }}>Alerts</h1>
+          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>
             Manage alert rules and view triggered notifications
           </p>
         </div>
@@ -66,35 +68,10 @@ export default function AlertsPage() {
       </div>
 
       {/* ── Alert Rules ─────────────────────────────── */}
-      <section>
-        <div className="card" style={{ overflow: 'hidden', padding: 0, position: 'relative' }}>
+      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+        <h2 className="section-anchor__title">Alert Rules</h2>
+        <div className="glass-panel" style={{ overflow: 'hidden', padding: 0, position: 'relative' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'linear-gradient(90deg, var(--accent-primary), #7C3AED)' }} />
-          {/* Card header */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '20px 24px',
-              borderBottom: '1px solid var(--border-subtle)',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'rgba(37,99,235,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)' }}>
-                <Bell size={15} />
-              </div>
-              <div>
-                <h2 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 2px 0' }}>
-                  Alert Rules
-                </h2>
-                {!loading && (
-                  <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
-                    {rules.length} {rules.length === 1 ? 'rule' : 'rules'} configured
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
 
           {/* Rules list */}
           <div>
@@ -228,7 +205,8 @@ export default function AlertsPage() {
       </section>
 
       {/* ── Alert History ───────────────────────────── */}
-      <section>
+      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+        <h2 className="section-anchor__title">Alert History</h2>
         <AlertHistory alerts={alerts} loading={loading} />
       </section>
 

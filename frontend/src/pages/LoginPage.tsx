@@ -162,13 +162,13 @@ export const LoginPage: React.FC = () => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          padding: '48px 48px',
+          padding: '48px 32px',
           backgroundColor: 'var(--layer-1)',
           borderLeft: '1px solid var(--border-subtle)',
         }}
       >
         {/* Form header */}
-        <div style={{ marginBottom: '36px' }}>
+        <div style={{ marginBottom: '24px' }}>
           <p
             style={{
               fontSize: '11px',
@@ -192,14 +192,21 @@ export const LoginPage: React.FC = () => {
           >
             Sign in to your account
           </h2>
-          <p style={{ fontSize: '14px', color: 'var(--text-tertiary)', margin: 0 }}>
+          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>
             Enter your credentials to access the dashboard
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            marginBottom: '24px',
+            padding: '32px',
+          }}
         >
           {/* Email field */}
           <div className="form-group" style={{ marginBottom: 0 }}>

@@ -73,16 +73,16 @@ export const ReportsPage: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       {/* Hero Header */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
-          gap: '24px',
+          gap: '32px',
           flexWrap: 'wrap',
-          paddingBottom: '16px',
+          paddingBottom: '24px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -140,19 +140,11 @@ export const ReportsPage: React.FC = () => {
 
       {/* Create Report Form */}
       {showForm && (
-        <section style={{ flex: '0 0 auto' }}>
-          <h2 style={{
-            fontSize: '14px',
-            fontWeight: 'var(--fw-semibold)',
-            color: 'var(--text-secondary)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            margin: '0 0 16px 0'
-          }}>
+        <section className="section-anchor" style={{ flex: '0 0 auto' }}>
+          <h2 className="section-anchor__title">
             New Scheduled Report
           </h2>
-          <div className="card">
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <form className="card" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
               <div className="form-group">
                 <label>Report Name *</label>
@@ -247,71 +239,63 @@ export const ReportsPage: React.FC = () => {
               </button>
             </div>
           </form>
-            </div>
         </section>
         )}
 
       {/* Reports List */}
-      <section style={{ flex: '1 1 auto' }}>
-        <h2 style={{
-          fontSize: '14px',
-          fontWeight: 'var(--fw-semibold)',
-          color: 'var(--text-secondary)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          margin: '0 0 16px 0'
-        }}>
+      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+        <h2 className="section-anchor__title">
           Scheduled Reports ({reports.length})
         </h2>
-        <div className="card">
-        {loading && <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-tertiary)' }}>Loading reports...</div>}
-        {error && <div className="alert alert-error"><p style={{ margin: 0 }}>{error}</p></div>}
+        {loading && <div className="card" style={{ textAlign: 'center', padding: '24px', color: 'var(--text-tertiary)' }}>Loading reports...</div>}
+        {error && <div className="card alert alert-error"><p style={{ margin: 0 }}>{error}</p></div>}
         {!loading && !error && reports.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-tertiary)' }}>
+          <div className="card" style={{ textAlign: 'center', padding: '24px', color: 'var(--text-tertiary)' }}>
             No scheduled reports yet. Click "+ Schedule Report" to create one.
           </div>
         )}
-        {!loading && reports.map((report, idx) => (
-          <div key={report.id} style={{ paddingTop: '16px', paddingBottom: '16px', borderBottom: idx < reports.length - 1 ? '1px solid var(--border-default)' : 'none' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <h3 style={{ fontWeight: '600', color: 'var(--text-primary)', margin: 0 }}>{report.name}</h3>
-                  <span className="status-badge" style={{ backgroundColor: report.is_active ? 'var(--accent-success-dim)' : 'var(--border-default)', color: report.is_active ? 'var(--accent-success)' : 'var(--text-tertiary)' }}>
-                    {report.is_active ? 'Active' : 'Inactive'}
-                  </span>
-                  <span className="status-badge" style={{ backgroundColor: 'var(--accent-info-dim)', color: 'var(--accent-info)', borderColor: 'rgba(2,132,199,0.2)' }}>
-                    {report.export_format.toUpperCase()}
-                  </span>
-                </div>
-                <p style={{ fontSize: '13px', color: 'var(--text-tertiary)', marginTop: '8px', margin: '8px 0 0 0' }}>
-                  {REPORT_TYPES.find(t => t.value === report.report_type)?.label} · {report.schedule_type} · {report.recipient_emails.join(', ')}
-                </p>
-                {report.next_run_at && (
-                  <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                    Next run: {new Date(report.next_run_at).toLocaleString()}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {!loading && reports.map((report) => (
+            <div key={report.id} className="glass-panel" style={{ padding: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                    <h3 style={{ fontWeight: '600', color: 'var(--text-primary)', margin: 0 }}>{report.name}</h3>
+                    <span className="status-badge" style={{ backgroundColor: report.is_active ? 'var(--accent-success-dim)' : 'var(--border-default)', color: report.is_active ? 'var(--accent-success)' : 'var(--text-tertiary)' }}>
+                      {report.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                    <span className="status-badge" style={{ backgroundColor: 'var(--accent-info-dim)', color: 'var(--accent-info)', borderColor: 'rgba(2,132,199,0.2)' }}>
+                      {report.export_format.toUpperCase()}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 8px 0' }}>
+                    {REPORT_TYPES.find(t => t.value === report.report_type)?.label} · {report.schedule_type} · {report.recipient_emails.join(', ')}
                   </p>
-                )}
-              </div>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  onClick={() => toggleReport(report.id, !report.is_active)}
-                  className="btn-secondary"
-                  style={{ fontSize: '13px', padding: '6px 12px' }}
-                >
-                  {report.is_active ? 'Pause' : 'Activate'}
-                </button>
-                <button
-                  onClick={() => { if (window.confirm('Delete this report?')) deleteReport(report.id); }}
-                  className="btn-ghost"
-                  style={{ color: 'var(--accent-error)', fontSize: '13px' }}
-                >
-                  Delete
-                </button>
+                  {report.next_run_at && (
+                    <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
+                      Next run: {new Date(report.next_run_at).toLocaleString()}
+                    </p>
+                  )}
+                </div>
+                <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                  <button
+                    onClick={() => toggleReport(report.id, !report.is_active)}
+                    className="btn-secondary"
+                    style={{ fontSize: '13px', padding: '6px 12px' }}
+                  >
+                    {report.is_active ? 'Pause' : 'Activate'}
+                  </button>
+                  <button
+                    onClick={() => { if (window.confirm('Delete this report?')) deleteReport(report.id); }}
+                    className="btn-ghost"
+                    style={{ color: 'var(--accent-error)', fontSize: '13px' }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
         </div>
       </section>
     </div>

@@ -41,6 +41,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   onRowClick,
 }) => {
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
   const handleSort = (column: string) => {
     let direction: 'asc' | 'desc' = 'asc';
@@ -127,8 +128,11 @@ export const UsersTable: React.FC<UsersTableProps> = ({
             {sortedUsers.map((user, idx) => (
               <tr
                 key={user.id}
-                className="table-row"
-                onClick={() => onRowClick?.(user.id)}
+                className={`table-row ${selectedUserId === user.id ? 'table-row--selected' : ''}`}
+                onClick={() => {
+                  setSelectedUserId(user.id);
+                  onRowClick?.(user.id);
+                }}
               >
                 <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

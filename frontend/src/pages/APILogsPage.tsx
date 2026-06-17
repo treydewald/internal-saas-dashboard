@@ -17,16 +17,16 @@ export const APILogsPage: React.FC = () => {
     });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       {/* Hero Header */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
-          gap: '24px',
+          gap: '32px',
           flexWrap: 'wrap',
-          paddingBottom: '16px',
+          paddingBottom: '24px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -85,22 +85,9 @@ export const APILogsPage: React.FC = () => {
       </div>
 
       {/* API Logs Table */}
-      <section style={{ flex: '1 1 auto' }}>
-        <h2
-          style={{
-            fontSize: '14px',
-            fontWeight: 'var(--fw-semibold)',
-            color: 'var(--text-secondary)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            margin: '0 0 16px 0',
-          }}
-        >
-          Request Logs
-        </h2>
-        <div className="card" style={{ overflow: 'hidden' }}>
-          <APILogsTable logs={logs} loading={loading} error={error} onRefetch={refetch} />
-        </div>
+      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+        <h2 className="section-anchor__title">Request Logs</h2>
+        <APILogsTable logs={logs} loading={loading} error={error} onRefetch={refetch} />
       </section>
 
       {/* Pagination */}

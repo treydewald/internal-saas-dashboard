@@ -15,10 +15,10 @@ const formatTimestamp = (timestamp: string): string => {
   return date.toLocaleTimeString();
 };
 
-const getResponseTimeStatus = (ms: number): string => {
-  if (ms < 1000) return 'var(--text-secondary)';
-  if (ms < 3000) return 'var(--accent-warning)';
-  return 'var(--accent-error)';
+const getLatencyClass = (ms: number): string => {
+  if (ms < 1000) return 'latency--normal';
+  if (ms < 3000) return 'latency--warning';
+  return 'latency--error';
 };
 
 export const APILogsTable: React.FC<APILogsTableProps> = ({
@@ -101,7 +101,7 @@ export const APILogsTable: React.FC<APILogsTableProps> = ({
                 <td>
                   <StatusCodeBadge code={log.status_code} />
                 </td>
-                <td style={{ fontSize: '0.72rem', fontVariantNumeric: 'tabular-nums', color: getResponseTimeStatus(log.response_time_ms) === 'error' ? 'var(--accent-error)' : getResponseTimeStatus(log.response_time_ms) === 'warn' ? 'var(--accent-warning)' : 'var(--text-secondary)' }}>
+                <td className={getLatencyClass(log.response_time_ms)} style={{ fontSize: '0.72rem', fontVariantNumeric: 'tabular-nums' }}>
                   {log.response_time_ms}ms
                 </td>
               </tr>

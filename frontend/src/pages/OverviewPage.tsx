@@ -10,7 +10,7 @@ export const OverviewPage: React.FC = () => {
   const { dateRange, updateDateRange } = useDateRange();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
 
       {/* ── Hero Header ─────────────────────────────── */}
       <div
@@ -18,10 +18,10 @@ export const OverviewPage: React.FC = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
-          gap: '24px',
+          gap: '32px',
           flexWrap: 'wrap',
           flex: '0 0 auto',
-          paddingBottom: '16px',
+          paddingBottom: '24px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -66,46 +66,25 @@ export const OverviewPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ── KPI Cards ──────────────────────────────── */}
-      <section style={{ flex: '0 0 auto' }}>
-        <h2 style={{
-          fontSize: '14px',
-          fontWeight: 'var(--fw-semibold)',
-          color: 'var(--text-secondary)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          margin: '0 0 16px 0'
-        }}>
+      {/* ── KPI Cards (Primary Focus) ──────────────────────────────── */}
+      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
+        <h2 className="section-anchor__title">
           Key Performance Indicators
         </h2>
         <KPICards dateFrom={dateRange.from} dateTo={dateRange.to} />
       </section>
 
       {/* ── Activity Chart (hero section) ─────────── */}
-      <section style={{ flex: '1 1 auto', minHeight: 0 }}>
-        <h2 style={{
-          fontSize: '14px',
-          fontWeight: 'var(--fw-semibold)',
-          color: 'var(--text-secondary)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          margin: '0 0 16px 0'
-        }}>
+      <section className="section-anchor" style={{ flex: '1 1 auto', minHeight: 0 }}>
+        <h2 className="section-anchor__title">
           API Activity
         </h2>
         <APIActivityChart dateFrom={dateRange.from} dateTo={dateRange.to} />
       </section>
 
       {/* ── Advanced Metrics ───────────────────────── */}
-      <section style={{ flex: '0 0 auto' }}>
-        <h2 style={{
-          fontSize: '14px',
-          fontWeight: 'var(--fw-semibold)',
-          color: 'var(--text-secondary)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          margin: '0 0 16px 0'
-        }}>
+      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
+        <h2 className="section-anchor__title">
           Performance Breakdown
         </h2>
         <MetricsCards dateFrom={dateRange.from} dateTo={dateRange.to} />

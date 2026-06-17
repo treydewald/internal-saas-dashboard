@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAPIKeys } from '../hooks/useAPIKeys';
+import { Key } from 'lucide-react';
 
 export const APIKeyUsagePage = () => {
   const { keys, loading, error, createKey, revokeKey, deleteKey, createdKey, clearCreatedKey } = useAPIKeys();
@@ -55,11 +56,24 @@ export const APIKeyUsagePage = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Header */}
-      <div className="page-header">
-        <h1>API Key Management</h1>
-        <p>Create and manage your API keys for programmatic access</p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      {/* Hero Header */}
+      <div
+        style={{
+          paddingBottom: '24px',
+          borderBottom: '1px solid var(--border-subtle)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+          <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: 'rgba(37,99,235,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)' }}>
+            <Key size={14} />
+          </div>
+          <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent-primary)', margin: 0 }}>
+            Developer Tools
+          </p>
+        </div>
+        <h1 style={{ margin: '0 0 4px 0', fontSize: '32px', fontWeight: 'var(--fw-bold)', color: 'var(--text-primary)' }}>API Key Management</h1>
+        <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>Create and manage your API keys for programmatic access</p>
       </div>
 
       {error && (
@@ -69,11 +83,9 @@ export const APIKeyUsagePage = () => {
       )}
 
       {/* Create New Key Section */}
-      <div className="card">
-        <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
-          Create New API Key
-        </h2>
-        <form onSubmit={handleCreateKey} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
+        <h2 className="section-anchor__title">Create New API Key</h2>
+        <form className="card" onSubmit={handleCreateKey} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div className="form-group">
             <label>Key Name</label>
             <input
@@ -95,7 +107,7 @@ export const APIKeyUsagePage = () => {
             {loading ? 'Creating...' : 'Create API Key'}
           </button>
         </form>
-      </div>
+      </section>
 
       {/* Created Key Display */}
       {createdKey && showCreatedKey && (
@@ -147,10 +159,9 @@ export const APIKeyUsagePage = () => {
       )}
 
       {/* API Keys List */}
-      <div className="card">
-        <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
-          Your API Keys
-        </h2>
+      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+        <h2 className="section-anchor__title">Your API Keys</h2>
+        <div className="glass-panel" style={{ padding: '16px' }}>
 
         {loading ? (
           <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>Loading API keys...</div>
@@ -211,23 +222,22 @@ export const APIKeyUsagePage = () => {
             </table>
           </div>
         )}
-      </div>
+        </div>
+      </section>
 
       {/* Security Notice */}
-      <div className="card">
-        <h3 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '12px' }}>
-          Security Guidelines
-        </h3>
-        <div className="info-card">
-          <ul>
-            <li>Keep your API keys confidential—treat them like passwords</li>
-            <li>Revoke keys immediately if you suspect they've been compromised</li>
-            <li>Rotate your API keys regularly for enhanced security</li>
-            <li>Use different keys for different applications or environments</li>
-            <li>Never commit API keys to version control systems</li>
+      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+        <h2 className="section-anchor__title">Security Guidelines</h2>
+        <div className="glass-panel" style={{ padding: '16px' }}>
+          <ul style={{ margin: 0, paddingLeft: '20px' }}>
+            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Keep your API keys confidential—treat them like passwords</li>
+            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Revoke keys immediately if you suspect they've been compromised</li>
+            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Rotate your API keys regularly for enhanced security</li>
+            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Use different keys for different applications or environments</li>
+            <li style={{ color: 'var(--text-secondary)' }}>Never commit API keys to version control systems</li>
           </ul>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

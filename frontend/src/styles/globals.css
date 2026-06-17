@@ -144,6 +144,15 @@ body {
   color: var(--text-primary);
   line-height: 1.5;
   transition: background-color var(--duration-md), color var(--duration-sm);
+  /* PHASE 3: Ambient background glow — subtle radial gradient at center */
+  background-image:
+    radial-gradient(
+      circle at 50% 30%,
+      rgba(37, 99, 235, 0.04) 0%,
+      rgba(37, 99, 235, 0.02) 25%,
+      transparent 70%
+    );
+  background-attachment: fixed;
 }
 
 a {
@@ -175,17 +184,23 @@ a:hover {
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
 }
 
 .btn-primary:active {
   transform: scale(0.97);
+  transition: all var(--duration-sm) var(--ease-in-out);
 }
 
 .btn-primary:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
 }
 
 /* Secondary Button */
@@ -206,13 +221,24 @@ a:hover {
 }
 
 .btn-secondary:hover {
-  background-color: var(--bg-tertiary);
-  border-color: var(--border-emphasis);
+  background-color: rgba(37,99,235,0.08);
+  border-color: var(--border-highlight);
   color: var(--text-primary);
 }
 
 .btn-secondary:active {
   transform: scale(0.97);
+  transition: all var(--duration-sm) var(--ease-in-out);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
 }
 
 /* Ghost Button */
@@ -254,8 +280,19 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
 }
 
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
+}
+
 input::placeholder, textarea::placeholder {
   color: var(--text-tertiary);
+  transition: color var(--duration-sm) var(--ease-out);
+}
+
+input:hover::placeholder, textarea:hover::placeholder {
+  color: var(--text-secondary);
 }
 
 /* Alert/Error Banner */
@@ -393,6 +430,11 @@ html.dark .info-card {
   border: 1px solid;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  transition: all var(--duration-sm) var(--ease-out);
+}
+
+.status-badge:hover {
+  transform: scale(1.05);
 }
 
 .status-badge--success {
@@ -420,6 +462,10 @@ html.dark .info-card {
 }
 
 /* Page Layout Containers */
+.page-wrapper {
+  animation: fadeIn var(--duration-md) var(--ease-out);
+}
+
 .page-header {
   margin-bottom: 32px;
 }
@@ -675,12 +721,21 @@ html.dark .alert-info {
 
 /* Glass-depth card treatment */
 .glass-panel {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0) 100%
+  ), var(--layer-2);
   background-color: var(--layer-2);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-card);
   backdrop-filter: blur(4px);
-  box-shadow: inset 0 1px 0 var(--border-inner);
+  box-shadow:
+    var(--shadow-card),
+    inset 0 1px 0 var(--border-inner);
   transition: all var(--duration-md) var(--ease-out);
+  position: relative;
+  overflow: hidden;
 }
 
 .glass-panel:hover {
@@ -688,14 +743,19 @@ html.dark .alert-info {
   box-shadow:
     var(--shadow-card-hover),
     inset 0 1px 0 var(--border-inner);
-  transform: scale(1.01);
+  transform: scale(1.01) translateY(-2px);
+}
+
+.glass-panel:active {
+  transform: scale(0.99);
 }
 
 /* Card directional gradient lighting (135deg, light from top-left) */
 .card-gradient {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.15) 40%,
     rgba(255, 255, 255, 0) 100%
   );
   position: absolute;
@@ -704,17 +764,80 @@ html.dark .alert-info {
   pointer-events: none;
 }
 
-/* Breathing animation for active/live states */
+/* Enhanced card base with directional lighting */
+.card--with-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-color: var(--layer-2);
+  background-blend-mode: overlay;
+}
+
+/* Page entrance animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Breathing animation for active/live states — 2.5s duration per spec */
 @keyframes breathe {
   0%, 100% {
-    opacity: 0.8;
+    opacity: 0.75;
   }
   50% {
     opacity: 1;
   }
 }
 
+/* Animation utility classes */
+.animate-fadeIn {
+  animation: fadeIn var(--duration-md) var(--ease-out);
+}
+
+.animate-slideInUp {
+  animation: slideInUp var(--duration-md) var(--ease-out);
+}
+
+.animate-scaleIn {
+  animation: scaleIn var(--duration-md) var(--ease-out);
+}
+
 .status-breathing {
+  animation: breathe 2.5s var(--ease-in-out) infinite !important;
+}
+
+/* Status chip active/live states should breathe */
+.status-chip--active,
+.status-chip--healthy,
+.status-chip--running {
   animation: breathe 2.5s var(--ease-in-out) infinite;
 }
 
@@ -731,6 +854,30 @@ html.dark .alert-info {
 .pulse-dot {
   animation: pulse-dot 2.5s var(--ease-in-out) infinite;
 }
+
+/* Stagger animation for list items */
+@keyframes staggerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* List item stagger with nth-child delay */
+.list-item-stagger {
+  animation: staggerFadeIn var(--duration-md) var(--ease-out) backwards;
+}
+
+.list-item-stagger:nth-child(1) { animation-delay: 0ms; }
+.list-item-stagger:nth-child(2) { animation-delay: 40ms; }
+.list-item-stagger:nth-child(3) { animation-delay: 80ms; }
+.list-item-stagger:nth-child(4) { animation-delay: 120ms; }
+.list-item-stagger:nth-child(5) { animation-delay: 160ms; }
+.list-item-stagger:nth-child(n+6) { animation-delay: 200ms; }
 
 /* ─────────────────────────────────────────────────────────────────────────────
    TABLE ROW POLISH (T4-12)
@@ -753,9 +900,10 @@ html.dark .alert-info {
   background-color: rgba(255, 255, 255, 0.015);
 }
 
-/* Row hover highlight */
+/* Row hover highlight with enhanced depth */
 .table-row:hover {
-  background-color: rgba(56, 189, 248, 0.04);
+  background-color: rgba(56, 189, 248, 0.06);
+  box-shadow: inset 0 0 8px rgba(37, 99, 235, 0.05);
 }
 
 /* Selected row with accent bar */
@@ -829,7 +977,28 @@ html.dark .alert-info {
   padding-left: 8px;
 }
 
-/* Section anchoring */
+/* Section anchoring — used throughout page layout */
+.section-anchor {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.section-anchor:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.section-anchor__title {
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin: 0 0 24px 0;
+}
+
 .nav-section {
   margin-top: 16px;
   padding-top: 16px;
@@ -926,6 +1095,11 @@ label {
 
 .card {
   padding: 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0) 100%
+  ), var(--layer-2);
   background-color: var(--layer-2);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-card);
@@ -935,15 +1109,22 @@ label {
     0 4px 12px rgba(15, 23, 42, 0.08),
     inset 0 1px 0 var(--border-inner);
   transition: all var(--duration-md) var(--ease-out);
+  position: relative;
+  overflow: hidden;
 }
 
 .card:hover {
   border-color: var(--border-highlight);
+  transform: scale(1.01);
   box-shadow:
     0 1px 3px rgba(15, 23, 42, 0.12),
     0 8px 20px rgba(15, 23, 42, 0.12),
     0 20px 48px rgba(15, 23, 42, 0.10),
     inset 0 1px 0 var(--border-inner);
+}
+
+.card:active {
+  transform: scale(0.99);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -959,6 +1140,11 @@ label {
 
 .kpi-card {
   padding: 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0) 100%
+  ), var(--layer-2);
   background-color: var(--layer-2);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-card);
@@ -969,6 +1155,7 @@ label {
     inset 0 1px 0 var(--border-inner);
   transition: all var(--duration-md) var(--ease-out);
   position: relative;
+  overflow: hidden;
 }
 
 .kpi-card:hover {
@@ -979,6 +1166,10 @@ label {
     0 8px 20px rgba(15, 23, 42, 0.12),
     0 20px 48px rgba(15, 23, 42, 0.10),
     inset 0 1px 0 var(--border-inner);
+}
+
+.kpi-card:active {
+  transform: scale(0.99);
 }
 
 .kpi-card__label {
@@ -1081,4 +1272,143 @@ label {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-tertiary);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PHASE 3.2: SEMANTIC TABLE BADGE COLORING SYSTEM
+───────────────────────────────────────────────────────────────────────────────── */
+
+/* HTTP METHOD BADGES */
+.method-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-chip);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.method-badge--get {
+  background-color: rgba(2, 132, 199, 0.1);
+  color: #0284C7;
+  border-color: rgba(2, 132, 199, 0.2);
+}
+
+.method-badge--post {
+  background-color: rgba(22, 163, 74, 0.1);
+  color: #16A34A;
+  border-color: rgba(22, 163, 74, 0.2);
+}
+
+.method-badge--put {
+  background-color: rgba(217, 119, 6, 0.1);
+  color: #D97706;
+  border-color: rgba(217, 119, 6, 0.2);
+}
+
+.method-badge--patch {
+  background-color: rgba(124, 58, 237, 0.1);
+  color: #7C3AED;
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+.method-badge--delete {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: #DC2626;
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+/* HTTP STATUS CODE BADGES */
+.status-code-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-chip);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.status-code-badge--2xx {
+  background-color: rgba(22, 163, 74, 0.1);
+  color: #16A34A;
+  border-color: rgba(22, 163, 74, 0.2);
+}
+
+.status-code-badge--3xx {
+  background-color: rgba(2, 132, 199, 0.1);
+  color: #0284C7;
+  border-color: rgba(2, 132, 199, 0.2);
+}
+
+.status-code-badge--4xx {
+  background-color: rgba(217, 119, 6, 0.1);
+  color: #D97706;
+  border-color: rgba(217, 119, 6, 0.2);
+}
+
+.status-code-badge--5xx {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: #DC2626;
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+/* LATENCY THRESHOLD COLORING */
+.latency--normal {
+  color: var(--text-secondary);
+}
+
+.latency--warning {
+  color: var(--accent-warning);
+  font-weight: var(--fw-semibold);
+}
+
+.latency--error {
+  color: var(--accent-error);
+  font-weight: var(--fw-semibold);
+  background-color: rgba(220, 38, 38, 0.04);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+/* ACTION TYPE BADGES (Audit Logs) */
+.action-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-chip);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.action-badge--user {
+  background-color: rgba(2, 132, 199, 0.1);
+  color: #0284C7;
+  border-color: rgba(2, 132, 199, 0.2);
+}
+
+.action-badge--api-key {
+  background-color: rgba(217, 119, 6, 0.1);
+  color: #D97706;
+  border-color: rgba(217, 119, 6, 0.2);
+}
+
+.action-badge--org {
+  background-color: rgba(124, 58, 237, 0.1);
+  color: #7C3AED;
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+.action-badge--system {
+  background-color: rgba(100, 116, 139, 0.08);
+  color: var(--text-secondary);
+  border-color: var(--border-subtle);
 }

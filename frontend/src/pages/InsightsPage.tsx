@@ -81,7 +81,7 @@ function SectionHeading({ icon, label }: { icon: React.ReactNode; label: string 
           fontWeight: 700,
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
-          color: 'var(--text-tertiary)',
+          color: 'var(--text-secondary)',
           margin: 0,
         }}
       >
@@ -138,7 +138,12 @@ const InsightsPage: React.FC = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
 
       {/* ── Page Header ─────────────────────────────── */}
-      <div className="page-header" style={{ marginBottom: 0 }}>
+      <div
+        style={{
+          paddingBottom: '24px',
+          borderBottom: '1px solid var(--border-subtle)',
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
           <div
             style={{
@@ -167,8 +172,8 @@ const InsightsPage: React.FC = () => {
             Machine Learning
           </p>
         </div>
-        <h1 style={{ margin: '0 0 4px 0' }}>ML Insights</h1>
-        <p style={{ fontSize: '14px', color: 'var(--text-tertiary)', margin: 0 }}>
+        <h1 style={{ margin: '0 0 4px 0', fontSize: '32px', fontWeight: 'var(--fw-bold)', color: 'var(--text-primary)' }}>ML Insights</h1>
+        <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>
           Anomaly detection, forecasts, and churn predictions for your API activity
         </p>
       </div>
@@ -293,7 +298,7 @@ const InsightsPage: React.FC = () => {
                   style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                    gap: '24px',
+                    gap: '32px',
                     paddingTop: '4px',
                   }}
                 >
