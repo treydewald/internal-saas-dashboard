@@ -1,78 +1,99 @@
 import { useEffect } from 'react';
 
 /**
- * Development hook to automatically clear cache and refresh on every page load
- * This ensures CSS changes from globals.css and other assets are always fresh
+ * Comprehensive cache clearing - equivalent to:
+ * 1. DevTools Application tab → Clear all site data
+ * 2. DevTools Network tab → Check "Disable cache"
+ * 3. Hard refresh (Ctrl+Shift+R)
  */
-export const useCacheBuster = () => {
-  useEffect(() => {
-    // Only run in development
-    if (import.meta.env.DEV) {
-      // Prevent caching via headers
-      const preventCache = (url: string) => {
-        const timeStamp = new Date().getTime();
-        const urlWithParam = url.includes('?') ? `${url}&_=${timeStamp}` : `${url}?_=${timeStamp}`;
-        return urlWithParam;
-      };
+const performFullCacheClear = async () => {
+  if (!import.meta.env.DEV) return;
 
-      // Fetch CSS files without cache
-      const cssLinks = document.querySelectorAll('link[rel="stylesheet"]');
-      cssLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href) {
-          link.setAttribute('href', preventCache(href));
-        }
+  try {
+    // 1. Clear all storage
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // 2. Clear IndexedDB
+    if (window.indexedDB) {
+      const dbs = await (window as any).indexedDB.databases?.() || [];
+      dbs.forEach((db: any) => {
+        try {
+          window.indexedDB.deleteDatabase(db.name);
+        } catch (e) {}
       });
-
-      // Clear localStorage dev cache if needed
-      const lastLoadTime = localStorage.getItem('app_last_load_time');
-      const currentTime = new Date().getTime();
-      if (lastLoadTime) {
-        const timeDiff = currentTime - parseInt(lastLoadTime);
-        // Force reload every 5 seconds in dev mode for instant updates
-        if (timeDiff > 5000) {
-          localStorage.setItem('app_last_load_time', currentTime.toString());
-          window.location.reload();
-        }
-      } else {
-        localStorage.setItem('app_last_load_time', currentTime.toString());
-      }
-    }
-  }, []);
-};
-
-/**
- * Function to manually clear all caches (for use in components)
- */
-export const clearAllCaches = async () => {
-  if (import.meta.env.DEV) {
-    // Clear service worker cache
-    if ('caches' in window) {
-      const cacheNames = await caches.keys();
-      await Promise.all(
-        cacheNames.map(cacheName => caches.delete(cacheName))
-      );
     }
 
-    // Clear service workers
+    // 3. Clear all service workers
     if ('serviceWorker' in navigator) {
       const registrations = await navigator.serviceWorker.getRegistrations();
       registrations.forEach(registration => registration.unregister());
     }
 
-    console.log('✅ All caches cleared');
+    // 4. Clear browser caches
+    if ('caches' in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(cacheNames.map(name => caches.delete(name)));
+    }
+
+    // 5. Clear cookies
+    document.cookie.split(";").forEach(c => {
+      const name = c.split("=")[0];
+      document.cookie = `${name}=;expires=${new Date(0).toUTCString()};path=/`;
+    });
+
+    // 6. Add cache-bust params to all assets
+    const timestamp = Date.now();
+    document.querySelectorAll('link[rel="stylesheet"]').forEach(el => {
+      const href = el.getAttribute('href');
+      if (href && !href.includes('_bust=')) {
+        const sep = href.includes('?') ? '&' : '?';
+        el.setAttribute('href', `${href}${sep}_bust=${timestamp}`);
+      }
+    });
+
+    console.log('✅ Full cache clear completed');
+  } catch (error) {
+    console.error('Error during cache clear:', error);
   }
 };
 
 /**
- * Function to force reload with no-cache headers
+ * Development hook to clear all caches on every page load
+ * Equivalent to: DevTools → Application → Clear all + Network → Disable cache + Hard refresh
  */
-export const forceReload = () => {
-  // Clear memory cache
-  window.location.href = window.location.href;
+export const useCacheBuster = () => {
+  useEffect(() => {
+    performFullCacheClear();
+  }, []);
 
-  // Force hard refresh
+  // Also clear cache when page becomes visible (tab switch)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        performFullCacheClear();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+};
+
+/**
+ * Manually trigger full cache clear
+ */
+export const clearAllCaches = async () => {
+  await performFullCacheClear();
+};
+
+/**
+ * Force reload with all caches cleared
+ */
+export const forceReload = async () => {
+  await performFullCacheClear();
+  // Hard refresh equivalent (Ctrl+Shift+R)
   setTimeout(() => {
-    window.location.reload();
+    window.location.href = window.location.href + '?_force_refresh=' + Date.now();
   }, 100);
 };
