@@ -1,21 +1,26 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './',
-  testMatch: /full-system-validation\.ts/,
+  testDir: './.',
+  testMatch: '**/*-qa.ts',
   fullyParallel: false,
   forbidOnly: false,
   retries: 0,
   workers: 1,
-  reporter: [
-    ['list'],
-    ['html', { outputFolder: 'playwright-report' }]
-  ],
+  reporter: 'list',
   use: {
-    baseURL: 'http://localhost:5176',
+    baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: 'off',
+    video: 'off',
   },
+
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+  ],
 
   webServer: undefined,
 });

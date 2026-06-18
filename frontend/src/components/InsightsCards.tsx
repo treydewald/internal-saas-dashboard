@@ -58,6 +58,7 @@ const InsightsCards: React.FC<InsightsCardsProps> = ({ data }) => {
 
   const cards = [
     {
+      id: 'anomalies',
       title: 'Total Anomalies',
       value: anomalyCount,
       subtitle: `${responseTimeAnomalies} response time, ${errorRateAnomalies} error rate`,
@@ -67,6 +68,7 @@ const InsightsCards: React.FC<InsightsCardsProps> = ({ data }) => {
       iconColor: getAnomalyColor(),
     },
     {
+      id: 'request-confidence',
       title: 'Request Volume Confidence',
       value: `${Math.round(requestForecastConfidence * 100)}%`,
       subtitle: (data.forecasts.requests.trend === 'increasing' || !data.forecasts.requests.trend) ? 'Trend: Increasing' : 'Trend: Decreasing',
@@ -76,6 +78,7 @@ const InsightsCards: React.FC<InsightsCardsProps> = ({ data }) => {
       iconColor: 'var(--accent-info)',
     },
     {
+      id: 'error-confidence',
       title: 'Error Rate Confidence',
       value: `${Math.round(errorForecastConfidence * 100)}%`,
       subtitle: data.forecasts.error_rate.trend === 'improving' ? 'Trend: Improving' : 'Trend: Worsening',
@@ -85,6 +88,7 @@ const InsightsCards: React.FC<InsightsCardsProps> = ({ data }) => {
       iconColor: 'var(--accent-primary)',
     },
     {
+      id: 'at-risk-users',
       title: 'At-Risk Users',
       value: churnRiskCount,
       subtitle: 'Churn prediction',
@@ -103,10 +107,10 @@ const InsightsCards: React.FC<InsightsCardsProps> = ({ data }) => {
         gap: '16px',
       }}
     >
-      {cards.map((card, idx) => {
+      {cards.map((card) => {
         const Icon = card.icon;
         return (
-          <div key={idx} className="card">
+          <div key={card.id} className="card">
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p

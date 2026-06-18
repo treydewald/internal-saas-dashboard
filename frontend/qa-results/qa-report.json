@@ -1,0 +1,187 @@
+{
+  "timestamp": "2026-06-18T19:41:36.830Z",
+  "duration": "25.108s",
+  "pages": 12,
+  "explorations": [
+    {
+      "path": "/",
+      "title": "Overview",
+      "elements": {
+        "Forms": 0,
+        "Tables": 0,
+        "Buttons": 7,
+        "Inputs": 2,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    },
+    {
+      "path": "/users",
+      "title": "Users",
+      "elements": {
+        "Forms": 0,
+        "Tables": 1,
+        "Buttons": 4,
+        "Inputs": 3,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    },
+    {
+      "path": "/api-logs",
+      "title": "API Logs",
+      "elements": {
+        "Forms": 0,
+        "Tables": 0,
+        "Buttons": 8,
+        "Inputs": 2,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    },
+    {
+      "path": "/insights",
+      "title": "Insights",
+      "elements": {
+        "Forms": 0,
+        "Tables": 0,
+        "Buttons": 3,
+        "Inputs": 0,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    },
+    {
+      "path": "/alerts",
+      "title": "Alerts",
+      "elements": {
+        "Forms": 0,
+        "Tables": 1,
+        "Buttons": 8,
+        "Inputs": 0,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    },
+    {
+      "path": "/audit-log",
+      "title": "Audit Log",
+      "elements": {
+        "Forms": 0,
+        "Tables": 1,
+        "Buttons": 3,
+        "Inputs": 0,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    },
+    {
+      "path": "/dashboard-builder",
+      "title": "Dashboard Builder",
+      "elements": {
+        "Forms": 0,
+        "Tables": 0,
+        "Buttons": 18,
+        "Inputs": 2,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    },
+    {
+      "path": "/reports",
+      "title": "Reports",
+      "elements": {
+        "Forms": 0,
+        "Tables": 0,
+        "Buttons": 4,
+        "Inputs": 0,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    },
+    {
+      "path": "/exports",
+      "title": "Exports",
+      "elements": {
+        "Forms": 1,
+        "Tables": 0,
+        "Buttons": 4,
+        "Inputs": 1,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    },
+    {
+      "path": "/api-keys",
+      "title": "API Keys",
+      "elements": {
+        "Forms": 1,
+        "Tables": 0,
+        "Buttons": 4,
+        "Inputs": 1,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    },
+    {
+      "path": "/org-settings",
+      "title": "Org Settings",
+      "elements": {
+        "Forms": 0,
+        "Tables": 0,
+        "Buttons": 3,
+        "Inputs": 0,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    },
+    {
+      "path": "/settings",
+      "title": "Settings",
+      "elements": {
+        "Forms": 0,
+        "Tables": 0,
+        "Buttons": 5,
+        "Inputs": 0,
+        "Links": 12
+      },
+      "interactiveTests": [
+        "Clicked: Button 1"
+      ],
+      "errors": []
+    }
+  ]
+}
