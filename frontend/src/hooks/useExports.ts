@@ -32,11 +32,12 @@ export const useExports = () => {
     setError(null);
     try {
       const response = await api.get<ExportsResponse>(`/api/exports?skip=${skip}&limit=${limit}`);
-      const data: ExportsResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(data as any);
+        throw new Error(`Failed to fetch export jobs: ${response.statusText}`);
       }
+
+      const data = response.data;
 
       setJobs(data.jobs);
       setTotalCount(data.total_count);
@@ -61,12 +62,12 @@ export const useExports = () => {
           job_type: jobType,
           filters,
         });
-        const data: ExportJob = await response.json();
 
         if (!response.ok) {
-          throw new Error(data as any);
+          throw new Error(`Failed to create export job: ${response.statusText}`);
         }
 
+        const data = response.data;
         setJobs([data, ...jobs]);
         setTotalCount(totalCount + 1);
         return data;
@@ -82,12 +83,12 @@ export const useExports = () => {
   const getJobStatus = useCallback(async (jobId: number) => {
     try {
       const response = await api.get<ExportJob>(`/api/exports/${jobId}`);
-      const data: ExportJob = await response.json();
 
       if (!response.ok) {
-        throw new Error(data as any);
+        throw new Error(`Failed to get job status: ${response.statusText}`);
       }
 
+      const data = response.data;
       // Update local state
       setJobs(jobs.map(j => (j.id === jobId ? data : j)));
       return data;
@@ -102,12 +103,12 @@ export const useExports = () => {
       setError(null);
       try {
         const response = await api.post<ExportJob>(`/api/exports/${jobId}/cancel`, {});
-        const data: ExportJob = await response.json();
 
         if (!response.ok) {
-          throw new Error(data as any);
+          throw new Error(`Failed to cancel export job: ${response.statusText}`);
         }
 
+        const data = response.data;
         setJobs(jobs.map(j => (j.id === jobId ? data : j)));
         return data;
       } catch (err) {
@@ -124,12 +125,12 @@ export const useExports = () => {
       setError(null);
       try {
         const response = await api.post<ExportJob>(`/api/exports/${jobId}/retry`, {});
-        const data: ExportJob = await response.json();
 
         if (!response.ok) {
-          throw new Error(data as any);
+          throw new Error(`Failed to retry export job: ${response.statusText}`);
         }
 
+        const data = response.data;
         setJobs(jobs.map(j => (j.id === jobId ? data : j)));
         return data;
       } catch (err) {
@@ -148,8 +149,7 @@ export const useExports = () => {
         const response = await api.delete<Record<string, unknown>>(`/api/exports/${jobId}`);
 
         if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data as any);
+          throw new Error(`Failed to delete export job: ${response.statusText}`);
         }
 
         setJobs(jobs.filter(j => j.id !== jobId));

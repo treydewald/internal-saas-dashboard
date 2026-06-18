@@ -99,8 +99,9 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
         }}
       >
         <div className="form-group" style={{ marginBottom: 0 }}>
-          <label>From</label>
+          <label htmlFor="from-date">From</label>
           <input
+            id="from-date"
             type="date"
             value={fromDate}
             onChange={handleFromDateChange}
@@ -108,8 +109,9 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
           />
         </div>
         <div className="form-group" style={{ marginBottom: 0 }}>
-          <label>To</label>
+          <label htmlFor="to-date">To</label>
           <input
+            id="to-date"
             type="date"
             value={toDate}
             onChange={handleToDateChange}

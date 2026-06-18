@@ -33,12 +33,12 @@ export const useAPIKeys = () => {
     setError(null);
     try {
       const response = await api.get<APIKeysResponse>('/api/api-keys');
-      const data: APIKeysResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(data as any);
+        throw new Error(`Failed to fetch API keys: ${response.statusText}`);
       }
 
+      const data = response.data;
       setKeys(data.api_keys);
       setTotalCount(data.total_count);
     } catch (err) {
@@ -58,12 +58,12 @@ export const useAPIKeys = () => {
     setError(null);
     try {
       const response = await api.post<APIKeyWithSecret>('/api/api-keys', { name });
-      const data: APIKeyWithSecret = await response.json();
 
       if (!response.ok) {
-        throw new Error(data as any);
+        throw new Error(`Failed to create API key: ${response.statusText}`);
       }
 
+      const data = response.data;
       setCreatedKey(data);
       // Refetch to include the new key in the list
       await fetchKeys();
@@ -79,15 +79,13 @@ export const useAPIKeys = () => {
     setError(null);
     try {
       const response = await api.post<Record<string, unknown>>(`/api/api-keys/${keyId}/revoke`, {});
-      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data as any);
+        throw new Error(`Failed to revoke API key: ${response.statusText}`);
       }
 
       // Update local state
       setKeys(keys.map(k => (k.id === keyId ? { ...k, is_active: false } : k)));
-      return data;
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to revoke API key';
       setError(errorMsg);
@@ -101,8 +99,7 @@ export const useAPIKeys = () => {
       const response = await api.delete<Record<string, unknown>>(`/api/api-keys/${keyId}`);
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data as any);
+        throw new Error(`Failed to delete API key: ${response.statusText}`);
       }
 
       // Update local state

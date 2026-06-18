@@ -63,12 +63,12 @@ export const useAPILogs = (options: UseAPILogsOptions = {}) => {
         }
 
         const response = await api.get<APILogsResponse>(`/api/api-logs?${params}`);
-        const data: APILogsResponse = await response.json();
 
         if (!response.ok) {
-          throw new Error(data as any);
+          throw new Error(`Failed to fetch API logs: ${response.statusText}`);
         }
 
+        const data = response.data;
         setLogs(data.logs);
         setTotalCount(data.total_count);
       } catch (err) {

@@ -38,12 +38,12 @@ export const useOrganization = () => {
     setError(null);
     try {
       const response = await api.get<OrganizationsResponse>('/api/organizations');
-      const data: OrganizationsResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(data as any);
+        throw new Error(`Failed to fetch organizations: ${response.statusText}`);
       }
 
+      const data = response.data;
       setOrganizations(data.organizations);
       setTotalCount(data.total_count);
 
@@ -73,12 +73,12 @@ export const useOrganization = () => {
           slug,
           description,
         });
-        const data: Organization = await response.json();
 
         if (!response.ok) {
-          throw new Error(data as any);
+          throw new Error(`Failed to create organization: ${response.statusText}`);
         }
 
+        const data = response.data;
         setOrganizations([...organizations, data]);
         setTotalCount(totalCount + 1);
         return data;
@@ -96,12 +96,12 @@ export const useOrganization = () => {
       setError(null);
       try {
         const response = await api.put<Organization>(`/api/organizations/${orgId}`, updates);
-        const data: Organization = await response.json();
 
         if (!response.ok) {
-          throw new Error(data as any);
+          throw new Error(`Failed to update organization: ${response.statusText}`);
         }
 
+        const data = response.data;
         setOrganizations(organizations.map(org => (org.id === orgId ? data : org)));
         if (currentOrg?.id === orgId) {
           setCurrentOrg(data);

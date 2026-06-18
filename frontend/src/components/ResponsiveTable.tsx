@@ -119,7 +119,7 @@ export const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '16px' }}>
         {data.map((row, idx) => (
           <div
-            key={idx}
+            key={row.id || `row-${idx}`}
             className="card"
             style={{ cursor: onRowClick ? 'pointer' : 'default' }}
             onClick={() => onRowClick?.(row)}
@@ -166,7 +166,7 @@ export const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
         <tbody>
           {data.map((row, idx) => (
             <tr
-              key={idx}
+              key={row.id || `row-${idx}`}
               className={onRowClick ? 'table-row--hoverable' : undefined}
               style={{
                 borderBottom: '1px solid var(--border-subtle)',

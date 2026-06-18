@@ -69,12 +69,12 @@ export const useUsers = (options: UseUsersOptions = {}) => {
         }
 
         const response = await api.get<UsersResponse>(`/api/users?${params}`);
-        const data: UsersResponse = await response.json();
 
         if (!response.ok) {
-          throw new Error(data as any);
+          throw new Error(`Failed to fetch users: ${response.statusText}`);
         }
 
+        const data = response.data;
         const realEmails = new Set((data.users || []).map((u: User) => u.email));
         const supplemental = data.users.length < 5
           ? MOCK_USERS.filter((m) => !realEmails.has(m.email)).slice(0, 8 - data.users.length)
