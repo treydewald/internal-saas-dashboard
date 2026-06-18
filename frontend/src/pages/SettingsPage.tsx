@@ -10,7 +10,7 @@ export const SettingsPage: React.FC = () => {
   // Restrict to admin users
   if (user?.role !== 'admin') {
     return (
-      <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <div
           style={{
             display: 'flex',
@@ -18,7 +18,9 @@ export const SettingsPage: React.FC = () => {
             alignItems: 'flex-end',
             gap: '20px',
             flexWrap: 'wrap',
+            flex: '0 0 auto',
             paddingBottom: '16px',
+            marginBottom: '12px',
             borderBottom: '1px solid var(--border-subtle)',
           }}
         >
@@ -79,7 +81,7 @@ export const SettingsPage: React.FC = () => {
   }
 
   return (
-    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Hero Header */}
       <div
         style={{
@@ -88,7 +90,9 @@ export const SettingsPage: React.FC = () => {
           alignItems: 'flex-end',
           gap: '20px',
           flexWrap: 'wrap',
+          flex: '0 0 auto',
           paddingBottom: '16px',
+          marginBottom: '12px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -138,41 +142,44 @@ export const SettingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Profile Section */}
-      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
-        <h2 className="section-anchor__title">
-          Profile
-        </h2>
-        <ProfileSection />
-      </section>
+      {/* Settings Sections */}
+      <div style={{ flex: '1 1 0', minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '12px' }}>
+        {/* Profile Section */}
+        <section>
+          <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Profile
+          </h2>
+          <ProfileSection />
+        </section>
 
-      {/* API Keys Section */}
-      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
-        <h2 className="section-anchor__title">
-          API Keys
-        </h2>
-        <APIKeySection />
-      </section>
+        {/* API Keys Section */}
+        <section>
+          <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            API Keys
+          </h2>
+          <APIKeySection />
+        </section>
 
-      {/* Additional Info */}
-      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
-        <h2 className="section-anchor__title">
-          Information
-        </h2>
-        <div className="card">
-        <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: 'var(--text-primary)' }}>
-          Account Information
-        </h3>
-        <div className="info-card">
-          <ul style={{ margin: 0, paddingLeft: '20px' }}>
-            <li>All changes to your profile are saved immediately</li>
-            <li>API keys are credentials—never share them with anyone</li>
-            <li>Regenerating your API key will invalidate the previous one</li>
-            <li>For security reasons, passwords cannot be changed in this interface</li>
-          </ul>
-        </div>
-        </div>
-      </section>
+        {/* Additional Info */}
+        <section>
+          <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Information
+          </h2>
+          <div className="card">
+          <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: 'var(--text-primary)' }}>
+            Account Information
+          </h3>
+          <div className="info-card">
+            <ul style={{ margin: 0, paddingLeft: '20px' }}>
+              <li>All changes to your profile are saved immediately</li>
+              <li>API keys are credentials—never share them with anyone</li>
+              <li>Regenerating your API key will invalidate the previous one</li>
+              <li>For security reasons, passwords cannot be changed in this interface</li>
+            </ul>
+          </div>
+          </div>
+        </section>
+      </div>
     </div>
   );
 };

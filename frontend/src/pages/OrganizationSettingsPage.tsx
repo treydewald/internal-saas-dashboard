@@ -35,7 +35,7 @@ export const OrganizationSettingsPage: React.FC = () => {
 
   if (!currentOrg) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <div
           style={{
             paddingBottom: '24px',
@@ -50,11 +50,13 @@ export const OrganizationSettingsPage: React.FC = () => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Hero Header */}
       <div
         style={{
-          paddingBottom: '24px',
+          flex: '0 0 auto',
+          paddingBottom: '16px',
+          marginBottom: '12px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -70,20 +72,23 @@ export const OrganizationSettingsPage: React.FC = () => {
         <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>Manage {currentOrg.name} settings</p>
       </div>
 
-      {error && (
-        <div className="alert alert-error">
-          {error}
-        </div>
-      )}
-
-      {successMessage && (
-        <div className="alert alert-success">
-          {successMessage}
+      {(error || successMessage) && (
+        <div style={{ flex: '0 0 auto', marginBottom: '12px' }}>
+          {error && (
+            <div className="alert alert-error">
+              {error}
+            </div>
+          )}
+          {successMessage && (
+            <div className="alert alert-success">
+              {successMessage}
+            </div>
+          )}
         </div>
       )}
 
       {/* Organization Details */}
-      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+      <section style={{ flex: '1 1 0', minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <h2 className="section-anchor__title" style={{ marginBottom: 0 }}>
             Organization Details
@@ -97,7 +102,7 @@ export const OrganizationSettingsPage: React.FC = () => {
             </button>
           )}
         </div>
-        <div className="glass-panel" style={{ padding: '20px' }}>
+        <div className="glass-panel" style={{ padding: '20px', flex: '1 1 0', minHeight: 0, overflowY: 'auto' }}>
 
         {!editMode ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
