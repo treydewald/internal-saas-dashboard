@@ -10,7 +10,7 @@ export const OverviewPage: React.FC = () => {
   const { dateRange, updateDateRange } = useDateRange();
 
   return (
-    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
       {/* ── Hero Header ─────────────────────────────── */}
       <div
@@ -18,10 +18,10 @@ export const OverviewPage: React.FC = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
-          gap: '32px',
+          gap: '24px',
           flexWrap: 'wrap',
           flex: '0 0 auto',
-          paddingBottom: '24px',
+          paddingBottom: '16px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -33,14 +33,14 @@ export const OverviewPage: React.FC = () => {
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
               color: 'var(--accent-primary)',
-              margin: '0 0 6px 0',
+              margin: '0 0 4px 0',
             }}
           >
-            Platform Analytics
+            PLATFORM ANALYTICS
           </p>
           <h1 style={{
-            margin: '0 0 4px 0',
-            fontSize: '32px',
+            margin: '0 0 2px 0',
+            fontSize: '36px',
             fontWeight: 'var(--fw-bold)',
             color: 'var(--text-primary)',
             letterSpacing: '-0.01em'
@@ -56,7 +56,7 @@ export const OverviewPage: React.FC = () => {
             Real-time performance metrics and API activity
           </p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <DateRangePicker
             onDateRangeChange={updateDateRange}
             fromDate={dateRange.from}

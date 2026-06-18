@@ -1,7 +1,7 @@
 .header {
   background-color: var(--layer-1);
   border-bottom: 1px solid var(--border-subtle);
-  box-shadow: 0 1px 0 var(--border-subtle);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
   padding: 0 24px;
   height: 58px;
   position: sticky;
@@ -9,7 +9,7 @@
   z-index: 300;
   display: flex;
   align-items: center;
-  transition: background-color var(--duration-md), border-color var(--duration-md);
+  transition: all var(--duration-md);
 }
 
 .content {

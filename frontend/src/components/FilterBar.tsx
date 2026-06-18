@@ -40,10 +40,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         backgroundColor: 'var(--layer-2)',
         border: '1px solid var(--border-default)',
         borderRadius: 'var(--radius-card)',
-        padding: '16px',
+        padding: '14px 16px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '12px',
+        gap: '10px',
       }}
     >
       {/* Search Bar */}

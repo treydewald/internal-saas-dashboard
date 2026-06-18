@@ -10,15 +10,15 @@ export const SettingsPage: React.FC = () => {
   // Restrict to admin users
   if (user?.role !== 'admin') {
     return (
-      <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'flex-end',
-            gap: '32px',
+            gap: '20px',
             flexWrap: 'wrap',
-            paddingBottom: '24px',
+            paddingBottom: '16px',
             borderBottom: '1px solid var(--border-subtle)',
           }}
         >
@@ -79,16 +79,16 @@ export const SettingsPage: React.FC = () => {
   }
 
   return (
-    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Hero Header */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
-          gap: '32px',
+          gap: '20px',
           flexWrap: 'wrap',
-          paddingBottom: '24px',
+          paddingBottom: '16px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
