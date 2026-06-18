@@ -1,6 +1,8 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
+import { useCacheBuster } from './hooks/useCacheBuster';
 import { OverviewPage } from './pages/OverviewPage';
 import { UsersPage } from './pages/UsersPage';
 import { APILogsPage } from './pages/APILogsPage';
@@ -24,6 +26,9 @@ import './App.css';
 function AppShell() {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
+
+  // Automatically clear cache on every page load (development)
+  useCacheBuster();
 
   if (isLoginPage) {
     return (
