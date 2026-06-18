@@ -1,99 +1,50 @@
 import { useEffect } from 'react';
 
 /**
- * Comprehensive cache clearing - equivalent to:
- * 1. DevTools Application tab → Clear all site data
- * 2. DevTools Network tab → Check "Disable cache"
- * 3. Hard refresh (Ctrl+Shift+R)
+ * Development hook to clear HTTP caches only (don't interfere with app state or HMR)
+ *
+ * WARNING: Clearing localStorage/sessionStorage/IndexedDB/cookies breaks HMR (hot reload)
+ * and can interfere with development. Only clear browser HTTP caches.
  */
-const performFullCacheClear = async () => {
+const performHttpCacheClear = async () => {
   if (!import.meta.env.DEV) return;
 
   try {
-    // 1. Clear all storage
-    localStorage.clear();
-    sessionStorage.clear();
+    // Only clear HTTP caches and service workers
+    // Do NOT clear localStorage, sessionStorage, IndexedDB, or cookies as these break HMR
 
-    // 2. Clear IndexedDB
-    if (window.indexedDB) {
-      const dbs = await (window as any).indexedDB.databases?.() || [];
-      dbs.forEach((db: any) => {
-        try {
-          window.indexedDB.deleteDatabase(db.name);
-        } catch (e) {}
-      });
-    }
-
-    // 3. Clear all service workers
+    // 1. Unregister service workers
     if ('serviceWorker' in navigator) {
       const registrations = await navigator.serviceWorker.getRegistrations();
       registrations.forEach(registration => registration.unregister());
     }
 
-    // 4. Clear browser caches
+    // 2. Clear browser HTTP caches only
     if ('caches' in window) {
       const cacheNames = await caches.keys();
       await Promise.all(cacheNames.map(name => caches.delete(name)));
     }
 
-    // 5. Clear cookies
-    document.cookie.split(";").forEach(c => {
-      const name = c.split("=")[0];
-      document.cookie = `${name}=;expires=${new Date(0).toUTCString()};path=/`;
-    });
-
-    // 6. Add cache-bust params to all assets
-    const timestamp = Date.now();
-    document.querySelectorAll('link[rel="stylesheet"]').forEach(el => {
-      const href = el.getAttribute('href');
-      if (href && !href.includes('_bust=')) {
-        const sep = href.includes('?') ? '&' : '?';
-        el.setAttribute('href', `${href}${sep}_bust=${timestamp}`);
-      }
-    });
-
-    console.log('✅ Full cache clear completed');
+    console.log('✅ HTTP cache cleared (HMR-safe)');
   } catch (error) {
     console.error('Error during cache clear:', error);
   }
 };
 
 /**
- * Development hook to clear all caches on every page load
- * Equivalent to: DevTools → Application → Clear all + Network → Disable cache + Hard refresh
+ * Development hook to clear HTTP caches on initial load only
+ * Do NOT run on visibility changes as this breaks hot module replacement (HMR)
  */
 export const useCacheBuster = () => {
   useEffect(() => {
-    performFullCacheClear();
-  }, []);
-
-  // Also clear cache when page becomes visible (tab switch)
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        performFullCacheClear();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, []);
+    // Only clear caches once on initial load
+    performHttpCacheClear();
+  }, []); // Empty dependency array - runs only once
 };
 
 /**
- * Manually trigger full cache clear
+ * Manually trigger HTTP cache clear (safe for HMR)
  */
-export const clearAllCaches = async () => {
-  await performFullCacheClear();
-};
-
-/**
- * Force reload with all caches cleared
- */
-export const forceReload = async () => {
-  await performFullCacheClear();
-  // Hard refresh equivalent (Ctrl+Shift+R)
-  setTimeout(() => {
-    window.location.href = window.location.href + '?_force_refresh=' + Date.now();
-  }, 100);
+export const clearHttpCaches = async () => {
+  await performHttpCacheClear();
 };
