@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api } from '../utils/api';
 
 interface Trend {
   direction: 'up' | 'down';
@@ -26,7 +26,8 @@ export const useKPIs = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get<KPIsResponse>('/api/analytics/kpis');
+      const response = await api.get<KPIsResponse>('/api/analytics/kpis');
+      if (!response.ok) throw new Error(`Failed to fetch KPIs: ${response.statusText}`);
       setKpis(response.data.kpis);
     } catch (err) {
       console.error('Failed to fetch KPIs:', err);

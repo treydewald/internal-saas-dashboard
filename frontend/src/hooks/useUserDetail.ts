@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api } from '../utils/api';
 
 interface UserData {
   id: number;
@@ -30,14 +30,12 @@ export const useUserDetail = (userId: number): UseUserDetailReturn => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`/api/users/${userId}`);
+        const response = await api.get<UserData>(`/api/users/${userId}`);
+        if (!response.ok) throw new Error(`Failed to fetch user: ${response.statusText}`);
         setUser(response.data);
       } catch (err) {
-        setError(
-          axios.isAxiosError(err)
-            ? err.response?.data?.error || err.message
-            : 'Failed to fetch user details'
-        );
+        const errorMessage = err instanceof Error ? err.message : 'Failed to fetch user details';
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -51,12 +49,11 @@ export const useUserDetail = (userId: number): UseUserDetailReturn => {
   const updateUser = async (updatedUser: Partial<UserData>) => {
     try {
       setError(null);
-      const response = await axios.put(`/api/users/${userId}`, updatedUser);
+      const response = await api.put<UserData>(`/api/users/${userId}`, updatedUser);
+      if (!response.ok) throw new Error(`Failed to update user: ${response.statusText}`);
       setUser(response.data);
     } catch (err) {
-      const errorMessage = axios.isAxiosError(err)
-        ? err.response?.data?.error || err.message
-        : 'Failed to update user';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update user';
       setError(errorMessage);
       throw new Error(errorMessage);
     }

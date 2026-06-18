@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api } from '../utils/api';
 
 interface ActivityDataPoint {
   date: string;
@@ -19,16 +19,12 @@ export const useAPIActivity = (days: number = 7, dateFrom: string = '', dateTo: 
     try {
       setLoading(true);
       setError(null);
-      const params: Record<string, string | number> = {};
+      let url = `/api/analytics/api-activity?days=${days}`;
       if (dateFrom && dateTo) {
-        params.date_from = dateFrom;
-        params.date_to = dateTo;
-      } else {
-        params.days = days;
+        url = `/api/analytics/api-activity?date_from=${dateFrom}&date_to=${dateTo}`;
       }
-      const response = await axios.get<ActivityResponse>('/api/analytics/api-activity', {
-        params
-      });
+      const response = await api.get<ActivityResponse>(url);
+      if (!response.ok) throw new Error(`Failed to fetch activity: ${response.statusText}`);
       setData(response.data.data);
     } catch (err) {
       console.error('Failed to fetch API activity:', err);

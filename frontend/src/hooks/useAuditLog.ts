@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import { api } from '../utils/api';
 
 interface AuditLog {
   id: number;
@@ -11,6 +11,11 @@ interface AuditLog {
   details: Record<string, any>;
   ip_address?: string;
   created_at: string;
+}
+
+interface AuditLogsResponse {
+  logs: AuditLog[];
+  total_count: number;
 }
 
 export function useAuditLog() {
@@ -36,7 +41,8 @@ export function useAuditLog() {
       params.append('limit', filters.limit.toString());
       params.append('offset', filters.offset.toString());
 
-      const response = await axios.get(`/api/audit/logs?${params}`);
+      const response = await api.get<AuditLogsResponse>(`/api/audit-log?${params}`);
+      if (!response.ok) throw new Error(`Failed to fetch logs: ${response.statusText}`);
       setLogs(response.data.logs);
       setTotalCount(response.data.total_count);
     } catch (error) {

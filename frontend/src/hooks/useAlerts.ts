@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api } from '../utils/api';
 
 interface AlertRule {
   id: number;
@@ -57,8 +57,8 @@ export function useAlerts() {
   const fetchRules = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/alerts/rules');
-      if (response.data && response.data.length > 0) setRules(response.data);
+      const response = await api.get<AlertRule[]>('/api/alerts');
+      if (response.ok && response.data && response.data.length > 0) setRules(response.data);
     } catch (error) {
       // keep mock data
     } finally {
@@ -68,8 +68,8 @@ export function useAlerts() {
 
   const fetchAlerts = async () => {
     try {
-      const response = await axios.get('/api/alerts');
-      if (response.data && response.data.length > 0) setAlerts(response.data);
+      const response = await api.get<Alert[]>('/api/alerts');
+      if (response.ok && response.data && response.data.length > 0) setAlerts(response.data);
     } catch (error) {
       // keep mock data
     }
@@ -82,7 +82,8 @@ export function useAlerts() {
     threshold: number;
   }) => {
     try {
-      const response = await axios.post('/api/alerts/rules', ruleData);
+      const response = await api.post<AlertRule>('/api/alerts', ruleData);
+      if (!response.ok) throw new Error(`Failed to create rule: ${response.statusText}`);
       setRules([...rules, response.data]);
       return response.data;
     } catch (error) {
@@ -93,7 +94,8 @@ export function useAlerts() {
 
   const updateRule = async (ruleId: number, updates: Partial<AlertRule>) => {
     try {
-      const response = await axios.put(`/api/alerts/rules/${ruleId}`, updates);
+      const response = await api.put<AlertRule>(`/api/alerts/${ruleId}`, updates);
+      if (!response.ok) throw new Error(`Failed to update rule: ${response.statusText}`);
       setRules(rules.map((r) => (r.id === ruleId ? response.data : r)));
       return response.data;
     } catch (error) {
@@ -104,7 +106,8 @@ export function useAlerts() {
 
   const deleteRule = async (ruleId: number) => {
     try {
-      await axios.delete(`/api/alerts/rules/${ruleId}`);
+      const response = await api.delete(`/api/alerts/${ruleId}`);
+      if (!response.ok) throw new Error(`Failed to delete rule: ${response.statusText}`);
       setRules(rules.filter((r) => r.id !== ruleId));
     } catch (error) {
       console.error('Failed to delete alert rule:', error);
@@ -114,7 +117,8 @@ export function useAlerts() {
 
   const acknowledgeAlert = async (alertId: number) => {
     try {
-      const response = await axios.post(`/api/alerts/${alertId}/acknowledge`);
+      const response = await api.post(`/api/alerts/${alertId}/acknowledge`, {});
+      if (!response.ok) throw new Error(`Failed to acknowledge: ${response.statusText}`);
       setAlerts(
         alerts.map((a) => (a.id === alertId ? { ...a, status: 'acknowledged' } : a))
       );
@@ -127,7 +131,8 @@ export function useAlerts() {
 
   const resolveAlert = async (alertId: number) => {
     try {
-      const response = await axios.post(`/api/alerts/${alertId}/resolve`);
+      const response = await api.post(`/api/alerts/${alertId}/resolve`, {});
+      if (!response.ok) throw new Error(`Failed to resolve: ${response.statusText}`);
       setAlerts(
         alerts.map((a) => (a.id === alertId ? { ...a, status: 'resolved' } : a))
       );

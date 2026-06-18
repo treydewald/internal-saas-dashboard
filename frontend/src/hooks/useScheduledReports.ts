@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import { api } from '../utils/api';
 
 export interface ScheduledReport {
   id: number;
@@ -44,7 +44,8 @@ export function useScheduledReports() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('/api/reports');
+      const response = await api.get<ScheduledReport[]>('/api/reports');
+      if (!response.ok) throw new Error(`Failed to fetch reports: ${response.statusText}`);
       setReports(response.data);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to fetch reports';
@@ -59,18 +60,21 @@ export function useScheduledReports() {
   }, [fetchReports]);
 
   const createReport = async (data: ScheduledReportCreate): Promise<ScheduledReport> => {
-    const response = await axios.post('/api/reports', data);
+    const response = await api.post<ScheduledReport>('/api/reports', data);
+    if (!response.ok) throw new Error(`Failed to create report: ${response.statusText}`);
     setReports(prev => [response.data, ...prev]);
     return response.data;
   };
 
   const deleteReport = async (id: number): Promise<void> => {
-    await axios.delete(`/api/reports/${id}`);
+    const response = await api.delete(`/api/reports/${id}`);
+    if (!response.ok) throw new Error(`Failed to delete report: ${response.statusText}`);
     setReports(prev => prev.filter(r => r.id !== id));
   };
 
   const toggleReport = async (id: number, is_active: boolean): Promise<void> => {
-    const response = await axios.put(`/api/reports/${id}`, { is_active });
+    const response = await api.put<ScheduledReport>(`/api/reports/${id}`, { is_active });
+    if (!response.ok) throw new Error(`Failed to update report: ${response.statusText}`);
     setReports(prev => prev.map(r => r.id === id ? response.data : r));
   };
 
