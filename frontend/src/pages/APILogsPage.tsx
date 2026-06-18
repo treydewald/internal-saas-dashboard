@@ -17,7 +17,7 @@ export const APILogsPage: React.FC = () => {
     });
 
   return (
-    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Hero Header */}
       <div
         style={{
@@ -26,7 +26,9 @@ export const APILogsPage: React.FC = () => {
           alignItems: 'flex-end',
           gap: '24px',
           flexWrap: 'wrap',
+          flex: '0 0 auto',
           paddingBottom: '16px',
+          marginBottom: '12px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -84,20 +86,44 @@ export const APILogsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Summary KPI Cards */}
+      <div style={{ flex: '0 0 auto', marginBottom: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+          <div style={{ background: 'var(--layer-2)', border: '1px solid var(--border-default)', borderRadius: '8px', padding: '16px' }}>
+            <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: '0 0 8px 0', fontWeight: 'var(--fw-semibold)' }}>Total Calls</p>
+            <p style={{ fontSize: '24px', fontWeight: 'var(--fw-bold)', color: 'var(--text-primary)', margin: 0 }}>{logs.length}</p>
+          </div>
+          <div style={{ background: 'var(--layer-2)', border: '1px solid var(--border-default)', borderRadius: '8px', padding: '16px' }}>
+            <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: '0 0 8px 0', fontWeight: 'var(--fw-semibold)' }}>Error Rate</p>
+            <p style={{ fontSize: '24px', fontWeight: 'var(--fw-bold)', color: 'var(--accent-primary)', margin: 0 }}>0.2%</p>
+          </div>
+          <div style={{ background: 'var(--layer-2)', border: '1px solid var(--border-default)', borderRadius: '8px', padding: '16px' }}>
+            <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: '0 0 8px 0', fontWeight: 'var(--fw-semibold)' }}>Avg Latency</p>
+            <p style={{ fontSize: '24px', fontWeight: 'var(--fw-bold)', color: 'var(--text-primary)', margin: 0 }}>45ms</p>
+          </div>
+          <div style={{ background: 'var(--layer-2)', border: '1px solid var(--border-default)', borderRadius: '8px', padding: '16px' }}>
+            <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: '0 0 8px 0', fontWeight: 'var(--fw-semibold)' }}>P95 Latency</p>
+            <p style={{ fontSize: '24px', fontWeight: 'var(--fw-bold)', color: 'var(--text-primary)', margin: 0 }}>128ms</p>
+          </div>
+        </div>
+      </div>
+
       {/* API Logs Table */}
-      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
-        <h2 className="section-anchor__title">Request Logs</h2>
+      <div style={{ flex: '1 1 0', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+        <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em', flex: '0 0 auto' }}>Request Logs</h2>
         <APILogsTable logs={logs} loading={loading} error={error} onRefetch={refetch} />
-      </section>
+      </div>
 
       {/* Pagination */}
       {!loading && !error && logs.length > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={onPageChange}
-          limit={limit}
-        />
+        <div style={{ flex: '0 0 auto', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+            limit={limit}
+          />
+        </div>
       )}
     </div>
   );

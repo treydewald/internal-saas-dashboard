@@ -9,11 +9,13 @@ export default function AuditLogPage() {
   const { logs, totalCount, loading } = useAuditLog();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Hero Header */}
       <div
         style={{
-          paddingBottom: '24px',
+          flex: '0 0 auto',
+          paddingBottom: '16px',
+          marginBottom: '12px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -29,9 +31,9 @@ export default function AuditLogPage() {
         <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>View all system actions and user activities for compliance and security</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '32px' }}>
+      <div style={{ flex: '1 1 0', minHeight: 0, display: 'grid', gridTemplateColumns: '1fr 360px', gap: '16px', overflow: 'hidden' }}>
         {/* Log Table */}
-        <div style={{ minWidth: 0 }}>
+        <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <AuditLogTable
             logs={logs}
             loading={loading}
@@ -41,11 +43,11 @@ export default function AuditLogPage() {
         </div>
 
         {/* Detail Sidebar */}
-        <div style={{ minWidth: 0 }}>
+        <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           {selectedLog ? (
             <AuditEntryDetail log={selectedLog} onClose={() => setSelectedLog(null)} />
           ) : (
-            <div className="card" style={{ textAlign: 'center', minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="card" style={{ textAlign: 'center', minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <p style={{ color: 'var(--text-tertiary)', margin: 0 }}>Select an entry to view details</p>
             </div>
           )}

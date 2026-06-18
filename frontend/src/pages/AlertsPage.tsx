@@ -9,7 +9,7 @@ export default function AlertsPage() {
   const { rules, alerts, loading, createRule, deleteRule } = useAlerts();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
       {/* ── Page Header ─────────────────────────────── */}
       <div
@@ -19,7 +19,9 @@ export default function AlertsPage() {
           alignItems: 'flex-end',
           gap: '32px',
           flexWrap: 'wrap',
-          paddingBottom: '24px',
+          flex: '0 0 auto',
+          paddingBottom: '16px',
+          marginBottom: '12px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -60,155 +62,161 @@ export default function AlertsPage() {
         <button
           onClick={() => setShowBuilder(true)}
           className="btn-primary"
-          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: '0 0 auto' }}
         >
           <Plus size={15} />
           Create Rule
         </button>
       </div>
 
-      {/* ── Alert Rules ─────────────────────────────── */}
-      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
-        <h2 className="section-anchor__title">Alert Rules</h2>
-        <div className="glass-panel" style={{ overflow: 'hidden', padding: 0, position: 'relative' }}>
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'linear-gradient(90deg, var(--accent-primary), #7C3AED)' }} />
+      {/* ── Two-Column Workspace ─────────────────────── */}
+      <div style={{ flex: '1 1 0', minHeight: 0, display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '16px', overflow: 'hidden' }}>
 
-          {/* Rules list */}
-          <div>
-            {loading ? (
-              <div
-                style={{
-                  textAlign: 'center',
-                  color: 'var(--text-tertiary)',
-                  padding: '48px 24px',
-                  fontSize: '14px',
-                }}
-              >
-                Loading rules...
-              </div>
-            ) : rules.length === 0 ? (
-              <div
-                style={{
-                  textAlign: 'center',
-                  color: 'var(--text-tertiary)',
-                  padding: '48px 24px',
-                }}
-              >
-                <Bell size={32} style={{ color: 'var(--border-emphasis)', marginBottom: '12px' }} />
-                <p style={{ fontWeight: 500, margin: '0 0 6px 0' }}>No alert rules yet</p>
-                <p style={{ fontSize: '13px', margin: 0 }}>
-                  Create a rule to get notified when metrics cross thresholds.
-                </p>
-              </div>
-            ) : (
-              rules.map((rule, index) => (
+        {/* ── Alert Rules (Left) ─────────────────────────────── */}
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em', flex: '0 0 auto' }}>Alert Rules</h2>
+          <div className="glass-panel" style={{ overflow: 'hidden', padding: 0, position: 'relative', flex: '1 1 0', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'linear-gradient(90deg, var(--accent-primary), #7C3AED)' }} />
+
+            {/* Rules list */}
+            <div style={{ flex: '1 1 0', minHeight: 0, overflowY: 'auto' }}>
+              {loading ? (
                 <div
-                  key={rule.id}
-                  className="table-row--hoverable"
                   style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '16px 24px',
-                    borderBottom:
-                      index < rules.length - 1 ? '1px solid var(--border-subtle)' : 'none',
-                    transition: 'background-color var(--duration-sm)',
+                    textAlign: 'center',
+                    color: 'var(--text-tertiary)',
+                    padding: '48px 24px',
+                    fontSize: '14px',
                   }}
                 >
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <h3
-                      style={{
-                        fontWeight: 600,
-                        fontSize: '14px',
-                        color: 'var(--text-primary)',
-                        margin: '0 0 4px 0',
-                      }}
-                    >
-                      {rule.name}
-                    </h3>
-                    <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: 0 }}>
-                      <code
+                  Loading rules...
+                </div>
+              ) : rules.length === 0 ? (
+                <div
+                  style={{
+                    textAlign: 'center',
+                    color: 'var(--text-tertiary)',
+                    padding: '48px 24px',
+                  }}
+                >
+                  <Bell size={32} style={{ color: 'var(--border-emphasis)', marginBottom: '12px' }} />
+                  <p style={{ fontWeight: 500, margin: '0 0 6px 0' }}>No alert rules yet</p>
+                  <p style={{ fontSize: '13px', margin: 0 }}>
+                    Create a rule to get notified when metrics cross thresholds.
+                  </p>
+                </div>
+              ) : (
+                rules.map((rule, index) => (
+                  <div
+                    key={rule.id}
+                    className="table-row--hoverable"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '16px 24px',
+                      borderBottom:
+                        index < rules.length - 1 ? '1px solid var(--border-subtle)' : 'none',
+                      transition: 'background-color var(--duration-sm)',
+                    }}
+                  >
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h3
                         style={{
-                          fontFamily: 'monospace',
-                          background: 'var(--bg-tertiary)',
-                          padding: '1px 6px',
-                          borderRadius: '4px',
-                          fontSize: '11px',
-                          color: 'var(--text-secondary)',
+                          fontWeight: 600,
+                          fontSize: '14px',
+                          color: 'var(--text-primary)',
+                          margin: '0 0 4px 0',
                         }}
                       >
-                        {rule.metric_name} {rule.operator} {rule.threshold}
-                      </code>
-                    </p>
-                  </div>
-
-                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexShrink: 0 }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                        padding: '4px 10px',
-                        borderRadius: 'var(--radius-chip)',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        background: rule.enabled
-                          ? 'rgba(22,163,74,0.1)'
-                          : 'rgba(100,116,139,0.1)',
-                        color: rule.enabled ? 'var(--accent-success)' : 'var(--text-muted)',
-                        border: `1px solid ${rule.enabled ? 'rgba(22,163,74,0.2)' : 'transparent'}`,
-                      }}
-                    >
-                      {rule.enabled ? (
-                        <CheckCircle size={11} />
-                      ) : (
-                        <XCircle size={11} />
-                      )}
-                      {rule.enabled ? 'Enabled' : 'Disabled'}
+                        {rule.name}
+                      </h3>
+                      <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: 0 }}>
+                        <code
+                          style={{
+                            fontFamily: 'monospace',
+                            background: 'var(--bg-tertiary)',
+                            padding: '1px 6px',
+                            borderRadius: '4px',
+                            fontSize: '11px',
+                            color: 'var(--text-secondary)',
+                          }}
+                        >
+                          {rule.metric_name} {rule.operator} {rule.threshold}
+                        </code>
+                      </p>
                     </div>
-                    <button
-                      onClick={() => deleteRule(rule.id)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                        padding: '6px 10px',
-                        background: 'transparent',
-                        color: 'var(--text-muted)',
-                        border: '1px solid var(--border-subtle)',
-                        borderRadius: 'var(--radius-sm)',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        fontWeight: 500,
-                        transition: 'all var(--duration-sm)',
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(220,38,38,0.06)';
-                        (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.3)';
-                        (e.currentTarget as HTMLButtonElement).style.color = 'var(--accent-error)';
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
-                        (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-subtle)';
-                        (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)';
-                      }}
-                    >
-                      <Trash2 size={12} />
-                      Delete
-                    </button>
+
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexShrink: 0 }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '5px',
+                          padding: '4px 10px',
+                          borderRadius: 'var(--radius-chip)',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          background: rule.enabled
+                            ? 'rgba(22,163,74,0.1)'
+                            : 'rgba(100,116,139,0.1)',
+                          color: rule.enabled ? 'var(--accent-success)' : 'var(--text-muted)',
+                          border: `1px solid ${rule.enabled ? 'rgba(22,163,74,0.2)' : 'transparent'}`,
+                        }}
+                      >
+                        {rule.enabled ? (
+                          <CheckCircle size={11} />
+                        ) : (
+                          <XCircle size={11} />
+                        )}
+                        {rule.enabled ? 'Enabled' : 'Disabled'}
+                      </div>
+                      <button
+                        onClick={() => deleteRule(rule.id)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '5px',
+                          padding: '6px 10px',
+                          background: 'transparent',
+                          color: 'var(--text-muted)',
+                          border: '1px solid var(--border-subtle)',
+                          borderRadius: 'var(--radius-sm)',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          fontWeight: 500,
+                          transition: 'all var(--duration-sm)',
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(220,38,38,0.06)';
+                          (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(220,38,38,0.3)';
+                          (e.currentTarget as HTMLButtonElement).style.color = 'var(--accent-error)';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
+                          (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-subtle)';
+                          (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)';
+                        }}
+                      >
+                        <Trash2 size={12} />
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* ── Alert History ───────────────────────────── */}
-      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
-        <h2 className="section-anchor__title">Alert History</h2>
-        <AlertHistory alerts={alerts} loading={loading} />
-      </section>
+        {/* ── Alert History (Right) ───────────────────────────── */}
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em', flex: '0 0 auto' }}>Alert History</h2>
+          <div style={{ flex: '1 1 0', minHeight: 0, overflow: 'hidden' }}>
+            <AlertHistory alerts={alerts} loading={loading} />
+          </div>
+        </div>
+      </div>
 
       {/* ── Create Rule Modal ───────────────────────── */}
       {showBuilder && (

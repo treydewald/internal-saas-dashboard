@@ -95,6 +95,7 @@ const InsightsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<DashboardData | null>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'anomalies' | 'forecasts'>('overview');
 
   useEffect(() => {
     const fetchInsights = async () => {
@@ -119,7 +120,7 @@ const InsightsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+      <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div
           style={{
             width: '40px',
@@ -135,12 +136,14 @@ const InsightsPage: React.FC = () => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
       {/* ── Page Header ─────────────────────────────── */}
       <div
         style={{
-          paddingBottom: '24px',
+          flex: '0 0 auto',
+          paddingBottom: '16px',
+          marginBottom: '12px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -179,198 +182,253 @@ const InsightsPage: React.FC = () => {
       </div>
 
       {error && (
-        <div className="alert alert-error">
+        <div className="alert alert-error" style={{ flex: '0 0 auto', marginBottom: '12px' }}>
           <p style={{ margin: 0 }}>{error}</p>
         </div>
       )}
 
       {data && (
         <>
-          {/* Summary Cards */}
-          <InsightsCards data={data} />
-
-          {/* Anomalies Section */}
-          {data.anomalies.total_anomalies > 0 && (
-            <section>
-              <SectionHeading icon={<AlertTriangle size={13} />} label="Detected Anomalies" />
-              <div
+          {/* ── Tab Navigation ─────────────────────────────── */}
+          <div style={{ flex: '0 0 auto', display: 'flex', gap: '8px', marginBottom: '12px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '12px' }}>
+            {['overview', 'anomalies', 'forecasts'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab as any)}
                 style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-                  gap: '16px',
+                  padding: '8px 16px',
+                  background: activeTab === tab ? 'transparent' : 'transparent',
+                  border: 'none',
+                  borderBottom: activeTab === tab ? '2px solid var(--accent-primary)' : '2px solid transparent',
+                  color: activeTab === tab ? 'var(--accent-primary)' : 'var(--text-tertiary)',
+                  fontSize: '14px',
+                  fontWeight: activeTab === tab ? 'var(--fw-semibold)' : 'var(--fw-medium)',
+                  cursor: 'pointer',
+                  transition: 'all var(--duration-sm)',
+                  textTransform: 'capitalize',
+                }}
+                onMouseEnter={(e) => {
+                  if (activeTab !== tab) {
+                    (e.target as HTMLButtonElement).style.color = 'var(--text-secondary)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (activeTab !== tab) {
+                    (e.target as HTMLButtonElement).style.color = 'var(--text-tertiary)';
+                  }
                 }}
               >
-                {data.anomalies.response_time_anomalies.map((anomaly, idx) => (
-                  <AnomalyAlert key={`rt-${idx}`} anomaly={anomaly} type="response_time" />
-                ))}
-                {data.anomalies.error_rate_anomalies.map((anomaly, idx) => (
-                  <AnomalyAlert key={`er-${idx}`} anomaly={anomaly} type="error_rate" />
-                ))}
-              </div>
-            </section>
-          )}
+                {tab}
+              </button>
+            ))}
+          </div>
 
-          {/* Forecasts Section */}
-          <section>
-            <SectionHeading icon={<TrendingUp size={13} />} label="Predictions & Forecasts" />
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-                gap: '20px',
-              }}
-            >
-              <div className="card" style={{ overflow: 'hidden' }}>
-                <div style={{ marginBottom: '16px' }}>
-                  <h3
-                    style={{
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      color: 'var(--text-primary)',
-                      margin: '0 0 2px 0',
-                    }}
-                  >
-                    Request Volume Forecast
-                  </h3>
-                  <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
-                    Confidence: {data.forecasts.requests.confidence_score > 0
-                      ? `${Math.round(data.forecasts.requests.confidence_score * 100)}%`
-                      : '87%'}
-                  </p>
-                </div>
-                <ForecastChart
-                  data={data.forecasts.requests.forecast.length > 0
-                    ? data.forecasts.requests.forecast
-                    : MOCK_REQUESTS_FORECAST}
-                  type="requests"
-                  confidence={data.forecasts.requests.confidence_score > 0
-                    ? data.forecasts.requests.confidence_score
-                    : 0.87}
-                />
-              </div>
-              <div className="card" style={{ overflow: 'hidden' }}>
-                <div style={{ marginBottom: '16px' }}>
-                  <h3
-                    style={{
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      color: 'var(--text-primary)',
-                      margin: '0 0 2px 0',
-                    }}
-                  >
-                    Error Rate Forecast
-                  </h3>
-                  <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
-                    Confidence: {data.forecasts.error_rate.confidence_score > 0
-                      ? `${Math.round(data.forecasts.error_rate.confidence_score * 100)}%`
-                      : '82%'}
-                  </p>
-                </div>
-                <ForecastChart
-                  data={data.forecasts.error_rate.forecast.length > 0
-                    ? data.forecasts.error_rate.forecast
-                    : MOCK_ERROR_RATE_FORECAST}
-                  type="error_rate"
-                  confidence={data.forecasts.error_rate.confidence_score > 0
-                    ? data.forecasts.error_rate.confidence_score
-                    : 0.82}
-                />
-              </div>
-            </div>
-          </section>
+          {/* ── Tab Content ─────────────────────────────── */}
+          <div style={{ flex: '1 1 0', minHeight: 0, overflowY: 'auto' }}>
 
-          {/* Churn Risk Section */}
-          {data.churn_risk && (
-            <section>
-              <SectionHeading icon={<Users size={13} />} label="Churn Risk Analysis" />
-              <div className="card" style={{ overflow: 'hidden', position: 'relative' }}>
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: '3px',
-                    background: 'linear-gradient(90deg, #DC2626, #D97706, #2563EB)',
-                  }}
-                />
+            {/* Overview Tab */}
+            {activeTab === 'overview' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '12px' }}>
+                <InsightsCards data={data} />
+
+                {data.churn_risk && (
+                  <div>
+                    <SectionHeading icon={<Users size={13} />} label="Churn Risk Analysis" />
+                    <div className="card" style={{ overflow: 'hidden', position: 'relative' }}>
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: '3px',
+                          background: 'linear-gradient(90deg, #DC2626, #D97706, #2563EB)',
+                        }}
+                      />
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                          gap: '32px',
+                          paddingTop: '4px',
+                        }}
+                      >
+                        {[
+                          {
+                            label: 'High Risk',
+                            value: data.churn_risk.high_risk_count,
+                            color: 'var(--accent-error)',
+                            bg: 'rgba(220,38,38,0.08)',
+                          },
+                          {
+                            label: 'Medium Risk',
+                            value: data.churn_risk.medium_risk_count,
+                            color: 'var(--accent-warning)',
+                            bg: 'rgba(217,119,6,0.08)',
+                          },
+                          {
+                            label: 'Total At Risk',
+                            value: data.churn_risk.total_at_risk,
+                            color: 'var(--accent-primary)',
+                            bg: 'rgba(37,99,235,0.08)',
+                          },
+                        ].map(({ label, value, color, bg }) => (
+                          <div key={label}>
+                            <p
+                              style={{
+                                fontSize: '11px',
+                                fontWeight: 600,
+                                letterSpacing: '0.06em',
+                                textTransform: 'uppercase',
+                                color: 'var(--text-muted)',
+                                margin: '0 0 10px 0',
+                              }}
+                            >
+                              {label}
+                            </p>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                              <p
+                                style={{
+                                  fontSize: '2.5rem',
+                                  fontWeight: 800,
+                                  color,
+                                  letterSpacing: '-0.02em',
+                                  lineHeight: 1,
+                                  margin: 0,
+                                }}
+                              >
+                                {value}
+                              </p>
+                              <span
+                                style={{
+                                  fontSize: '11px',
+                                  fontWeight: 600,
+                                  padding: '2px 8px',
+                                  borderRadius: 'var(--radius-chip)',
+                                  background: bg,
+                                  color,
+                                }}
+                              >
+                                users
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <p style={{ color: 'var(--text-muted)', fontSize: '11px', letterSpacing: '0.03em' }}>
+                  Last updated: {new Date(data.generated_at).toLocaleString()}
+                </p>
+              </div>
+            )}
+
+            {/* Anomalies Tab */}
+            {activeTab === 'anomalies' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '12px' }}>
+                {data.anomalies.total_anomalies > 0 ? (
+                  <>
+                    <SectionHeading icon={<AlertTriangle size={13} />} label="Detected Anomalies" />
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+                        gap: '16px',
+                      }}
+                    >
+                      {data.anomalies.response_time_anomalies.map((anomaly, idx) => (
+                        <AnomalyAlert key={`rt-${idx}`} anomaly={anomaly} type="response_time" />
+                      ))}
+                      {data.anomalies.error_rate_anomalies.map((anomaly, idx) => (
+                        <AnomalyAlert key={`er-${idx}`} anomaly={anomaly} type="error_rate" />
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ textAlign: 'center', color: 'var(--text-tertiary)', padding: '48px 24px' }}>
+                    <AlertTriangle size={32} style={{ color: 'var(--border-emphasis)', marginBottom: '12px' }} />
+                    <p style={{ fontWeight: 500, margin: '0 0 6px 0' }}>No anomalies detected</p>
+                    <p style={{ fontSize: '13px', margin: 0 }}>
+                      Your API is running normally.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Forecasts Tab */}
+            {activeTab === 'forecasts' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '12px' }}>
+                <SectionHeading icon={<TrendingUp size={13} />} label="Predictions & Forecasts" />
                 <div
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                    gap: '32px',
-                    paddingTop: '4px',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+                    gap: '20px',
                   }}
                 >
-                  {[
-                    {
-                      label: 'High Risk',
-                      value: data.churn_risk.high_risk_count,
-                      color: 'var(--accent-error)',
-                      bg: 'rgba(220,38,38,0.08)',
-                    },
-                    {
-                      label: 'Medium Risk',
-                      value: data.churn_risk.medium_risk_count,
-                      color: 'var(--accent-warning)',
-                      bg: 'rgba(217,119,6,0.08)',
-                    },
-                    {
-                      label: 'Total At Risk',
-                      value: data.churn_risk.total_at_risk,
-                      color: 'var(--accent-primary)',
-                      bg: 'rgba(37,99,235,0.08)',
-                    },
-                  ].map(({ label, value, color, bg }) => (
-                    <div key={label}>
-                      <p
+                  <div className="card" style={{ overflow: 'hidden' }}>
+                    <div style={{ marginBottom: '16px' }}>
+                      <h3
                         style={{
-                          fontSize: '11px',
+                          fontSize: '14px',
                           fontWeight: 600,
-                          letterSpacing: '0.06em',
-                          textTransform: 'uppercase',
-                          color: 'var(--text-muted)',
-                          margin: '0 0 10px 0',
+                          color: 'var(--text-primary)',
+                          margin: '0 0 2px 0',
                         }}
                       >
-                        {label}
+                        Request Volume Forecast
+                      </h3>
+                      <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
+                        Confidence: {data.forecasts.requests.confidence_score > 0
+                          ? `${Math.round(data.forecasts.requests.confidence_score * 100)}%`
+                          : '87%'}
                       </p>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                        <p
-                          style={{
-                            fontSize: '2.5rem',
-                            fontWeight: 800,
-                            color,
-                            letterSpacing: '-0.02em',
-                            lineHeight: 1,
-                            margin: 0,
-                          }}
-                        >
-                          {value}
-                        </p>
-                        <span
-                          style={{
-                            fontSize: '11px',
-                            fontWeight: 600,
-                            padding: '2px 8px',
-                            borderRadius: 'var(--radius-chip)',
-                            background: bg,
-                            color,
-                          }}
-                        >
-                          users
-                        </span>
-                      </div>
                     </div>
-                  ))}
+                    <ForecastChart
+                      data={data.forecasts.requests.forecast.length > 0
+                        ? data.forecasts.requests.forecast
+                        : MOCK_REQUESTS_FORECAST}
+                      type="requests"
+                      confidence={data.forecasts.requests.confidence_score > 0
+                        ? data.forecasts.requests.confidence_score
+                        : 0.87}
+                    />
+                  </div>
+                  <div className="card" style={{ overflow: 'hidden' }}>
+                    <div style={{ marginBottom: '16px' }}>
+                      <h3
+                        style={{
+                          fontSize: '14px',
+                          fontWeight: 600,
+                          color: 'var(--text-primary)',
+                          margin: '0 0 2px 0',
+                        }}
+                      >
+                        Error Rate Forecast
+                      </h3>
+                      <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
+                        Confidence: {data.forecasts.error_rate.confidence_score > 0
+                          ? `${Math.round(data.forecasts.error_rate.confidence_score * 100)}%`
+                          : '82%'}
+                      </p>
+                    </div>
+                    <ForecastChart
+                      data={data.forecasts.error_rate.forecast.length > 0
+                        ? data.forecasts.error_rate.forecast
+                        : MOCK_ERROR_RATE_FORECAST}
+                      type="error_rate"
+                      confidence={data.forecasts.error_rate.confidence_score > 0
+                        ? data.forecasts.error_rate.confidence_score
+                        : 0.82}
+                    />
+                  </div>
                 </div>
               </div>
-            </section>
-          )}
-
-          <p style={{ color: 'var(--text-muted)', fontSize: '11px', letterSpacing: '0.03em' }}>
-            Last updated: {new Date(data.generated_at).toLocaleString()}
-          </p>
+            )}
+          </div>
         </>
       )}
     </div>

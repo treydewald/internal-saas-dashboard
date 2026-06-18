@@ -68,8 +68,8 @@ function WorkflowPageContent() {
   };
 
   return (
-    <div className="main-layout">
-      <div className="main-layout__header">
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div style={{ flex: '0 0 auto' }}>
         <div className="control-panel">
           <div className="control-panel__info">
             <p className="eyebrow">Orchestration Engine</p>
@@ -97,11 +97,11 @@ function WorkflowPageContent() {
         </div>
       </div>
 
-      <div className="kpi-grid">
+      <div style={{ flex: '0 0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', padding: '0 0 12px 0' }} className="kpi-grid">
         <KPICards />
       </div>
 
-      <div className="workspace-grid">
+      <div style={{ flex: '1 1 0', minHeight: 0, display: 'grid', gridTemplateColumns: '1fr 360px', gap: '16px', overflow: 'hidden' }} className="workspace-grid">
         <WorkflowCanvas
           workflows={MOCK_WORKFLOWS}
           selectedWorkflowId={selectedWorkflowId}

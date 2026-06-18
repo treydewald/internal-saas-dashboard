@@ -35,7 +35,7 @@ export const UsersPage: React.FC = () => {
   };
 
   return (
-    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Hero Header */}
       <div
         style={{
@@ -44,7 +44,9 @@ export const UsersPage: React.FC = () => {
           alignItems: 'flex-end',
           gap: '24px',
           flexWrap: 'wrap',
+          flex: '0 0 auto',
           paddingBottom: '16px',
+          marginBottom: '12px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -66,24 +68,26 @@ export const UsersPage: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <FilterBar
-        onSearch={(search) => {
-          updateFilter('search', search);
-        }}
-        onPlanChange={(plan) => {
-          updateFilter('plan', plan);
-        }}
-        onStatusChange={(status) => {
-          updateFilter('status', status);
-        }}
-        onClearFilters={clearFilters}
-        searchValue={filters.search}
-        planValue={filters.plan}
-        statusValue={filters.status}
-      />
+      <div style={{ flex: '0 0 auto', marginBottom: '12px' }}>
+        <FilterBar
+          onSearch={(search) => {
+            updateFilter('search', search);
+          }}
+          onPlanChange={(plan) => {
+            updateFilter('plan', plan);
+          }}
+          onStatusChange={(status) => {
+            updateFilter('status', status);
+          }}
+          onClearFilters={clearFilters}
+          searchValue={filters.search}
+          planValue={filters.plan}
+          statusValue={filters.status}
+        />
+      </div>
 
       {/* Users Table */}
-      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
+      <div style={{ flex: '1 1 0', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
         <UsersTable
           users={users}
           loading={loading}
@@ -91,7 +95,19 @@ export const UsersPage: React.FC = () => {
           onRefetch={refetch}
           onRowClick={handleRowClick}
         />
-      </section>
+      </div>
+
+      {/* Pagination */}
+      {!loading && !error && users.length > 0 && (
+        <div style={{ flex: '0 0 auto', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+            limit={limit}
+          />
+        </div>
+      )}
 
       {/* User Detail Modal */}
       {selectedUserId && (
@@ -100,16 +116,6 @@ export const UsersPage: React.FC = () => {
           isOpen={isModalOpen}
           onClose={handleModalClose}
           onSave={handleModalSave}
-        />
-      )}
-
-      {/* Pagination */}
-      {!loading && !error && users.length > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={onPageChange}
-          limit={limit}
         />
       )}
     </div>

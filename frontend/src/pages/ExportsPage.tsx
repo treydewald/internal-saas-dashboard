@@ -88,7 +88,7 @@ export const ExportsPage = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Hero Header */}
       <div
         style={{
@@ -97,7 +97,9 @@ export const ExportsPage = () => {
           alignItems: 'flex-end',
           gap: '32px',
           flexWrap: 'wrap',
-          paddingBottom: '24px',
+          flex: '0 0 auto',
+          paddingBottom: '16px',
+          marginBottom: '12px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -116,125 +118,123 @@ export const ExportsPage = () => {
       </div>
 
       {error && (
-        <div className="alert alert-error">
+        <div className="alert alert-error" style={{ flex: '0 0 auto', marginBottom: '12px' }}>
           {error}
         </div>
       )}
 
-      {/* Create Export Form */}
-      <ExportJobForm onSubmit={handleCreateExport} loading={loading} error={error ?? undefined} />
+      {/* Two-Panel Layout: Form (Left) | Jobs List (Right) */}
+      <div style={{ flex: '1 1 0', minHeight: 0, display: 'grid', gridTemplateColumns: '360px 1fr', gap: '16px', overflow: 'hidden' }}>
 
-      {/* Export Jobs List */}
-      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
-        <h2 className="section-anchor__title">
-          Export Jobs
-        </h2>
-
-        {loading && jobs.length === 0 ? (
-          <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>Loading export jobs...</div>
-        ) : jobs.length === 0 ? (
-          <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>No export jobs yet. Create one above to get started.</div>
-        ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
-                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Type</th>
-                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Status</th>
-                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Progress</th>
-                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Rows</th>
-                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Created</th>
-                  <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {jobs.map((job: ExportJobDisplay) => {
-                  const statusColors = getStatusColor(job.status);
-                  return (
-                    <tr key={job.id} style={{ borderBottom: '1px solid var(--border-default)' }}>
-                      <td style={{ padding: '12px', color: 'var(--text-primary)', textTransform: 'capitalize' }}>{job.job_type}</td>
-                      <td style={{ padding: '12px' }}>
-                        <span className="status-badge" style={{ backgroundColor: statusColors.bg, color: statusColors.text, borderColor: 'transparent' }}>
-                          {job.status}
-                        </span>
-                      </td>
-                      <td style={{ padding: '12px' }}>
-                        <div style={{ width: '128px' }}>
-                          <div style={{ backgroundColor: 'var(--border-default)', borderRadius: '999px', height: '8px', overflow: 'hidden' }}>
-                            <div
-                              style={{
-                                backgroundColor: 'var(--accent-primary)',
-                                height: '100%',
-                                transition: 'width 0.3s ease',
-                                width: `${job.progress_percent}%`
-                              }}
-                            />
-                          </div>
-                          <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '4px' }}>
-                            {job.progress_percent.toFixed(0)}%
-                          </div>
-                        </div>
-                      </td>
-                      <td style={{ padding: '12px', color: 'var(--text-secondary)' }}>{job.row_count.toLocaleString()}</td>
-                      <td style={{ padding: '12px', color: 'var(--text-tertiary)', fontSize: '12px' }}>{formatDate(job.created_at)}</td>
-                      <td style={{ padding: '12px', display: 'flex', gap: '8px' }}>
-                        {job.status === 'completed' && job.file_url && (
-                          <a
-                            href={job.file_url}
-                            download
-                            className="btn-ghost"
-                            style={{ fontSize: '12px', padding: '4px 8px' }}
-                          >
-                            Download
-                          </a>
-                        )}
-                        {(job.status === 'pending' || job.status === 'processing') && (
-                          <button
-                            onClick={() => handleCancelJob(job.id)}
-                            className="btn-ghost"
-                            style={{ fontSize: '12px', padding: '4px 8px', color: 'var(--accent-warning)' }}
-                          >
-                            Cancel
-                          </button>
-                        )}
-                        {job.status === 'failed' && (
-                          <button
-                            onClick={() => handleRetryJob(job.id)}
-                            className="btn-ghost"
-                            style={{ fontSize: '12px', padding: '4px 8px', color: 'var(--accent-info)' }}
-                          >
-                            Retry
-                          </button>
-                        )}
-                        <button
-                          onClick={() => handleDeleteJob(job.id)}
-                          className="btn-ghost"
-                          style={{ fontSize: '12px', padding: '4px 8px', color: 'var(--accent-error)' }}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        {/* Form Panel (Left) */}
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden', borderRight: '1px solid var(--border-subtle)', paddingRight: '16px' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em', flex: '0 0 auto' }}>
+            New Export
+          </h2>
+          <div style={{ flex: '1 1 0', minHeight: 0, overflowY: 'auto' }}>
+            <ExportJobForm onSubmit={handleCreateExport} loading={loading} error={error ?? undefined} />
           </div>
-        )}
-      </section>
-
-      {/* Information Box */}
-      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
-        <h2 className="section-anchor__title">Export Information</h2>
-        <div className="glass-panel" style={{ padding: '16px' }}>
-          <ul style={{ margin: 0, paddingLeft: '20px' }}>
-            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Exports are processed asynchronously to avoid blocking your requests</li>
-            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>You can monitor the progress of active exports in real-time</li>
-            <li style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Completed exports are available for download for 7 days</li>
-            <li style={{ color: 'var(--text-secondary)' }}>Failed exports can be retried by clicking the Retry button</li>
-          </ul>
         </div>
-      </section>
+
+        {/* Jobs List (Right, scrollable) */}
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em', flex: '0 0 auto' }}>
+            Export Jobs
+          </h2>
+
+          <div style={{ flex: '1 1 0', minHeight: 0, overflowY: 'auto' }}>
+            {loading && jobs.length === 0 ? (
+              <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>Loading export jobs...</div>
+            ) : jobs.length === 0 ? (
+              <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>No export jobs yet. Create one on the left to get started.</div>
+            ) : (
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', fontSize: '13px', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
+                      <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Type</th>
+                      <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Status</th>
+                      <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Progress</th>
+                      <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Rows</th>
+                      <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {jobs.map((job: ExportJobDisplay) => {
+                      const statusColors = getStatusColor(job.status);
+                      return (
+                        <tr key={job.id} style={{ borderBottom: '1px solid var(--border-default)' }}>
+                          <td style={{ padding: '12px', color: 'var(--text-primary)', textTransform: 'capitalize' }}>{job.job_type}</td>
+                          <td style={{ padding: '12px' }}>
+                            <span className="status-badge" style={{ backgroundColor: statusColors.bg, color: statusColors.text, borderColor: 'transparent', fontSize: '11px' }}>
+                              {job.status}
+                            </span>
+                          </td>
+                          <td style={{ padding: '12px' }}>
+                            <div style={{ width: '100px' }}>
+                              <div style={{ backgroundColor: 'var(--border-default)', borderRadius: '999px', height: '6px', overflow: 'hidden' }}>
+                                <div
+                                  style={{
+                                    backgroundColor: 'var(--accent-primary)',
+                                    height: '100%',
+                                    transition: 'width 0.3s ease',
+                                    width: `${job.progress_percent}%`
+                                  }}
+                                />
+                              </div>
+                              <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '2px' }}>
+                                {job.progress_percent.toFixed(0)}%
+                              </div>
+                            </div>
+                          </td>
+                          <td style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '12px' }}>{job.row_count.toLocaleString()}</td>
+                          <td style={{ padding: '12px', display: 'flex', gap: '6px' }}>
+                            {job.status === 'completed' && job.file_url && (
+                              <a
+                                href={job.file_url}
+                                download
+                                className="btn-ghost"
+                                style={{ fontSize: '11px', padding: '3px 6px' }}
+                              >
+                                DL
+                              </a>
+                            )}
+                            {(job.status === 'pending' || job.status === 'processing') && (
+                              <button
+                                onClick={() => handleCancelJob(job.id)}
+                                className="btn-ghost"
+                                style={{ fontSize: '11px', padding: '3px 6px', color: 'var(--accent-warning)' }}
+                              >
+                                Cancel
+                              </button>
+                            )}
+                            {job.status === 'failed' && (
+                              <button
+                                onClick={() => handleRetryJob(job.id)}
+                                className="btn-ghost"
+                                style={{ fontSize: '11px', padding: '3px 6px', color: 'var(--accent-info)' }}
+                              >
+                                Retry
+                              </button>
+                            )}
+                            <button
+                              onClick={() => handleDeleteJob(job.id)}
+                              className="btn-ghost"
+                              style={{ fontSize: '11px', padding: '3px 6px', color: 'var(--accent-error)' }}
+                            >
+                              Del
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

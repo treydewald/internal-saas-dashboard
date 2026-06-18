@@ -56,11 +56,13 @@ export const APIKeyUsagePage = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Hero Header */}
       <div
         style={{
-          paddingBottom: '24px',
+          flex: '0 0 auto',
+          paddingBottom: '16px',
+          marginBottom: '12px',
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
@@ -83,7 +85,7 @@ export const APIKeyUsagePage = () => {
       )}
 
       {/* Create New Key Section */}
-      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
+      <section style={{ flex: '0 0 auto', marginBottom: '12px' }}>
         <h2 className="section-anchor__title">Create New API Key</h2>
         <form className="card" onSubmit={handleCreateKey} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div className="form-group">
@@ -159,17 +161,17 @@ export const APIKeyUsagePage = () => {
       )}
 
       {/* API Keys List */}
-      <section className="section-anchor" style={{ flex: '1 1 auto' }}>
-        <h2 className="section-anchor__title">Your API Keys</h2>
-        <div className="glass-panel" style={{ padding: '16px' }}>
+      <section style={{ flex: '1 1 0', minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em', flex: '0 0 auto' }}>Your API Keys</h2>
+        <div className="glass-panel" style={{ padding: '16px', flex: '1 1 0', minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
         {loading ? (
           <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>Loading API keys...</div>
         ) : keys.length === 0 ? (
           <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>No API keys created yet. Create one above to get started.</div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+          <div style={{ overflowX: 'auto', flex: '1 1 0', minHeight: 0, overflowY: 'auto' }}>
+            <table style={{ width: '100%', fontSize: '13px', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
                   <th style={{ textAlign: 'left', padding: '12px', color: 'var(--text-tertiary)', fontWeight: '500' }}>Name</th>

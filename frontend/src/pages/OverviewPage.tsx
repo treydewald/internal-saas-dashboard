@@ -10,7 +10,7 @@ export const OverviewPage: React.FC = () => {
   const { dateRange, updateDateRange } = useDateRange();
 
   return (
-    <div className="animate-fadeIn" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
       {/* ── Hero Header ─────────────────────────────── */}
       <div
@@ -67,28 +67,33 @@ export const OverviewPage: React.FC = () => {
       </div>
 
       {/* ── KPI Cards (Primary Focus) ──────────────────────────────── */}
-      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
-        <h2 className="section-anchor__title">
+      <section style={{ flex: '0 0 auto', paddingBottom: '12px' }}>
+        <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           Key Performance Indicators
         </h2>
         <KPICards dateFrom={dateRange.from} dateTo={dateRange.to} />
       </section>
 
-      {/* ── Activity Chart (hero section) ─────────── */}
-      <section className="section-anchor" style={{ flex: '1 1 auto', minHeight: 0 }}>
-        <h2 className="section-anchor__title">
-          API Activity
-        </h2>
-        <APIActivityChart dateFrom={dateRange.from} dateTo={dateRange.to} />
-      </section>
+      {/* ── Activity Chart & Metrics ─────────────────── */}
+      <div style={{ flex: '1 1 0', minHeight: 0, display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '16px', overflow: 'hidden' }}>
+        <section style={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em', flex: '0 0 auto' }}>
+            API Activity
+          </h2>
+          <div style={{ flex: '1 1 0', minHeight: 0, overflow: 'hidden' }}>
+            <APIActivityChart dateFrom={dateRange.from} dateTo={dateRange.to} />
+          </div>
+        </section>
 
-      {/* ── Advanced Metrics ───────────────────────── */}
-      <section className="section-anchor" style={{ flex: '0 0 auto' }}>
-        <h2 className="section-anchor__title">
-          Performance Breakdown
-        </h2>
-        <MetricsCards dateFrom={dateRange.from} dateTo={dateRange.to} />
-      </section>
+        <section style={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: 'var(--fw-semibold)', color: 'var(--text-secondary)', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em', flex: '0 0 auto' }}>
+            Performance Breakdown
+          </h2>
+          <div style={{ flex: '1 1 0', minHeight: 0, overflowY: 'auto' }}>
+            <MetricsCards dateFrom={dateRange.from} dateTo={dateRange.to} />
+          </div>
+        </section>
+      </div>
     </div>
   );
 };

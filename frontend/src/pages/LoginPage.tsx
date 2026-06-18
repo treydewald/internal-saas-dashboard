@@ -39,6 +39,7 @@ export const LoginPage: React.FC = () => {
       <div
         style={{
           flex: '1',
+          minWidth: 0,
           background: 'linear-gradient(145deg, #1E3A8A 0%, #1D4ED8 40%, #4338CA 100%)',
           display: 'flex',
           flexDirection: 'column',
@@ -165,6 +166,7 @@ export const LoginPage: React.FC = () => {
           padding: '48px 32px',
           backgroundColor: 'var(--layer-1)',
           borderLeft: '1px solid var(--border-subtle)',
+          overflowY: 'auto',
         }}
       >
         {/* Form header */}
