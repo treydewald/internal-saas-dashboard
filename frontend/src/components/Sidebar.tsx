@@ -95,7 +95,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           </div>
           <div className={styles.brandText}>
             <span className={styles.brandName}>DataPulse</span>
-            <span className={styles.brandTagline}>Analytics Platform</span>
           </div>
         </div>
 
