@@ -50,6 +50,7 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
 
     setIsConnecting(true);
     setError(null);
+    setIsConnected(false);
 
     try {
       const url = buildWebSocketUrl();
@@ -96,6 +97,7 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
         console.log('WebSocket disconnected');
         setIsConnected(false);
         setIsConnecting(false);
+        setError(null);
 
         // Attempt to reconnect after 3 seconds if authenticated
         if (isAuthenticated && user?.id) {
@@ -122,6 +124,7 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     }
     setIsConnected(false);
     setIsConnecting(false);
+    setError(null);
     connect();
   }, [connect]);
 

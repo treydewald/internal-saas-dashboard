@@ -34,7 +34,7 @@ const DEMO_USER: AuthUser = {
   plan: 'enterprise',
 };
 
-const DEMO_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6OTk5OTk5OTk5OX0.1nxI5A0l7fPHDYZNPM2S5j0q8b9c1d0e1f2g3h4i5j6';
+const DEMO_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInVzZXJfaWQiOjEsImVtYWlsIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3ODIxMDE4OTB9.iRFYsBgUwwtFVoFYtwBtlDblmz54SwB3dFlET3y3VGg';
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
