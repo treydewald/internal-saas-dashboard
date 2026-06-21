@@ -88,16 +88,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
     <>
       {isOpen && <div className={styles.overlay} onClick={onClose} />}
       <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
-        {/* Brand Header */}
-        <div className={styles.brand}>
-          <div className={styles.brandMark}>
-            <Zap size={14} />
-          </div>
-          <div className={styles.brandText}>
-            <span className={styles.brandName}>DataPulse</span>
-          </div>
-        </div>
-
         <nav className={styles.nav}>
           {/* Core Navigation */}
           <div className={styles.navSection}>
